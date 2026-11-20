@@ -36,7 +36,7 @@
       "messages_each_visit": true
     },
     "day2": {
-      "meet_all_three": false
+      "meet_all_three": true
     }
   },
   "saveSlots": 3,
@@ -44,8 +44,11 @@
   "sceneFiles": [
     "s01_prologue.json",
     "s02_place_select.json",
+    "s03_lego_phone.json",
     "s03_lego.json",
+    "s03_skywalk_phone.json",
     "s03_skywalk.json",
+    "s03_myeongdong_phone.json",
     "s03_myeongdong.json",
     "s03_2_day1_messages.json",
     "s04_s05_day1_repeat.json",

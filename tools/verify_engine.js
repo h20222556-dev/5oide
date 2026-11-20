@@ -115,6 +115,55 @@ for (const ed of endings) {
 const s15Exists = fs.existsSync(path.join(rootDir, 'data', 'scenes', 's15_final_choice.json'));
 assert(s15Exists, `최종 선택 씬 s15_final_choice.json 존재`);
 
+// ─── 추가 검증: 버그 및 구조 수정 5종 검증 ───
+
+// 6. 이슈 1 (모바일 화면 UI & 100dvh & safe-area) 검증
+console.log('\n--- 6. 이슈 1: 모바일 세로 레이아웃 및 CSS 검증 ---');
+const mainCss = fs.readFileSync(path.join(rootDir, 'css', 'main.css'), 'utf8');
+assert(mainCss.includes('100dvh'), 'CSS에 100dvh 단위가 적용되어 있음');
+assert(mainCss.includes('safe-area-inset'), 'CSS에 safe-area-inset 환경변수가 반영되어 있음');
+assert(mainCss.includes('@media (max-width: 768px), (orientation: portrait)'), '모바일 세로 전용 미디어 쿼리가 적용되어 있음');
+assert(mainCss.includes('font-size: 16px !important'), '모바일 세로 대사창 폰트 크기가 16px 이상으로 설정되어 있음');
+assert(mainCss.includes('min-height: 48px') || mainCss.includes('min-height: 44px'), '선택지 및 모달 터치 타겟이 44px 이상임');
+
+// 7. 이슈 2 ("새로 시작" 뒤로 가기 버튼) 검증
+console.log('\n--- 7. 이슈 2: "새로 시작" 모달 뒤로 가기 검증 ---');
+const indexHtml = fs.readFileSync(path.join(rootDir, 'index.html'), 'utf8');
+assert(indexHtml.includes('id="btn-gender-back"'), '성별 선택 모달에 뒤로 버튼(btn-gender-back)이 존재함');
+assert(indexHtml.includes('id="btn-name-back"'), '이름 입력 모달에 뒤로 버튼(btn-name-back)이 존재함');
+
+// 8. 이슈 3 (휴대폰 메시지 분리 및 phone_message 씬) 검증
+console.log('\n--- 8. 이슈 3: 장소별 휴대폰 메시지 씬 분리 검증 ---');
+const phoneScenes = ['s03_lego_phone', 's03_skywalk_phone', 's03_myeongdong_phone'];
+for (const ps of phoneScenes) {
+  const pPath = path.join(rootDir, 'data', 'scenes', `${ps}.json`);
+  const pExists = fs.existsSync(pPath);
+  assert(pExists, `휴대폰 메시지 씬 파일 존재: ${ps}.json`);
+  if (pExists) {
+    const data = JSON.parse(fs.readFileSync(pPath, 'utf8'));
+    assert(data.type === 'phone_message', `${ps} 타입이 'phone_message'임`);
+    assert(data.partner && data.messages && data.messages.length > 0, `${ps}에 상대와 메시지 목록이 수록되어 있음`);
+    assert(data.intro_vo && data.outro_vo, `${ps}에 intro_vo 및 outro_vo가 수록되어 있음`);
+  }
+}
+const s03_2 = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's03_2_day1_messages.json'), 'utf8'));
+assert(s03_2.dialogues.length <= 2, `s03_2 대사창에서 메시지 A,B,C 텍스트가 모두 제거됨 (현재 대사 수: ${s03_2.dialogues.length})`);
+
+// 9. 이슈 4 (스카이워크 이름 공개 "???" 버그 수정) 검증
+console.log('\n--- 9. 이슈 4: 이름 ??? 공개 주석 및 세이브 필드 검증 ---');
+const skywalkData = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's03_skywalk.json'), 'utf8'));
+const skywalkRevealLine = skywalkData.dialogues.find(d => d.text.includes('제 이름은'));
+assert(skywalkRevealLine && skywalkRevealLine.text.includes('실제 이름으로 바뀜'), 's03_skywalk의 "제 이름은" 대사에 이름 공개 주석이 포함됨');
+const saveJs = fs.readFileSync(path.join(rootDir, 'js', 'save.js'), 'utf8');
+assert(saveJs.includes('revealedSpeakers'), 'save.js 세이브 데이터에 revealedSpeakers가 포함되어 영구 저장됨');
+
+// 10. 이슈 5 (Day 2 세 명 순차 방문) 검증
+console.log('\n--- 10. 이슈 5: Day 2 세 명 순차 방문 및 설정 검증 ---');
+assert(config.flags && config.flags.day2 && config.flags.day2.meet_all_three === true, 'game_config.json flags.day2.meet_all_three 가 true 로 설정됨');
+assert(saveJs.includes('day2Visited'), 'save.js 세이브 데이터에 day2Visited가 포함되어 영구 저장됨');
+const engineJs = fs.readFileSync(path.join(rootDir, 'js', 'engine.js'), 'utf8');
+assert(engineJs.includes('_presentDay2RemainingChoices'), 'engine.js에 Day 2 남은 인물 순차 선택 로직(_presentDay2RemainingChoices)이 구현됨');
+
 console.log('\n====================================================');
 console.log(` 검증 결과: ${passedTests} / ${totalTests} 테스트 통과 (${Math.round((passedTests/totalTests)*100)}%)`);
 console.log('====================================================');

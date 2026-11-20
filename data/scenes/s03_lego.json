@@ -214,5 +214,31 @@
     }
   ],
   "choices": null,
-  "next": "s03_2_day1_messages"
+  "next": "s03_lego_phone",
+  "phone_message": {
+    "partner": "dakgalbi",
+    "intro_vo": [
+      "생각보다 정말 재미있는 곳이었어.",
+      "그리고 예상하지 못한 만남까지..."
+    ],
+    "messages": [
+      {
+        "sender": "player",
+        "text": "관광지 추천해주셔서 감사해요. 추천해주신 곳 꼭 가볼게요."
+      },
+      {
+        "sender": "dakgalbi",
+        "text": "아, {player} 씨 맞죠?"
+      },
+      {
+        "sender": "dakgalbi",
+        "text": "ㅎㅎ 마음에 드셨으면 좋겠네요!"
+      },
+      {
+        "sender": "dakgalbi",
+        "text": "다음에 또 만나면 그때는 더 재미있는 곳 소개해 드릴게요~!"
+      }
+    ],
+    "outro_vo": "답장이 정말 빠르네!"
+  }
 }

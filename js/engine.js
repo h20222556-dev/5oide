@@ -22,6 +22,7 @@ class GameEngine {
       revealedSpeakers: new Set(), // 실제 이름이 밝혀진 캐릭터 목록
 
       day1Visited: [],             // Day 1 방문한 장소 목록 ['lego', 'skywalk', ...]
+      day2Visited: [],             // Day 2 만난 캐릭터 목록 ['dakgalbi', 'goguma', ...]
       day2Target: null,            // Day 2 선택한 캐릭터
       chosenSeat: null,            // s10에서 선택한 좌석 캐릭터
 
@@ -111,20 +112,42 @@ class GameEngine {
   startNewGameFlow() {
     if (!this.renderer) return;
 
-    // 1. 성별 선택 모달 표시
-    this.renderer.showGenderModal((selectedGender) => {
-      this.state.gender = selectedGender;
+    let selectedGender = this.state.gender || 'female';
+    let typedName = this.state.playerName && this.state.playerName !== '주인공' ? this.state.playerName : '';
 
-      // 2. 이름 입력 모달 표시
-      this.renderer.showNameModal((enteredName) => {
-        this.state.playerName = enteredName.trim() || '주인공';
+    const showGenderStep = () => {
+      this.renderer.showGenderModal(
+        (gender) => {
+          selectedGender = gender;
+          this.state.gender = gender;
+          showNameStep();
+        },
+        () => {
+          // 성별 선택 단계에서 "뒤로" -> 타이틀 메뉴로 복귀
+          this.renderer.showScreen('title');
+        }
+      );
+    };
 
-        // 3. 상태 초기화 후 프롤로그 진입
-        this._initNewGameState();
-        this.renderer.showScreen('game');
-        this.goToScene('s01_prologue');
-      });
-    });
+    const showNameStep = () => {
+      this.renderer.showNameModal(
+        (enteredName) => {
+          this.state.playerName = enteredName.trim() || '주인공';
+          this.state.gender = selectedGender;
+          this._initNewGameState();
+          this.renderer.showScreen('game');
+          this.goToScene('s01_prologue');
+        },
+        (currentInput) => {
+          // 이름 입력 단계에서 "뒤로" -> 성별 선택 복귀 (입력하던 이름 유지)
+          typedName = currentInput;
+          showGenderStep();
+        },
+        typedName
+      );
+    };
+
+    showGenderStep();
   }
 
   _initNewGameState() {
@@ -134,6 +157,7 @@ class GameEngine {
     this.state.hiddenUnlocked = false;
     this.state.revealedSpeakers = new Set();
     this.state.day1Visited = [];
+    this.state.day2Visited = [];
     this.state.day2Target = null;
     this.state.chosenSeat = null;
 
@@ -183,6 +207,7 @@ class GameEngine {
       hiddenUnlocked: this.state.hiddenUnlocked,
       revealedSpeakers: Array.from(this.state.revealedSpeakers),
       day1Visited: [...this.state.day1Visited],
+      day2Visited: [...this.state.day2Visited],
       day2Target: this.state.day2Target,
       chosenSeat: this.state.chosenSeat,
       seenDialogues: [...this.state.seenDialogues],
@@ -203,6 +228,7 @@ class GameEngine {
     this.state.hiddenUnlocked = !!saved.hiddenUnlocked;
     this.state.revealedSpeakers = new Set(saved.revealedSpeakers || []);
     this.state.day1Visited = [...(saved.day1Visited || [])];
+    this.state.day2Visited = [...(saved.day2Visited || [])];
     this.state.day2Target = saved.day2Target || null;
     this.state.chosenSeat = saved.chosenSeat || null;
 
@@ -294,6 +320,12 @@ class GameEngine {
     const scene = this.scenes.get(this.state.sceneId);
     if (!scene) return;
 
+    // 휴대폰 메시지 장면 (phone_message 타입) 특수 처리
+    if (scene.type === 'phone_message') {
+      this._renderPhoneMessageScene(scene);
+      return;
+    }
+
     const dialogues = scene.dialogues || [];
 
     // 대사 목록 끝 도달
@@ -311,19 +343,35 @@ class GameEngine {
     const vars = {
       player: this.state.playerName,
       dakgalbi: this.currentCharacters.dakgalbi?.name || '다곡희',
-      yangnyeom: this.currentCharacters.yangnyeom?.name || '양연미',
-      goguma: this.currentCharacters.goguma?.name || '고규미',
-      bokkeumbap: this.currentCharacters.bokkeumbap?.name || '박복은',
+      양념: this.currentCharacters.yangnyeom?.name || '양연미',
+      고구마: this.currentCharacters.goguma?.name || '고규미',
+      볶음밥: this.currentCharacters.bokkeumbap?.name || '박복은',
     };
 
     let processedText = resolveTextVariables(d.text, vars);
 
     // 실제 이름 공개 여부 판별 (← 이 대사부터 화자 이름이 ???에서 실제 이름으로 바뀜)
-    if (d.text.includes('실제 이름으로 바뀜')) {
+    // (a) 안내 지문이 있거나 자기소개 대사 감지
+    const hasRevealNotice = d.text.includes('실제 이름으로 바뀜') || (d.text.includes('제 이름은') && d.speaker?.includes('고구마'));
+    if (hasRevealNotice) {
       if (d.speaker?.includes('닭갈비')) this.state.revealedSpeakers.add('dakgalbi');
       if (d.speaker?.includes('고구마')) this.state.revealedSpeakers.add('goguma');
       if (d.speaker?.includes('양념')) this.state.revealedSpeakers.add('yangnyeom');
-      // 안내 지문 제거
+    }
+
+    // (b) 화자 라벨이 실제 이름(또는 역할)으로 지정되어 있고 "???"가 아닌 경우
+    for (const [cid, cData] of Object.entries(this.currentCharacters)) {
+      if (d.speaker && (d.speaker.includes(cData.role) || d.speaker.includes(cData.name)) && !d.speaker.includes('???')) {
+        if (!['s03_lego', 's03_skywalk', 's03_myeongdong'].includes(this.state.sceneId)) {
+          this.state.revealedSpeakers.add(cid);
+        } else if (hasRevealNotice || d.text.includes('제 이름은') || d.text.includes('입니다') || d.text.includes('이요')) {
+          this.state.revealedSpeakers.add(cid);
+        }
+      }
+    }
+
+    // 안내 지문 제거
+    if (processedText.includes('실제 이름으로 바뀜')) {
       processedText = processedText.replace(/\(←\s*이 대사부터[^\)]+\)/g, '').trim();
     }
 
@@ -334,31 +382,41 @@ class GameEngine {
     if (d.speaker) {
       if (d.speaker.includes('나레이션') || d.speaker.includes('내레이션') || d.speakerType === 'narration') {
         speakerDisplayName = null;
-      } else if (d.speaker === '???') {
-        speakerDisplayName = '???';
       } else {
-        // 괄호 수식어((V.O.), (O.S.), (속마음) 등) 제거
         let cleanSpeaker = d.speaker.replace(/\(V\.O\.\)|\(O\.S\.\)|\(속마음\)|\(화면\s*밖\)|\[화면\s*밖\]/g, '').trim();
 
-        // 캐릭터 ID 치환
-        for (const [cid, cData] of Object.entries(this.currentCharacters)) {
-          if (cleanSpeaker.includes(cData.role) || cleanSpeaker.includes(cid)) {
-            // 아직 이름이 밝혀지지 않았으면 ???
-            if (!this.state.revealedSpeakers.has(cid) && ['s03_lego', 's03_skywalk', 's03_myeongdong'].includes(this.state.sceneId)) {
-              speakerDisplayName = '???';
+        if (cleanSpeaker === '???') {
+          const targetChar = d.characters && d.characters[0] ? d.characters[0].id : null;
+          if (targetChar && this.currentCharacters[targetChar]) {
+            if (this.state.revealedSpeakers.has(targetChar)) {
+              speakerDisplayName = this.currentCharacters[targetChar].name;
+              speakerColor = this.currentCharacters[targetChar].color;
             } else {
-              speakerDisplayName = cData.name;
-              speakerColor = cData.color;
+              speakerDisplayName = '???';
             }
-            break;
+          } else {
+            speakerDisplayName = '???';
           }
-        }
-        if (cleanSpeaker === '주인공') {
-          speakerDisplayName = this.state.playerName;
+        } else {
+          let matched = false;
+          for (const [cid, cData] of Object.entries(this.currentCharacters)) {
+            if (cleanSpeaker.includes(cData.role) || cleanSpeaker.includes(cid) || cleanSpeaker.includes(cData.name)) {
+              matched = true;
+              if (this.state.revealedSpeakers.has(cid)) {
+                speakerDisplayName = cData.name;
+                speakerColor = cData.color;
+              } else {
+                speakerDisplayName = '???';
+              }
+              break;
+            }
+          }
+          if (!matched && cleanSpeaker === '주인공') {
+            speakerDisplayName = this.state.playerName;
+          }
         }
       }
     }
-
 
     if (this.renderer) {
       this.renderer.setSpeaker(speakerDisplayName, speakerColor, d.speakerType);
@@ -392,8 +450,92 @@ class GameEngine {
     }
   }
 
+  // ─── 휴대폰 메시지 전용 렌더링 (V.O. 2줄 -> 말풍선 팝업 -> V.O. 1줄 -> 다음 씬) ───
+  _renderPhoneMessageScene(scene) {
+    const vars = {
+      player: this.state.playerName,
+      dakgalbi: this.currentCharacters.dakgalbi?.name || '다곡희',
+      양념: this.currentCharacters.yangnyeom?.name || '양연미',
+      고구마: this.currentCharacters.goguma?.name || '고규미',
+      볶음밥: this.currentCharacters.bokkeumbap?.name || '박복은',
+    };
+
+    const idx = this.state.dialogueIndex;
+    if (idx === 0 || idx === 1) {
+      // V.O. 2줄 ("생각보다 정말 재미있는 곳이었어.", "그리고 예상하지 못한 만남까지...")
+      const defaultIntros = ["생각보다 정말 재미있는 곳이었어.", "그리고 예상하지 못한 만남까지..."];
+      const rawText = scene.intro_vo && scene.intro_vo[idx] ? scene.intro_vo[idx] : defaultIntros[idx];
+      const text = resolveTextVariables(rawText, vars);
+      if (this.renderer) {
+        this.renderer.setSpeaker(this.state.playerName, null, 'vo');
+        this.renderer.setDialogueStyle('vo');
+        this.renderer.setCharacters([], null, this.state.gender);
+        this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
+        this.state.isTyping = true;
+        this.renderer.startTyping(text, this.settings.textSpeed ?? 40, () => {
+          this.state.isTyping = false;
+          if (this.state.isAuto) this._scheduleNext(this.settings.autoSpeed || 2000);
+        });
+      }
+    } else if (idx === 2) {
+      // 휴대폰 말풍선 화면 열기
+      this._stopAutoTimer();
+      const partnerData = this.currentCharacters[scene.partner];
+      const partnerName = partnerData ? partnerData.name : '연락처';
+
+      const resolvedMsgs = (scene.messages || []).map(m => ({
+        sender: m.sender,
+        senderName: m.sender === 'player' ? this.state.playerName : partnerName,
+        text: resolveTextVariables(m.text, vars)
+      }));
+
+      if (this.renderer) {
+        this.renderer.startPhoneMessageSequence(partnerName, resolvedMsgs, () => {
+          // 말풍선 완료 후 outro VO 대사로 진행
+          this.state.dialogueIndex = 3;
+          this._renderCurrentDialogue();
+        });
+      } else {
+        this.state.dialogueIndex = 3;
+        this._renderCurrentDialogue();
+      }
+    } else if (idx === 3) {
+      // 그 세트의 마지막 V.O. 한 줄 ("답장이 정말 빠르네!" 등)
+      const rawText = scene.outro_vo || "답장이 정말 빠르네!";
+      const text = resolveTextVariables(rawText, vars);
+      if (this.renderer) {
+        this.renderer.setSpeaker(this.state.playerName, null, 'vo');
+        this.renderer.setDialogueStyle('vo');
+        this.renderer.setCharacters([], null, this.state.gender);
+        this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
+        this.state.isTyping = true;
+        this.renderer.startTyping(text, this.settings.textSpeed ?? 40, () => {
+          this.state.isTyping = false;
+          if (this.state.isAuto) this._scheduleNext(this.settings.autoSpeed || 2000);
+        });
+      }
+    } else {
+      // 완료 후 s03_2_day1_messages 로 이동
+      this.goToScene(scene.next || 's03_2_day1_messages');
+    }
+  }
+
   nextDialogue() {
     if (this.state.choiceActive) return;
+
+    const scene = this.scenes.get(this.state.sceneId);
+    if (scene && scene.type === 'phone_message') {
+      if (this.state.isTyping) {
+        this.state.isTyping = false;
+        if (this.renderer) this.renderer.completeTyping();
+        if (this.state.isAuto) this._scheduleNext(this.settings.autoSpeed || 2000);
+        return;
+      }
+      this._stopAutoTimer();
+      this.state.dialogueIndex++;
+      this._renderCurrentDialogue();
+      return;
+    }
 
     if (this.state.isTyping) {
       // 1) 타이핑 중이면 즉시 전체 표시만 수행 (다음 대사로 안 넘어감)
@@ -416,9 +558,9 @@ class GameEngine {
   _onDialoguesFinished(scene) {
     this._stopAutoTimer();
 
-    // 1. Day 1 메시지 씬 (s03_2_day1_messages)
+    // 1. Day 1 메시지 및 남은 장소 씬 (s03_2_day1_messages)
     if (scene.id === 's03_2_day1_messages') {
-      this._handleDay1MessageScene();
+      this._handleDay1RepeatBranch();
       return;
     }
 
@@ -428,36 +570,56 @@ class GameEngine {
       return;
     }
 
-    // 3. 선착장 해질녘 판정 (s14_pier_sunset)
+    // 3. Day 2 첫 선택 또는 반복 선택 씬 (s07_day2)
+    if (scene.id === 's07_day2') {
+      this._presentDay2RemainingChoices();
+      return;
+    }
+
+    // 4. Day 2 개별 인물 만남 종료 후 (s07_dakgalbi, s07_yangnyeom, s07_goguma)
+    if (scene.id === 's07_dakgalbi' || scene.id === 's07_yangnyeom' || scene.id === 's07_goguma') {
+      const cid = scene.id.replace('s07_', '');
+      if (!this.state.day2Visited.includes(cid)) {
+        this.state.day2Visited.push(cid);
+      }
+      if (this.state.day2Visited.length >= 3) {
+        this.goToScene('s08_day2_end');
+      } else {
+        this._presentDay2RemainingChoices();
+      }
+      return;
+    }
+
+    // 5. 선착장 해질녘 판정 (s14_pier_sunset)
     if (scene.id === 's14_pier_sunset') {
       this._handlePierSunsetJudgement();
       return;
     }
 
-    // 4. 분기 A/B 종료 후 -> s15_final_choice
+    // 6. 분기 A/B 종료 후 -> s15_final_choice
     if (scene.id === 's14_pier_sunset_a' || scene.id === 's14_pier_sunset_b') {
       this.goToScene('s15_final_choice');
       return;
     }
 
-    // 5. 최종 선택 화면 (s15_final_choice)
+    // 7. 최종 선택 화면 (s15_final_choice)
     if (scene.id === 's15_final_choice') {
       this._presentFinalChoice();
       return;
     }
 
-    // 6. 뱃길 대화 종료 후 -> 남이섬으로 연결 (s11_dakgalbi -> s12_dakgalbi 등)
+    // 8. 뱃길 대화 종료 후 -> 남이섬으로 연결 (s11_dakgalbi -> s12_dakgalbi 등)
     if (scene.id === 's11_dakgalbi') { this.goToScene('s12_dakgalbi'); return; }
     if (scene.id === 's11_yangnyeom') { this.goToScene('s12_yangnyeom'); return; }
     if (scene.id === 's11_goguma') { this.goToScene('s12_goguma'); return; }
 
-    // 7. 남이섬 이벤트 종료 후 -> s14_pier_sunset
+    // 9. 남이섬 이벤트 종료 후 -> s14_pier_sunset
     if (scene.id === 's12_dakgalbi' || scene.id === 's12_yangnyeom' || scene.id === 's12_goguma') {
       this.goToScene('s14_pier_sunset');
       return;
     }
 
-    // 8. 엔딩 씬 대사 종료 후 -> 타이틀 복귀 버튼
+    // 10. 엔딩 씬 대사 종료 후 -> 타이틀 복귀 버튼
     if (scene.type === 'ending') {
       this._presentChoices("이야기가 마무리되었습니다.", [
         { text: "타이틀 화면으로 돌아가기", next: "__TITLE__" }
@@ -465,11 +627,15 @@ class GameEngine {
       return;
     }
 
-    // 9. 일반 씬의 선택지
+    // 11. 일반 씬의 선택지
     if (scene.choices && scene.choices.options?.length > 0) {
       // Day 1 두 번째/세 번째 장소 선택지 동적 필터링
       if (scene.choices.id === 'place_1' || scene.choices.id === 'place_2') {
         this._presentDay1PlaceChoices(scene.choices);
+        return;
+      }
+      if (scene.id === 's07_day2') {
+        this._presentDay2RemainingChoices();
         return;
       }
 
@@ -477,16 +643,16 @@ class GameEngine {
       return;
     }
 
-    // 10. 다음 씬이 지정되어 있으면 이동 (또는 기본 씬 연결 맵)
+    // 12. 다음 씬이 지정되어 있으면 이동 (또는 기본 씬 연결 맵)
     const fallbackNextMap = {
       "s01_prologue": "s02_place_select",
-      "s03_lego": "s03_2_day1_messages",
-      "s03_skywalk": "s03_2_day1_messages",
-      "s03_myeongdong": "s03_2_day1_messages",
+      "s03_lego": "s03_lego_phone",
+      "s03_lego_phone": "s03_2_day1_messages",
+      "s03_skywalk": "s03_skywalk_phone",
+      "s03_skywalk_phone": "s03_2_day1_messages",
+      "s03_myeongdong": "s03_myeongdong_phone",
+      "s03_myeongdong_phone": "s03_2_day1_messages",
       "s06_day1_end": "s07_day2",
-      "s07_dakgalbi": "s08_day2_end",
-      "s07_yangnyeom": "s08_day2_end",
-      "s07_goguma": "s08_day2_end",
       "s08_day2_end": "s09_pier",
       "s09_pier": "s10_seat",
       "s11_dakgalbi": "s12_dakgalbi",
@@ -504,48 +670,9 @@ class GameEngine {
       this.goToScene(nextTarget);
       return;
     }
-
   }
 
-  // ─── Day 1 메시지 및 장소 선택 핸들러 ────────────────────────────────────────
-
-  _handleDay1MessageScene() {
-    // 가장 최근에 방문한 장소
-    const lastVisited = this.state.day1Visited[this.state.day1Visited.length - 1];
-    let partnerName = '연락처';
-    let partnerId = 'dakgalbi';
-
-    if (lastVisited === 'lego') { partnerId = 'dakgalbi'; partnerName = this.currentCharacters.dakgalbi.name; }
-    else if (lastVisited === 'skywalk') { partnerId = 'goguma'; partnerName = this.currentCharacters.goguma.name; }
-    else if (lastVisited === 'myeongdong') { partnerId = 'yangnyeom'; partnerName = this.currentCharacters.yangnyeom.name; }
-
-    // 휴대폰 말풍선 메시지 데이터 생성
-    const messages = [];
-    if (partnerId === 'dakgalbi') {
-      messages.push({ sender: 'player', senderName: this.state.playerName, text: "관광지 추천해주셔서 감사해요. 추천해주신 곳 꼭 가볼게요." });
-      messages.push({ sender: partnerId, senderName: partnerName, text: `아, ${this.state.playerName} 씨 맞죠?` });
-      messages.push({ sender: partnerId, senderName: partnerName, text: "ㅎㅎ 마음에 드셨으면 좋겠네요!" });
-      messages.push({ sender: partnerId, senderName: partnerName, text: "다음에 또 만나면 그때는 더 재미있는 곳 소개해 드릴게요~!" });
-    } else if (partnerId === 'goguma') {
-      messages.push({ sender: 'player', senderName: this.state.playerName, text: "좋은 풍경 소개해 주셔서 감사했어요. 언젠가 카페도 놀러갈게요." });
-      messages.push({ sender: partnerId, senderName: partnerName, text: `먼저 연락해 주셨네요, ${this.state.playerName} 씨.` });
-      messages.push({ sender: partnerId, senderName: partnerName, text: `${this.state.playerName} 씨를 위해 따뜻한 음료를 준비해 둬야겠어요~` });
-    } else if (partnerId === 'yangnyeom') {
-      messages.push({ sender: 'player', senderName: this.state.playerName, text: "덕분에 추천해주신 식당에서 잘 먹고 가요~" });
-      messages.push({ sender: partnerId, senderName: partnerName, text: "뭐야, 아까 그 사람 맞죠?" });
-      messages.push({ sender: partnerId, senderName: partnerName, text: "진짜 연락까지 하실 줄은 몰랐는데." });
-      messages.push({ sender: partnerId, senderName: partnerName, text: "궁금하시면 연락하세요." });
-    }
-
-    // 휴대폰 UI 팝업 표시 후 다음 장소 선택지로 진행
-    if (this.renderer) {
-      this.renderer.showPhoneMessages(partnerName, messages, () => {
-        this._handleDay1RepeatBranch();
-      });
-    } else {
-      this._handleDay1RepeatBranch();
-    }
-  }
+  // ─── Day 1 & Day 2 순차 선택 핸들러 ─────────────────────────────────────────
 
   _handleDay1RepeatBranch() {
     // 3개 장소를 모두 방문했으면 Day 1 마무리(s06_day1_end)로 이동
@@ -556,24 +683,55 @@ class GameEngine {
 
     // 남은 장소들로 동적 선택지 제시
     const allPlaces = [
-      { key: 'lego', text: '레고랜드 — 테마파크', next: 's03_lego' },
-      { key: 'skywalk', text: '소양강 스카이워크 — 강 풍경 명소', next: 's03_skywalk' },
-      { key: 'myeongdong', text: '명동 닭갈비 골목 — 대표 먹거리 거리', next: 's03_myeongdong' },
+      { key: 'lego', text: 'A: 레고랜드 — "다양한 놀이기구와 볼거리가 있는 테마파크"', next: 's03_lego' },
+      { key: 'skywalk', text: 'B: 스카이워크 — "탁 트인 강 풍경을 감상할 수 있는 명소"', next: 's03_skywalk' },
+      { key: 'myeongdong', text: 'C: 명동 닭갈비 골목 — "춘천의 대표 먹거리를 즐길 수 있는 거리"', next: 's03_myeongdong' },
     ];
 
     const available = allPlaces.filter(p => !this.state.day1Visited.includes(p.key));
-    this._presentChoices("다음에는 어디로 가볼까?", available);
+    this._presentChoices("다음은! 여기다.", available);
   }
 
   _presentDay1PlaceChoices(choiceObj) {
     const allPlaces = [
-      { key: 'lego', text: 'A: 레고랜드 — 테마파크', next: 's03_lego' },
-      { key: 'skywalk', text: 'B: 소양강 스카이워크 — 강 풍경 명소', next: 's03_skywalk' },
-      { key: 'myeongdong', text: 'C: 명동 닭갈비 골목 — 대표 먹거리 거리', next: 's03_myeongdong' },
+      { key: 'lego', text: 'A: 레고랜드 — "다양한 놀이기구와 볼거리가 있는 테마파크"', next: 's03_lego' },
+      { key: 'skywalk', text: 'B: 스카이워크 — "탁 트인 강 풍경을 감상할 수 있는 명소"', next: 's03_skywalk' },
+      { key: 'myeongdong', text: 'C: 명동 닭갈비 골목 — "춘천의 대표 먹거리를 즐길 수 있는 거리"', next: 's03_myeongdong' },
     ];
 
     const available = allPlaces.filter(p => !this.state.day1Visited.includes(p.key));
-    this._presentChoices(choiceObj.question || "어디부터 갈까?", available);
+    this._presentChoices(choiceObj?.question || "다음은! 여기다.", available);
+  }
+
+  _presentDay2RemainingChoices() {
+    if (this.state.day2Visited.length >= 3) {
+      this.goToScene('s08_day2_end');
+      return;
+    }
+
+    const allChars = [
+      { id: 'dakgalbi', role: '닭갈비', next: 's07_dakgalbi' },
+      { id: 'yangnyeom', role: '양념', next: 's07_yangnyeom' },
+      { id: 'goguma', role: '고구마', next: 's07_goguma' },
+    ];
+
+    const available = allChars
+      .filter(c => !this.state.day2Visited.includes(c.id))
+      .map((c, idx) => {
+        const charName = this.currentCharacters[c.id]?.name || c.role;
+        return {
+          key: String.fromCharCode(65 + idx),
+          charId: c.id,
+          text: `${String.fromCharCode(65 + idx)}: ${charName}에게 연락한다`,
+          next: c.next
+        };
+      });
+
+    const question = this.state.day2Visited.length === 0
+      ? "누구에게 먼저 연락해볼까?"
+      : "다음은 누구에게 연락해볼까?"; // 임시 문구 (작업 보고서 명시)
+
+    this._presentChoices(question, available);
   }
 
   // ─── s14 선착장 해질녘 판정 ────────────────────────────────────────────────
@@ -713,20 +871,33 @@ class GameEngine {
       else if (chosen.key === 'C') this.state.chosenSeat = 'goguma';
     }
 
-    // Day 2 대상 선택 기록 (s07_day2)
-    if (this.state.sceneId === 's07_day2') {
-      if (chosen.key === 'A') this.state.day2Target = 'dakgalbi';
-      else if (chosen.key === 'B') this.state.day2Target = 'yangnyeom';
-      else if (chosen.key === 'C') this.state.day2Target = 'goguma';
+    // Day 2 대상 선택 기록
+    if (this.state.sceneId === 's07_day2' || this.state.sceneId?.startsWith('s07_')) {
+      let cid = chosen.charId;
+      if (!cid) {
+        if (chosen.key === 'A') cid = 'dakgalbi';
+        else if (chosen.key === 'B') cid = 'yangnyeom';
+        else if (chosen.key === 'C') cid = 'goguma';
+      }
+      if (cid) {
+        if (!this.state.day2Visited.includes(cid)) {
+          this.state.day2Visited.push(cid);
+        }
+        this.state.day2Target = cid;
+      }
     }
 
-    // 다음 씬 이동 (s03 만남 후 s03_2 메시지 씬으로 자동 연결)
+    // 다음 씬 이동
     if (chosen.next) {
       this.goToScene(chosen.next);
     } else if (['s03_lego', 's03_skywalk', 's03_myeongdong'].includes(this.state.sceneId)) {
       this.goToScene('s03_2_day1_messages');
     } else if (this.state.sceneId?.startsWith('s07_')) {
-      this.goToScene('s08_day2_end');
+      if (this.state.day2Visited.length >= 3) {
+        this.goToScene('s08_day2_end');
+      } else {
+        this._presentDay2RemainingChoices();
+      }
     }
   }
 

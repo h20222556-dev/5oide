@@ -32,18 +32,33 @@ class UIController {
   }
 
   _bindEvents() {
-    // 1. 대사창 클릭
+    // 1. 대사창 터치 및 클릭 (모바일 중복 탭 방지)
     const dialogueBox = document.getElementById('dialogue-box');
     if (dialogueBox) {
+      let lastTouchTime = 0;
+      dialogueBox.addEventListener('touchstart', (e) => {
+        lastTouchTime = Date.now();
+        this._handleAdvanceDialogue();
+      }, { passive: true });
+
       dialogueBox.addEventListener('click', (e) => {
+        // touchstart 직후 350ms 이내에 합성되는 click 이벤트 중복 실행 차단
+        if (Date.now() - lastTouchTime < 350) return;
         this._handleAdvanceDialogue();
       });
     }
 
     // 2. 키보드 단축키
     window.addEventListener('keydown', (e) => {
-      // 텍스트 인풋 포커스 중에는 핫키 무시
-      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      // 텍스트 인풋 포커스 중에는 핫키 무시 (단, Escape는 제외)
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+        if (e.code === 'Escape') {
+          e.preventDefault();
+          const btnNameBack = document.getElementById('btn-name-back');
+          if (btnNameBack) btnNameBack.click();
+        }
+        return;
+      }
 
       if (e.code === 'KeyD') {
         e.preventDefault();
@@ -53,6 +68,18 @@ class UIController {
 
       if (e.code === 'Escape') {
         e.preventDefault();
+        const nameModal = document.getElementById('modal-name');
+        const genderModal = document.getElementById('modal-gender');
+
+        if (nameModal && !nameModal.classList.contains('hidden')) {
+          const btnBack = document.getElementById('btn-name-back');
+          if (btnBack) { btnBack.click(); return; }
+        }
+        if (genderModal && !genderModal.classList.contains('hidden')) {
+          const btnBack = document.getElementById('btn-gender-back');
+          if (btnBack) { btnBack.click(); return; }
+        }
+
         this._closeAllModals();
         return;
       }
@@ -84,8 +111,12 @@ class UIController {
       });
     }
 
-    // 7. 창 크기 변경 시 16:9 비율 유지
+    // 7. 창 크기 / 뷰포트 변경 시 반응형 재계산
     window.addEventListener('resize', () => this.resizeGame());
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => this.resizeGame());
+      window.visualViewport.addEventListener('scroll', () => this.resizeGame());
+    }
   }
 
   _handleAdvanceDialogue() {
@@ -232,25 +263,36 @@ class UIController {
     if (this.renderer) this.renderer.hideGalleryModal();
   }
 
-  // ─── 16:9 반응형 ───────────────────────────────────────────────────────────
+  // ─── 반응형 크기 조절 (PC 16:9 유지 / 모바일 세로 100dvh 분할 레이아웃) ────
 
   resizeGame() {
     const wrapper = document.getElementById('game-wrapper');
     if (!wrapper) return;
 
     const winW = window.innerWidth;
-    const winH = window.innerHeight;
-    const targetRatio = 16 / 9;
+    const winH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    let w = winW;
-    let h = winW / targetRatio;
+    // 모바일 세로 모드 판별 (너비 768px 이하 또는 세로가 더 긴 경우)
+    const isPortrait = winW <= 768 || winW < winH;
 
-    if (h > winH) {
-      h = winH;
-      w = winH * targetRatio;
+    if (isPortrait) {
+      wrapper.style.width = '100%';
+      wrapper.style.height = `${winH}px`;
+      wrapper.style.aspectRatio = 'unset';
+    } else {
+      // PC / 가로 모드 (16:9 비율 유지)
+      const targetRatio = 16 / 9;
+      let w = winW;
+      let h = winW / targetRatio;
+
+      if (h > winH) {
+        h = winH;
+        w = winH * targetRatio;
+      }
+
+      wrapper.style.width = `${Math.floor(w)}px`;
+      wrapper.style.height = `${Math.floor(h)}px`;
+      wrapper.style.aspectRatio = '16 / 9';
     }
-
-    wrapper.style.width = `${Math.floor(w)}px`;
-    wrapper.style.height = `${Math.floor(h)}px`;
   }
 }

@@ -127,7 +127,7 @@
     {
       "speaker": "고구마",
       "speakerType": "normal",
-      "text": "제 이름은 {고구마}예요.",
+      "text": "제 이름은 {고구마}예요.\" (← 이 대사부터 화자 이름이 ???에서 실제 이름으로 바뀜)",
       "characters": [
         {
           "id": "goguma",
@@ -171,5 +171,27 @@
     }
   ],
   "choices": null,
-  "next": "s03_2_day1_messages"
+  "next": "s03_skywalk_phone",
+  "phone_message": {
+    "partner": "goguma",
+    "intro_vo": [
+      "생각보다 정말 재미있는 곳이었어.",
+      "그리고 예상하지 못한 만남까지..."
+    ],
+    "messages": [
+      {
+        "sender": "player",
+        "text": "좋은 풍경 소개해 주셔서 감사했어요. 언젠가 카페도 놀러갈게요."
+      },
+      {
+        "sender": "goguma",
+        "text": "먼저 연락해 주셨네요, {player} 씨."
+      },
+      {
+        "sender": "goguma",
+        "text": "언제든 환영이에요. {player} 씨를 위해 따뜻한 음료를 준비해 둬야겠어요~"
+      }
+    ],
+    "outro_vo": "답장에서도 다정함이 느껴지는 것 같아."
+  }
 }

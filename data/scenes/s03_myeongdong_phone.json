@@ -1,0 +1,37 @@
+{
+  "id": "s03_myeongdong_phone",
+  "title": "Day 1 — 첫 만남 (명동 닭갈비 골목 선택 시, 만나는 인물: 양념) — 메시지",
+  "type": "phone_message",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "partner": "yangnyeom",
+  "intro_vo": [
+    "생각보다 정말 재미있는 곳이었어.",
+    "그리고 예상하지 못한 만남까지..."
+  ],
+  "messages": [
+    {
+      "sender": "player",
+      "text": "덕분에 추천해주신 식당에서 잘 먹고 가요~"
+    },
+    {
+      "sender": "yangnyeom",
+      "text": "뭐야, 아까 그 사람 맞죠?"
+    },
+    {
+      "sender": "yangnyeom",
+      "text": "진짜 연락까지 하실 줄은 몰랐는데."
+    },
+    {
+      "sender": "yangnyeom",
+      "text": "다음에는 더 괜찮은 곳도 알려줄 수 있어요."
+    },
+    {
+      "sender": "yangnyeom",
+      "text": "궁금하시면 연락하세요."
+    }
+  ],
+  "outro_vo": "말투는... 한결같네.",
+  "next": "s03_2_day1_messages"
+}

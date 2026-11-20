@@ -288,33 +288,86 @@ class Renderer {
     }, duration);
   }
 
-  // ─── 휴대폰 메시지 말풍선 UI ────────────────────────────────────────────────
+  // ─── 휴대폰 메시지 말풍선 UI (말풍선 순차 표시) ──────────────────────────
 
   showPhoneMessages(partnerName, messageList, onClose) {
-    if (!this.phoneOverlay || !this.phoneMessagesList) return;
+    this.startPhoneMessageSequence(partnerName, messageList, onClose);
+  }
+
+  startPhoneMessageSequence(partnerName, messageList, onClose) {
+    if (!this.phoneOverlay || !this.phoneMessagesList) {
+      if (typeof onClose === 'function') onClose();
+      return;
+    }
 
     if (this.phonePartnerName) this.phonePartnerName.textContent = partnerName;
     this.phoneMessagesList.innerHTML = '';
+    this.phoneOverlay.classList.remove('hidden');
 
-    messageList.forEach(m => {
-      const bubble = document.createElement('div');
-      const isMe = m.sender === 'player' || m.sender === '주인공';
-      bubble.className = `phone-bubble ${isMe ? 'bubble-me' : 'bubble-other'}`;
-      bubble.innerHTML = `
-        <div class="bubble-sender">${m.senderName || m.sender}</div>
-        <div class="bubble-text">${m.text}</div>
-      `;
-      this.phoneMessagesList.appendChild(bubble);
-    });
+    let currentMsgIdx = 0;
+    let isFinished = false;
+
+    const appendNextBubble = () => {
+      if (currentMsgIdx < messageList.length) {
+        const m = messageList[currentMsgIdx];
+        const bubble = document.createElement('div');
+        const isMe = m.sender === 'player' || m.sender === '주인공';
+        bubble.className = `phone-bubble ${isMe ? 'bubble-me' : 'bubble-other'}`;
+        const senderLabel = isMe ? (m.senderName || '나') : (m.senderName || partnerName);
+        bubble.innerHTML = `
+          <div class="bubble-sender">${senderLabel}</div>
+          <div class="bubble-text">${m.text}</div>
+        `;
+        this.phoneMessagesList.appendChild(bubble);
+        this.phoneMessagesList.scrollTop = this.phoneMessagesList.scrollHeight;
+        currentMsgIdx++;
+      } else {
+        // 모든 말풍선 출력 후 다음 입력 시 닫기
+        cleanupAndClose();
+      }
+    };
+
+    const cleanupAndClose = () => {
+      if (isFinished) return;
+      isFinished = true;
+      this.hidePhoneMessages();
+      this.phoneOverlay.removeEventListener('click', handleOverlayClick);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (typeof onClose === 'function') onClose();
+    };
+
+    const handleOverlayClick = (e) => {
+      if (e.target === this.btnClosePhone || this.btnClosePhone?.contains(e.target)) {
+        return;
+      }
+      e.stopPropagation();
+      appendNextBubble();
+    };
+
+    const handleKeyDown = (e) => {
+      if (['Space', 'Enter'].includes(e.code)) {
+        e.preventDefault();
+        e.stopPropagation();
+        appendNextBubble();
+      } else if (e.code === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        cleanupAndClose();
+      }
+    };
+
+    this.phoneOverlay.addEventListener('click', handleOverlayClick);
+    window.addEventListener('keydown', handleKeyDown);
 
     if (this.btnClosePhone) {
-      this.btnClosePhone.onclick = () => {
-        this.hidePhoneMessages();
-        if (typeof onClose === 'function') onClose();
+      this.btnClosePhone.onclick = (e) => {
+        e.stopPropagation();
+        cleanupAndClose();
       };
     }
 
-    this.phoneOverlay.classList.remove('hidden');
+    // 첫 말풍선 1개 바로 표시
+    appendNextBubble();
   }
 
   hidePhoneMessages() {
@@ -479,12 +532,13 @@ class Renderer {
 
   // ─── 성별 / 이름 모달 ──────────────────────────────────────────────────────
 
-  showGenderModal(onSelect) {
+  showGenderModal(onSelect, onBack) {
     if (!this.genderModal) return;
     this.genderModal.classList.remove('hidden');
 
     const btnFemale = document.getElementById('btn-gender-female');
     const btnMale = document.getElementById('btn-gender-male');
+    const btnBack = document.getElementById('btn-gender-back');
 
     if (btnFemale) {
       btnFemale.onclick = () => {
@@ -498,15 +552,23 @@ class Renderer {
         if (typeof onSelect === 'function') onSelect('male');
       };
     }
+    if (btnBack) {
+      btnBack.onclick = (e) => {
+        e.stopPropagation();
+        this.genderModal.classList.add('hidden');
+        if (typeof onBack === 'function') onBack();
+      };
+    }
   }
 
-  showNameModal(onConfirm) {
+  showNameModal(onConfirm, onBack, initialName = '') {
     if (!this.nameModal) return;
     const input = document.getElementById('input-player-name');
     const errorMsg = document.getElementById('name-error-msg');
     const confirmBtn = document.getElementById('btn-name-confirm');
+    const backBtn = document.getElementById('btn-name-back');
 
-    if (input) input.value = '';
+    if (input) input.value = initialName || '';
     if (errorMsg) errorMsg.classList.add('hidden');
     this.nameModal.classList.remove('hidden');
 
@@ -521,6 +583,13 @@ class Renderer {
     };
 
     if (confirmBtn) confirmBtn.onclick = handleConfirm;
+    if (backBtn) {
+      backBtn.onclick = (e) => {
+        e.stopPropagation();
+        this.nameModal.classList.add('hidden');
+        if (typeof onBack === 'function') onBack(input ? input.value : '');
+      };
+    }
     if (input) {
       input.onkeydown = (e) => {
         if (e.key === 'Enter') handleConfirm();

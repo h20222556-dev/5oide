@@ -123,7 +123,7 @@ const gameConfig = {
       "messages_each_visit": true
     },
     "day2": {
-      "meet_all_three": false
+      "meet_all_three": true
     }
   },
   "saveSlots": 3,
@@ -268,6 +268,80 @@ while (i < lines.length) {
       characters: []
     });
     i++;
+    continue;
+  }
+
+  // 휴대폰 메시지 블록 감지: 메시지 A (레고랜드 → 닭갈비):
+  const msgHeaderMatch = line.match(/^메시지\s+([A-C])\s*\(([^→]+)→\s*([^)]+)\):/);
+  if (msgHeaderMatch) {
+    const rawTarget = msgHeaderMatch[3].trim();
+    let partnerId = "dakgalbi";
+    if (rawTarget.includes("닭갈비")) partnerId = "dakgalbi";
+    else if (rawTarget.includes("고구마")) partnerId = "goguma";
+    else if (rawTarget.includes("양념")) partnerId = "yangnyeom";
+
+    // 직전 대사 2개가 intro_vo ("생각보다...", "그리고 예상하지 못한...")라면 추출
+    const introVo = [];
+    while (currentScene.dialogues.length > 0 && currentScene.dialogues[currentScene.dialogues.length - 1].speakerType === "vo") {
+      const lastVo = currentScene.dialogues.pop();
+      introVo.unshift(lastVo.text);
+      if (introVo.length >= 2) break;
+    }
+    if (introVo.length === 0) {
+      introVo.push("생각보다 정말 재미있는 곳이었어.", "그리고 예상하지 못한 만남까지...");
+    }
+
+    const messages = [];
+    let outroVo = "";
+    i++;
+    while (i < lines.length) {
+      const msgLine = lines[i].trim();
+      if (!msgLine || msgLine.startsWith("#") || msgLine.startsWith("CHOICE") || msgLine.startsWith("연출:")) {
+        break;
+      }
+      const mMatch = msgLine.match(/^-\s*([^:]+):\s*"?(.*?)"?$/);
+      if (mMatch) {
+        const senderRaw = mMatch[1].trim();
+        const text = mMatch[2].replace(/^"|"$/g, "").trim();
+        if (senderRaw.includes("V.O.") || senderRaw.includes("속마음")) {
+          outroVo = text;
+          i++;
+          break;
+        } else if (senderRaw.includes("주인공")) {
+          messages.push({ sender: "player", text: text });
+        } else {
+          messages.push({ sender: partnerId, text: text });
+        }
+      }
+      i++;
+    }
+
+    const phoneSceneId = `${currentScene.id}_phone`;
+    const phoneScene = {
+      id: phoneSceneId,
+      title: `${currentScene.title} — 메시지`,
+      type: "phone_message",
+      background: "bg_black",
+      time: "낮",
+      bgm: "bgm_main",
+      partner: partnerId,
+      intro_vo: introVo,
+      messages: messages,
+      outro_vo: outroVo,
+      next: "s03_2_day1_messages"
+    };
+
+    currentScene.next = phoneSceneId;
+    currentScene.phone_message = {
+      partner: partnerId,
+      intro_vo: introVo,
+      messages: messages,
+      outro_vo: outroVo
+    };
+
+    allScenes.push(phoneScene);
+    report.scenes.push({ id: phoneScene.id, title: phoneScene.title, dialogues: 0 });
+    report.sceneCount++;
     continue;
   }
 
@@ -466,9 +540,12 @@ for (const ed of endingScenes) {
 // 5. 각 씬을 data/scenes/{id}.json 파일로 저장
 const defaultNextMap = {
   "s01_prologue": "s02_place_select",
-  "s03_lego": "s03_2_day1_messages",
-  "s03_skywalk": "s03_2_day1_messages",
-  "s03_myeongdong": "s03_2_day1_messages",
+  "s03_lego": "s03_lego_phone",
+  "s03_lego_phone": "s03_2_day1_messages",
+  "s03_skywalk": "s03_skywalk_phone",
+  "s03_skywalk_phone": "s03_2_day1_messages",
+  "s03_myeongdong": "s03_myeongdong_phone",
+  "s03_myeongdong_phone": "s03_2_day1_messages",
   "s06_day1_end": "s07_day2",
   "s07_dakgalbi": "s08_day2_end",
   "s07_yangnyeom": "s08_day2_end",

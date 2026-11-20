@@ -28,8 +28,12 @@ class SaveManager {
       troubleStates: { ...(gameState.troubleStates || {}) },
       hiddenUnlocked: !!gameState.hiddenUnlocked,
       day1Visited: [...(gameState.day1Visited || [])],
+      day2Visited: [...(gameState.day2Visited || [])],
       day2Target: gameState.day2Target || null,
       chosenSeat: gameState.chosenSeat || null,
+      revealedSpeakers: Array.isArray(gameState.revealedSpeakers)
+        ? gameState.revealedSpeakers
+        : Array.from(gameState.revealedSpeakers || []),
       seenDialogues: Array.isArray(gameState.seenDialogues)
         ? gameState.seenDialogues
         : [...(gameState.seenDialogues ?? [])],
