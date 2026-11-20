@@ -66,40 +66,43 @@
     "options": [
       {
         "key": "A",
-        "text": "\"아무 말 안 해도 옆에 있을게요\" — 효과: 크게↑ / 고민이 풀리기 시작",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"아무 말 안 해도 옆에 있을게요\"",
+        "next": "s12_dakgalbi",
+        "effectDesc": "크게↑ / 고민이 풀리기 시작",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 6,
+          "scale": "크게↑",
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "B",
-        "text": "\"홍보대사로서의 모습도 정말 좋아해요\" — 효과: ↑ / 고민은 그대로",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"홍보대사로서의 모습도 정말 좋아해요\"",
+        "next": "s12_dakgalbi",
+        "effectDesc": "↑ / 고민은 그대로",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 4,
+          "scale": "↑",
+          "troubleState": "고민은 그대로",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "C",
-        "text": "\"그건 천천히 생각해도 돼요\" — 효과: 소폭↑",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"그건 천천히 생각해도 돼요\"",
+        "next": "s12_dakgalbi",
+        "effectDesc": "소폭↑",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 2,
+          "scale": "소폭↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }

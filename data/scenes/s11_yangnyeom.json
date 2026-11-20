@@ -72,40 +72,43 @@
     "options": [
       {
         "key": "A",
-        "text": "\"솔직한 게 좋아요. 속마음은 다 보이던데요\" — 효과: 크게↑ / 고민이 풀리기 시작",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"솔직한 게 좋아요. 속마음은 다 보이던데요\"",
+        "next": "s12_yangnyeom",
+        "effectDesc": "크게↑ / 고민이 풀리기 시작",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 6,
+          "scale": "크게↑",
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "B",
-        "text": "\"누가 직접 상처받았다고 말했어요?\" — 효과: ↑ / 대화가 이어짐",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"누가 직접 상처받았다고 말했어요?\"",
+        "next": "s12_yangnyeom",
+        "effectDesc": "↑ / 대화가 이어짐",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 4,
+          "scale": "↑",
+          "troubleState": "대화가 이어짐",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "C",
-        "text": "\"조금만 부드럽게 말해보면 어때요?\" — 효과: 소폭↓ / 고민 자극 ⚠",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"조금만 부드럽게 말해보면 어때요?\"",
+        "next": "s12_yangnyeom",
+        "effectDesc": "소폭↓ / 고민 자극 ⚠",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": -2,
+          "scale": "소폭↓",
+          "troubleState": "고민 자극",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }

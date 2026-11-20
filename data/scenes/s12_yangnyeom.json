@@ -65,40 +65,43 @@
     "options": [
       {
         "key": "A",
-        "text": "\"세게 나와도 괜찮으니까 말해봐요\" — 효과: 크게↑ / 고민이 풀리기 시작",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"세게 나와도 괜찮으니까 말해봐요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "크게↑ / 고민이 풀리기 시작",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 6,
+          "scale": "크게↑",
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "B",
-        "text": "\"천천히 말해도 돼요\" — 효과: ↑",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"천천히 말해도 돼요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "↑",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 4,
+          "scale": "↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "C",
-        "text": "\"말하기 싫으면 안 해도 돼요\" — 효과: 소폭↓",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"말하기 싫으면 안 해도 돼요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "소폭↓",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": -2,
+          "scale": "소폭↓",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }

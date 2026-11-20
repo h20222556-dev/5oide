@@ -53,7 +53,8 @@
           "score": 0,
           "scale": null,
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
@@ -66,7 +67,8 @@
           "score": 0,
           "scale": null,
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
@@ -79,7 +81,8 @@
           "score": 0,
           "scale": null,
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }

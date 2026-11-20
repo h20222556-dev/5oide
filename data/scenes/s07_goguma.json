@@ -183,13 +183,14 @@
       {
         "key": "A",
         "text": "\"가끔은 자신을 먼저 챙겨도 괜찮아요.\"",
-        "next": null,
+        "next": "s08_day2_end",
         "effectDesc": "고구마 호감 상승 표시 (+)",
         "effects": {
           "score": 3,
           "scale": "(+)",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": "goguma",
+          "characters": null
         },
         "followUp": [
           {

@@ -392,11 +392,16 @@ class Renderer {
       const btn = document.createElement('button');
       btn.className = `choice-btn ${opt.disabled ? 'disabled-choice' : ''}`;
 
+      const cleanText = (opt.text || '')
+        .replace(/\s*—\s*효과\s*:.*$/, '')
+        .replace(/\s*\(효과\s*:.*?\)/, '')
+        .trim();
+
       if (opt.disabled) {
-        btn.innerHTML = `${opt.text} <span class="locked-badge">[${opt.lockedReason || '잠김'}]</span>`;
+        btn.innerHTML = `${cleanText} <span class="locked-badge">[${opt.lockedReason || '잠김'}]</span>`;
         btn.disabled = true;
       } else {
-        btn.textContent = opt.text;
+        btn.textContent = cleanText;
         btn.addEventListener('click', () => {
           this.hideChoices();
           if (typeof onSelect === 'function') onSelect(idx);

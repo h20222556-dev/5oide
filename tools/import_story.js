@@ -466,13 +466,48 @@ while (i < lines.length) {
           j++;
         }
 
-        // 효과 파싱 (크게↑, ↑, 소폭↑, 소폭↓, (+), 고민 상태)
-        const parsedEffects = { score: 0, scale: null, troubleState: null, targetChar: null };
-        if (effectText.includes('크게↑')) { parsedEffects.score = 6; parsedEffects.scale = '크게↑'; }
-        else if (effectText.includes('소폭↑')) { parsedEffects.score = 2; parsedEffects.scale = '소폭↑'; }
-        else if (effectText.includes('소폭↓')) { parsedEffects.score = -2; parsedEffects.scale = '소폭↓'; }
-        else if (effectText.includes('↑')) { parsedEffects.score = 4; parsedEffects.scale = '↑'; }
-        else if (effectText.includes('(+)')) { parsedEffects.score = 3; parsedEffects.scale = '(+)'; }
+        // 선택지 문구 자체에 '— 효과:' 또는 '(효과:)'가 포함되어 있는 경우 분리 및 제거
+        if (optText.includes('— 효과:') || optText.includes('—효과:') || optText.includes('— 효과 :')) {
+          const parts = optText.split(/—\s*효과\s*:/);
+          optText = parts[0].trim();
+          if (!effectText) effectText = parts[1].trim();
+        } else if (optText.includes('(효과:')) {
+          const m = optText.match(/\(효과:\s*(.*?)\)/);
+          if (m) {
+            if (!effectText) effectText = m[1].trim();
+            optText = optText.replace(/\(효과:.*?\)/, '').trim();
+          }
+        }
+        optText = optText.replace(/\s*—\s*효과:.*$/, '').trim();
+
+        // 효과 파싱 (크게↑, ↑, 소폭↑, 소폭↓, (+), 고민 상태, 특정 캐릭터)
+        const parsedEffects = { score: 0, scale: null, troubleState: null, targetChar: null, characters: null };
+        let baseScore = 0;
+        let scale = null;
+        if (effectText.includes('크게↑')) { baseScore = 6; scale = '크게↑'; }
+        else if (effectText.includes('소폭↑')) { baseScore = 2; scale = '소폭↑'; }
+        else if (effectText.includes('소폭↓')) { baseScore = -2; scale = '소폭↓'; }
+        else if (effectText.includes('↑')) { baseScore = 4; scale = '↑'; }
+        else if (effectText.includes('(+)')) { baseScore = 3; scale = '(+)'; }
+
+        parsedEffects.score = baseScore;
+        parsedEffects.scale = scale;
+
+        // 타깃 인물 추출 (닭갈비, 양념, 고구마, 볶음밥)
+        const targetChars = [];
+        if (effectText.includes('닭갈비') || effectText.includes('닭고기')) targetChars.push('dakgalbi');
+        if (effectText.includes('양념')) targetChars.push('yangnyeom');
+        if (effectText.includes('고구마')) targetChars.push('goguma');
+        if (effectText.includes('볶음밥')) targetChars.push('bokkeumbap');
+
+        if (targetChars.length === 1) {
+          parsedEffects.targetChar = targetChars[0];
+        } else if (targetChars.length > 1) {
+          parsedEffects.characters = {};
+          for (const tc of targetChars) {
+            parsedEffects.characters[tc] = baseScore;
+          }
+        }
 
         if (effectText.includes('고민이 풀리기 시작')) parsedEffects.troubleState = '고민이 풀리기 시작';
         else if (effectText.includes('고민은 그대로')) parsedEffects.troubleState = '고민은 그대로';
@@ -566,6 +601,14 @@ const sceneFileList = [];
 for (const scene of allScenes) {
   if (!scene.next && defaultNextMap[scene.id]) {
     scene.next = defaultNextMap[scene.id];
+  }
+  // 선택지 옵션이 개별 next를 가지고 있지 않은 경우, 씬의 default next를 상속 (갈림길 선택지 제외)
+  if (scene.choices && scene.choices.options) {
+    for (const opt of scene.choices.options) {
+      if (!opt.next && scene.next && !['s07_day2', 's10_seat', 's02_place_select', 's15_final_choice'].includes(scene.id)) {
+        opt.next = scene.next;
+      }
+    }
   }
   const fileName = `${scene.id}.json`;
   fs.writeFileSync(path.join(scenesDir, fileName), JSON.stringify(scene, null, 2), 'utf8');

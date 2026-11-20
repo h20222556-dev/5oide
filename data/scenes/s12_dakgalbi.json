@@ -64,40 +64,43 @@
     "options": [
       {
         "key": "A",
-        "text": "\"방금도 지금도, 둘 다 {닭갈비} 씨 같아요\" — 효과: 크게↑ / 고민이 풀리기 시작",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"방금도 지금도, 둘 다 {닭갈비} 씨 같아요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "크게↑ / 고민이 풀리기 시작",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 6,
+          "scale": "크게↑",
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "B",
-        "text": "\"힘들면 쉬어도 돼요\" — 효과: ↑",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"힘들면 쉬어도 돼요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "↑",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 4,
+          "scale": "↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "C",
-        "text": "\"역시 대단하세요\" — 효과: 소폭↑ / 고민은 오히려 깊어짐",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"역시 대단하세요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "소폭↑ / 고민은 오히려 깊어짐",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 2,
+          "scale": "소폭↑",
+          "troubleState": "고민은 오히려 깊어짐",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }

@@ -227,53 +227,60 @@
     "options": [
       {
         "key": "A",
-        "text": "\"처음부터 같이 간다고 말해줬으면 좋았잖아요\" 하고 웃는다 — 효과: 양념, 닭갈비 호감 소폭↑ (+)",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"처음부터 같이 간다고 말해줬으면 좋았잖아요\" 하고 웃는다",
+        "next": "s10_seat",
+        "effectDesc": "양념, 닭갈비 호감 소폭↑ (+)",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 2,
+          "scale": "소폭↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": {
+            "dakgalbi": 2,
+            "yangnyeom": 2
+          }
         },
         "followUp": []
       },
       {
         "key": "B",
-        "text": "\"세 분이 친구라서 신기해요\" — 효과: 고구마 호감 소폭↑ (+)",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"세 분이 친구라서 신기해요\"",
+        "next": "s10_seat",
+        "effectDesc": "고구마 호감 소폭↑ (+)",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 2,
+          "scale": "소폭↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": "goguma",
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "C",
-        "text": "\"제가 같이 가도 괜찮은 거예요?\" 하고 조심스레 묻는다 — 효과: 고구마 호감 소폭↑ (+)",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"제가 같이 가도 괜찮은 거예요?\" 하고 조심스레 묻는다",
+        "next": "s10_seat",
+        "effectDesc": "고구마 호감 소폭↑ (+)",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 2,
+          "scale": "소폭↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": "goguma",
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "D",
-        "text": "웃으며 조용히 지켜본다 — 효과: 변화 적음",
-        "next": null,
-        "effectDesc": "",
+        "text": "웃으며 조용히 지켜본다",
+        "next": "s10_seat",
+        "effectDesc": "변화 적음",
         "effects": {
           "score": 0,
           "scale": null,
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }

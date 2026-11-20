@@ -264,13 +264,14 @@
       {
         "key": "A",
         "text": "\"저는 지금의 {닭갈비} 씨가 좋아요.\"",
-        "next": null,
+        "next": "s08_day2_end",
         "effectDesc": "닭갈비 호감 상승 표시 (+)",
         "effects": {
           "score": 3,
           "scale": "(+)",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": "dakgalbi",
+          "characters": null
         },
         "followUp": [
           {
