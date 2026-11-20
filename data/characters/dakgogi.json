@@ -1,0 +1,15 @@
+{
+  "id": "dakgogi",
+  "name": "닭고기",
+  "color": "#F4D03F",
+  "isHidden": false,
+  "statKey": "affinity",
+  "defaultStat": 0,
+  "description": "활발하고 유쾌한 성격의 캐릭터",
+  "expressions": [
+    { "id": "normal", "file": "dakgogi_normal.png" },
+    { "id": "happy",  "file": "dakgogi_happy.png"  },
+    { "id": "sad",    "file": "dakgogi_sad.png"    }
+  ],
+  "endingId": "ending_dakgogi_yangnyeom"
+}

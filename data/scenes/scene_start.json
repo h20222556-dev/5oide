@@ -1,0 +1,64 @@
+{
+  "id": "scene_start",
+  "chapter": 1,
+  "type": "normal",
+  "background": "bg_park",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": null,
+      "text": "테스트 대사 1",
+      "characters": []
+    },
+    {
+      "speaker": "goguma",
+      "text": "테스트 대사 2",
+      "characters": [
+        { "id": "goguma", "position": "left", "expression": "normal" }
+      ]
+    },
+    {
+      "speaker": "dakgogi",
+      "text": "테스트 대사 3",
+      "characters": [
+        { "id": "dakgogi", "position": "right", "expression": "normal" }
+      ]
+    }
+  ],
+  "choices": {
+    "question": "누구에게 말을 걸까?",
+    "options": [
+      {
+        "text": "고구마에게 말 걸기",
+        "effects": {
+          "goguma": 5,
+          "dakgogi": 0,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch1_a"
+      },
+      {
+        "text": "닭고기에게 말 걸기",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": 5,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch1_b"
+      },
+      {
+        "text": "그냥 돌아다님",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": 0,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch2"
+      }
+    ]
+  }
+}

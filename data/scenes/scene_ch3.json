@@ -1,0 +1,21 @@
+{
+  "id": "scene_ch3",
+  "chapter": 1,
+  "type": "choice_ending",
+  "background": "bg_sunset",
+  "time": "황혼",
+  "bgm": "bgm_ending",
+  "dialogues": [
+    {
+      "speaker": null,
+      "text": "테스트 대사 1",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "text": "테스트 대사 2",
+      "characters": []
+    }
+  ],
+  "choices": null
+}

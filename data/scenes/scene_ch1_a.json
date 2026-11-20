@@ -1,0 +1,56 @@
+{
+  "id": "scene_ch1_a",
+  "chapter": 1,
+  "type": "normal",
+  "background": "bg_cafe",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "goguma",
+      "text": "테스트 대사 1",
+      "characters": [
+        { "id": "goguma", "position": "center", "expression": "happy" }
+      ]
+    },
+    {
+      "speaker": null,
+      "text": "테스트 대사 2",
+      "characters": [
+        { "id": "goguma", "position": "center", "expression": "normal" }
+      ]
+    },
+    {
+      "speaker": "goguma",
+      "text": "테스트 대사 3",
+      "characters": [
+        { "id": "goguma", "position": "center", "expression": "happy" }
+      ]
+    }
+  ],
+  "choices": {
+    "question": "어떻게 할까?",
+    "options": [
+      {
+        "text": "같이 먹기",
+        "effects": {
+          "goguma": 6,
+          "dakgogi": 0,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch2"
+      },
+      {
+        "text": "나중에",
+        "effects": {
+          "goguma": -2,
+          "dakgogi": 0,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch2"
+      }
+    ]
+  }
+}

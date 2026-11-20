@@ -1,0 +1,23 @@
+{
+  "id": "ending_dakgalbi",
+  "title": "닭갈비 엔딩",
+  "type": "ending",
+  "background": "bg_sunset_pier",
+  "time": "황혼",
+  "bgm": "bgm_ending",
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "[누락] 엔딩 원고 필요 (원문에 없는 대사로, 원고 수급 후 data 파일에 입력)",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    }
+  ],
+  "choices": null
+}

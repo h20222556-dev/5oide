@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오이데 (춘천에서 5명의 이상한 데이트)</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       1. 타이틀 화면
+  ══════════════════════════════════════ -->
+  <div id="screen-title" class="screen active">
+    <div id="title-bg"></div>
+    <div id="title-content">
+      <h1 id="title-game-title">춘천에서 5명의<br>이상한 데이트<span class="title-sub">(오이데)</span></h1>
+      <nav id="title-menu">
+        <button class="title-btn" id="btn-new-game">새로 시작</button>
+        <button class="title-btn" id="btn-title-load">불러오기</button>
+        <button class="title-btn" id="btn-title-gallery">기록실</button>
+        <button class="title-btn" id="btn-title-settings">설정</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       2. 게임 화면
+  ══════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+    <div id="game-wrapper">
+
+      <!-- 배경 이미지 레이어 -->
+      <div id="game-background">
+        <span id="bg-placeholder-text">배경 없음</span>
+      </div>
+
+      <!-- 캐릭터 입화 레이어 (홍조 오버레이 지원) -->
+      <div id="characters-layer">
+        <div class="char-slot left" id="char-slot-left"></div>
+        <div class="char-slot center" id="char-slot-center"></div>
+        <div class="char-slot right" id="char-slot-right"></div>
+      </div>
+
+      <!-- 자막 오버레이 -->
+      <div id="subtitle-overlay" class="hidden">
+        <div id="subtitle-text"></div>
+      </div>
+
+      <!-- 휴대폰 메시지 화면 UI (채팅 말풍선) -->
+      <div id="phone-message-overlay" class="hidden">
+        <div class="phone-screen">
+          <div class="phone-header">
+            <span class="phone-header-title" id="phone-partner-name">메시지</span>
+            <button class="phone-close-btn" id="btn-close-phone">✕</button>
+          </div>
+          <div class="phone-messages" id="phone-messages-list"></div>
+        </div>
+      </div>
+
+      <!-- 시간 표기 (우상단) -->
+      <div id="time-label"></div>
+
+      <!-- 호감도 게이지 (우상단) -->
+      <div id="affinity-bar"></div>
+
+      <!-- 상단 게임 메뉴바 -->
+      <div id="game-menu-bar">
+        <button class="menu-btn" id="btn-save">세이브</button>
+        <button class="menu-btn" id="btn-load">불러오기</button>
+        <button class="menu-btn" id="btn-settings">설정</button>
+        <button class="menu-btn" id="btn-to-title">타이틀</button>
+        <button class="menu-btn" id="btn-auto">자동</button>
+        <button class="menu-btn" id="btn-skip">스킵</button>
+      </div>
+
+      <!-- 챕터 타이틀 오버레이 -->
+      <div id="chapter-title-overlay" class="hidden">
+        <div id="chapter-title-text"></div>
+      </div>
+
+      <!-- 대사창 -->
+      <div id="dialogue-box">
+        <div id="speaker-name"></div>
+        <div id="dialogue-text"></div>
+        <div id="dialogue-arrow">▼</div>
+      </div>
+
+      <!-- 선택지 컨테이너 -->
+      <div id="choices-container" class="hidden"></div>
+
+    </div><!-- /#game-wrapper -->
+  </div><!-- /#screen-game -->
+
+  <!-- ══════════════════════════════════════
+       3. 성별 선택 모달
+  ══════════════════════════════════════ -->
+  <div id="modal-gender" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>성별 / 데이트 상대 선택</h2>
+      </div>
+      <p id="gender-prompt" class="modal-desc">만나고 싶은 인물들의 성별을 선택하세요.</p>
+      <div class="gender-options">
+        <button class="modal-btn choice-btn-large" id="btn-gender-female" data-gender="female">
+          여성 등장인물과 데이트<br>
+          <span class="sub-desc">(다곡희, 양연미, 고규미, 박복은)</span>
+        </button>
+        <button class="modal-btn choice-btn-large" id="btn-gender-male" data-gender="male">
+          남성 등장인물과 데이트<br>
+          <span class="sub-desc">(다고길, 양연우, 고구민, 박복검)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       4. 이름 입력 모달
+  ══════════════════════════════════════ -->
+  <div id="modal-name" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>주인공 이름 입력</h2>
+      </div>
+      <p class="modal-desc">춘천으로 여행을 떠날 당신의 이름을 입력해 주세요. (1~8글자)</p>
+      <div class="name-input-group">
+        <input type="text" id="input-player-name" maxlength="8" placeholder="이름을 입력하세요" autocomplete="off">
+        <div id="name-error-msg" class="error-msg hidden">공백 제외 1~8자로 입력해 주세요.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn" id="btn-name-confirm">여행 시작하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       5. 세이브/로드 모달
+  ══════════════════════════════════════ -->
+  <div id="modal-save" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-save-title">세이브</h2>
+        <button class="modal-close" id="btn-close-save">✕</button>
+      </div>
+      <div id="save-slots"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       6. 설정 모달
+  ══════════════════════════════════════ -->
+  <div id="modal-settings" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>설정</h2>
+        <button class="modal-close" id="btn-close-settings">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-row">
+          <label for="slider-text-speed">글자 속도</label>
+          <input type="range" id="slider-text-speed" min="10" max="150" step="10" value="40">
+          <span id="label-text-speed">40ms</span>
+        </div>
+        <div class="settings-row">
+          <label for="slider-bgm">BGM 볼륨</label>
+          <input type="range" id="slider-bgm" min="0" max="1" step="0.05" value="0.5">
+          <span id="label-bgm">50%</span>
+        </div>
+        <div class="settings-row">
+          <label for="slider-sfx">효과음 볼륨</label>
+          <input type="range" id="slider-sfx" min="0" max="1" step="0.05" value="0.7">
+          <span id="label-sfx">70%</span>
+        </div>
+        <div class="settings-row">
+          <label for="toggle-affinity">호감도 팝업/게이지 표시</label>
+          <input type="checkbox" id="toggle-affinity" checked>
+        </div>
+        <div class="settings-actions">
+          <button class="modal-btn" id="btn-settings-save">저장</button>
+          <button class="modal-btn secondary" id="btn-settings-cancel">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       7. 기록실 모달
+  ══════════════════════════════════════ -->
+  <div id="modal-gallery" class="modal-overlay hidden">
+    <div class="modal-content modal-gallery-content">
+      <div class="modal-header">
+        <h2>기록실 — 엔딩 컬렉션</h2>
+        <button class="modal-close" id="btn-close-gallery">✕</button>
+      </div>
+      <div id="gallery-grid"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       8. 개발자 디버그 패널 (D 키로 토글)
+  ══════════════════════════════════════ -->
+  <div id="debug-panel">
+    <div id="debug-content">
+      <div style="font-weight:bold;color:#f1c40f;">[ 개발자 디버그 패널 (D키) ]</div>
+      <div id="debug-stats"></div>
+      <div style="margin-top:8px;">
+        <label for="debug-scene-select" style="font-size:0.8em;color:#aaa;">장면 점프:</label>
+        <select id="debug-scene-select" style="width:100%;font-size:0.8em;padding:2px;"></select>
+        <button id="btn-debug-jump" style="width:100%;margin-top:4px;font-size:0.8em;cursor:pointer;">해당 장면으로 이동</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

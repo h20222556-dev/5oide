@@ -1,0 +1,19 @@
+{
+  "id": "s14_pier_sunset_b",
+  "title": "분기 B — 히든 조건 미충족",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "볶음밥은 나타나지 않는다. 세 명이 \"오늘 즐거웠어\" 하고 인사를 나누고, 해질녘의 선착장 앞에서 주인공이 마음을 정하는 순간이 온다. 화면이 최종 선택으로 넘어간다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s15_final_choice"
+}

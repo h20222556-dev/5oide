@@ -1,0 +1,11 @@
+{
+  "id": "s12_namiseom",
+  "title": "남이섬",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [],
+  "choices": null
+}

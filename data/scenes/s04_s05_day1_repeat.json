@@ -1,0 +1,18 @@
+{
+  "id": "s04_s05_day1_repeat",
+  "title": "Day 1 — 다음 장소, 마지막 장소",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [
+    {
+      "speaker": "⚠ 메시지 장면(s03_2)과 \"다음 장소 선택\"이 장소마다 반복되는지는 원문에 적혀 있지 않음. 아래처럼 처리하는 것을 가정",
+      "speakerType": "normal",
+      "text": "두 번째 장소 뒤에는 메시지 + 남은 한 곳 선택, 마지막 장소 뒤에는 메시지 후 s06으로 이동.",
+      "characters": []
+    }
+  ],
+  "choices": null
+}

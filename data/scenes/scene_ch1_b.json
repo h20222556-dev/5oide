@@ -1,0 +1,56 @@
+{
+  "id": "scene_ch1_b",
+  "chapter": 1,
+  "type": "normal",
+  "background": "bg_street",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "dakgogi",
+      "text": "테스트 대사 1",
+      "characters": [
+        { "id": "dakgogi", "position": "center", "expression": "normal" }
+      ]
+    },
+    {
+      "speaker": null,
+      "text": "테스트 대사 2",
+      "characters": [
+        { "id": "dakgogi", "position": "center", "expression": "happy" }
+      ]
+    },
+    {
+      "speaker": "dakgogi",
+      "text": "테스트 대사 3",
+      "characters": [
+        { "id": "dakgogi", "position": "center", "expression": "happy" }
+      ]
+    }
+  ],
+  "choices": {
+    "question": "어떻게 할까?",
+    "options": [
+      {
+        "text": "함께 걷기",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": 6,
+          "yangnyeom": 1,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch2"
+      },
+      {
+        "text": "먼저 가기",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": -2,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch2"
+      }
+    ]
+  }
+}

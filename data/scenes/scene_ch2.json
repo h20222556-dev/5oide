@@ -1,0 +1,77 @@
+{
+  "id": "scene_ch2",
+  "chapter": 1,
+  "type": "normal",
+  "background": "bg_lake",
+  "time": "저녁",
+  "bgm": "bgm_evening",
+  "dialogues": [
+    {
+      "speaker": null,
+      "text": "테스트 대사 1",
+      "characters": [
+        { "id": "yangnyeom", "position": "left", "expression": "normal" },
+        { "id": "bokkeumbap", "position": "right", "expression": "normal" }
+      ]
+    },
+    {
+      "speaker": "yangnyeom",
+      "text": "테스트 대사 2",
+      "characters": [
+        { "id": "yangnyeom", "position": "left", "expression": "happy" },
+        { "id": "bokkeumbap", "position": "right", "expression": "normal" }
+      ]
+    },
+    {
+      "speaker": "bokkeumbap",
+      "text": "테스트 대사 3",
+      "characters": [
+        { "id": "yangnyeom", "position": "left", "expression": "normal" },
+        { "id": "bokkeumbap", "position": "right", "expression": "sad" }
+      ]
+    },
+    {
+      "speaker": "yangnyeom",
+      "text": "테스트 대사 4",
+      "characters": [
+        { "id": "yangnyeom", "position": "left", "expression": "normal" },
+        { "id": "bokkeumbap", "position": "right", "expression": "normal" }
+      ]
+    }
+  ],
+  "choices": {
+    "question": "어떻게 할까?",
+    "options": [
+      {
+        "text": "양념에게 말 걸기",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": 0,
+          "yangnyeom": 8,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch3"
+      },
+      {
+        "text": "볶음밥을 보다",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": 0,
+          "yangnyeom": 0,
+          "reunion_temp": 8
+        },
+        "next": "scene_ch3"
+      },
+      {
+        "text": "그냥 자리 뜨기",
+        "effects": {
+          "goguma": 0,
+          "dakgogi": 0,
+          "yangnyeom": 0,
+          "reunion_temp": 0
+        },
+        "next": "scene_ch3"
+      }
+    ]
+  }
+}

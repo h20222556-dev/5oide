@@ -1,0 +1,15 @@
+{
+  "id": "yangnyeom",
+  "name": "양념",
+  "color": "#E74C3C",
+  "isHidden": false,
+  "statKey": "affinity",
+  "defaultStat": 0,
+  "description": "강렬하고 개성 넘치는 성격의 캐릭터",
+  "expressions": [
+    { "id": "normal", "file": "yangnyeom_normal.png" },
+    { "id": "happy",  "file": "yangnyeom_happy.png"  },
+    { "id": "sad",    "file": "yangnyeom_sad.png"    }
+  ],
+  "endingId": "ending_dakgogi_yangnyeom"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "s11_boat",
+  "title": "뱃길 위 (약 40분)",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "배가 출발하고 선착장이 멀어진다. 창밖으로 호수와 가을 산이 펼쳐진다.",
+      "characters": []
+    }
+  ],
+  "choices": null
+}

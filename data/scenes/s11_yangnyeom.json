@@ -1,0 +1,115 @@
+{
+  "id": "s11_yangnyeom",
+  "title": "선내 창가 2인석 — 양념",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "왜 여기 앉아. 저쪽이 자리 더 많은데...",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "뭐, 앉든가.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "한동안 말이 없다. 양념이 이어폰을 빼서 주머니에 넣는다.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "아까 선착장에서 내가 말 세게 했나... 나는 원래 이런데, 다들 놀라거나 조용해지더라고.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "남이섬 가서... 하고 싶은 말 있으면 해. 나도 편하게 말해볼 테니까. 노력은 해볼게.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "seat_yangnyeom",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"솔직한 게 좋아요. 속마음은 다 보이던데요\" — 효과: 크게↑ / 고민이 풀리기 시작",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "\"누가 직접 상처받았다고 말했어요?\" — 효과: ↑ / 대화가 이어짐",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "\"조금만 부드럽게 말해보면 어때요?\" — 효과: 소폭↓ / 고민 자극 ⚠",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      }
+    ]
+  },
+  "next": "s12_yangnyeom"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "bokkeumbap",
+  "name": "볶음밥",
+  "color": "#AAB7B8",
+  "isHidden": true,
+  "statKey": "reunion_temp",
+  "defaultStat": 0,
+  "description": "과거의 기억과 연결된 미스터리한 캐릭터. 호감도 대신 재회 온도(reunion_temp)로 관계를 측정한다.",
+  "expressions": [
+    { "id": "normal", "file": "bokkeumbap_normal.png" },
+    { "id": "happy",  "file": "bokkeumbap_happy.png"  },
+    { "id": "sad",    "file": "bokkeumbap_sad.png"    }
+  ],
+  "endingId": "ending_bokkeumbap",
+  "thresholdKey": "bokkeumbap_reunion_temp"
+}

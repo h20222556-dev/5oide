@@ -1,0 +1,115 @@
+{
+  "id": "s11_goguma",
+  "title": "선미 쪽 벤치 — 고구마",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "바람이 차요. 이거 둘러요. 괜찮아요, 저는 하나 더 있어요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "샌드위치도 있는데, 드실래요? 아침 안 드셨죠.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "normal",
+      "text": "챙겨주시는 거 힘들지 않아요?",
+      "characters": []
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "저는 챙기는 게 편해요. 그런데 제가 뭘 하고 싶은지는 요즘 잘 모르겠더라고요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "오늘 하나만 정해볼게요. 저도... 하고 싶은 거요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "seat_goguma",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"그럼 오늘은 하고 싶은 거 하나만 골라봐요\" — 효과: 크게↑ / 고민이 풀리기 시작",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "\"천천히 찾아도 돼요\" — 효과: ↑",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "\"챙겨주는 모습이 좋아요\" — 효과: 소폭↑ / 고민은 그대로",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      }
+    ]
+  },
+  "next": "s12_goguma"
+}

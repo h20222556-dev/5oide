@@ -1,0 +1,15 @@
+{
+  "id": "goguma",
+  "name": "고구마",
+  "color": "#E8A87C",
+  "isHidden": false,
+  "statKey": "affinity",
+  "defaultStat": 0,
+  "description": "따뜻하고 순수한 성격의 캐릭터",
+  "expressions": [
+    { "id": "normal", "file": "goguma_normal.png" },
+    { "id": "happy",  "file": "goguma_happy.png"  },
+    { "id": "sad",    "file": "goguma_sad.png"    }
+  ],
+  "endingId": "ending_goguma"
+}

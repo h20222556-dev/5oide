@@ -1,0 +1,88 @@
+{
+  "id": "s02_place_select",
+  "title": "장소 선택",
+  "type": "normal",
+  "background": "bg_chuncheon_station",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "안내책자 이미지(블러 처리)"
+  ],
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "드디어! 춘천이다!",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그래, 지난 일은 다 잊고 혼자 재밌게 놀아보는 거야!",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "아까 전에 받은 춘천 관광 안내 책자... 여기에 소개된 곳에 가보자.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "음... 어디부터 가는 게 좋으려나?",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그래, 첫날은 여기부터 가는 거야.",
+      "characters": []
+    }
+  ],
+  "choices": {
+    "id": "place_1",
+    "question": "장소 선택 (각 보기에 장소 이미지)",
+    "options": [
+      {
+        "key": "A",
+        "text": "레고랜드 — \"다양한 놀이기구와 볼거리가 있는 테마파크\"",
+        "next": "s03_lego",
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "스카이워크 — \"탁 트인 강 풍경을 감상할 수 있는 명소\"",
+        "next": "s03_skywalk",
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "명동 닭갈비 골목 — \"춘천의 대표 먹거리를 즐길 수 있는 거리\"",
+        "next": "s03_myeongdong",
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      }
+    ]
+  }
+}

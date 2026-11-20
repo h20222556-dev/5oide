@@ -1,0 +1,109 @@
+{
+  "id": "s11_dakgalbi",
+  "title": "갑판 난간 옆 2인석 — 닭갈비",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "dialogues": [
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "예전엔 남이섬 가려면 가평으로 빙 돌아가야 했거든. 지금은 춘천에서 그냥 출발! ...아, 이거 영상에서 열 번은 말했는데 또 해설 모드네. 오늘은 쉬는 날인데.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "아무튼, 여기서 보는 호수가 제일 예뻐. 뭐, 알려줬으니까 됐지?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "다들 내가 춘천 얘기해 줄 때 제일 좋아해. 그게 나쁜 건 아닌데... 가끔은 내가 아무 말도 안 해도 옆에 있어 줄 사람이 있을까 싶어.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "남이섬에서는 홍보대사 말고 그냥 나로 걸어볼래. 같이 걸어줄래?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "seat_dakgalbi",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"아무 말 안 해도 옆에 있을게요\" — 효과: 크게↑ / 고민이 풀리기 시작",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "\"홍보대사로서의 모습도 정말 좋아해요\" — 효과: ↑ / 고민은 그대로",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "\"그건 천천히 생각해도 돼요\" — 효과: 소폭↑",
+        "next": null,
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      }
+    ]
+  },
+  "next": "s12_dakgalbi"
+}

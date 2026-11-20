@@ -1,0 +1,35 @@
+{
+  "id": "ending_dakgogi_yangnyeom",
+  "chapter": 1,
+  "type": "ending",
+  "background": "bg_street",
+  "time": "낮",
+  "bgm": "bgm_ending",
+  "dialogues": [
+    {
+      "speaker": "dakgogi",
+      "text": "테스트 대사 1",
+      "characters": [
+        { "id": "dakgogi", "position": "left", "expression": "happy" },
+        { "id": "yangnyeom", "position": "right", "expression": "happy" }
+      ]
+    },
+    {
+      "speaker": "yangnyeom",
+      "text": "테스트 대사 2",
+      "characters": [
+        { "id": "dakgogi", "position": "left", "expression": "happy" },
+        { "id": "yangnyeom", "position": "right", "expression": "happy" }
+      ]
+    },
+    {
+      "speaker": null,
+      "text": "테스트 대사 3",
+      "characters": [
+        { "id": "dakgogi", "position": "left", "expression": "happy" },
+        { "id": "yangnyeom", "position": "right", "expression": "happy" }
+      ]
+    }
+  ],
+  "choices": null
+}

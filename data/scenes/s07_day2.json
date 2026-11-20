@@ -1,0 +1,82 @@
+{
+  "id": "s07_day2",
+  "title": "Day 2 — 가까워지는 시간",
+  "type": "normal",
+  "background": "bg_hotel",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "채팅 목록 이미지"
+  ],
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "벌써... 아침이네.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "어제는 춘천에 도착해서 이곳저곳 돌아다니느라 정신이 없었어.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그러고 보니 어제 만났던 사람들...",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "처음 만난 사이였지만, 왠지 조금 더 이야기해 보고 싶단 말이지...",
+      "characters": []
+    }
+  ],
+  "choices": {
+    "id": "day2",
+    "question": "\"누구에게 먼저 연락해볼까?\"",
+    "options": [
+      {
+        "key": "A",
+        "text": "닭갈비",
+        "next": "s07_dakgalbi",
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "양념",
+        "next": "s07_yangnyeom",
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "고구마",
+        "next": "s07_goguma",
+        "effectDesc": "",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null
+        },
+        "followUp": []
+      }
+    ]
+  }
+}
