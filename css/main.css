@@ -397,19 +397,21 @@ button {
 }
 
 /* ──────────────────────────────────────────
-   챕터 타이틀 오버레이
+   챕터 / DAY 타이틀 오버레이
 ────────────────────────────────────────── */
 #chapter-title-overlay {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.6);
-  z-index: 60;
+  background: #000;
+  z-index: 150;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.6s ease;
+  cursor: pointer;
+  transition: opacity 1.2s ease;
 }
 
 #chapter-title-overlay.visible {
@@ -417,14 +419,25 @@ button {
   pointer-events: auto;
 }
 
-#chapter-title-text {
-  font-family: var(--font-title);
-  font-size: 2em;
+.day-title-badge {
+  font-family: var(--font-title, sans-serif);
+  font-size: 3.5rem;
+  font-weight: 900;
   color: #fff;
+  letter-spacing: 0.35em;
+  text-shadow: 0 0 25px rgba(255, 158, 205, 0.8), 0 4px 15px rgba(0, 0, 0, 0.9);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.day-title-subtitle {
+  font-family: var(--font-title, sans-serif);
+  font-size: 1.5rem;
+  color: #ffd1dc;
+  letter-spacing: 0.25em;
   text-align: center;
-  letter-spacing: 0.15em;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.8);
-  animation: fadeIn 0.8s ease;
+  font-weight: 500;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
 /* ──────────────────────────────────────────

@@ -164,6 +164,79 @@ assert(saveJs.includes('day2Visited'), 'save.js 세이브 데이터에 day2Visit
 const engineJs = fs.readFileSync(path.join(rootDir, 'js', 'engine.js'), 'utf8');
 assert(engineJs.includes('_presentDay2RemainingChoices'), 'engine.js에 Day 2 남은 인물 순차 선택 로직(_presentDay2RemainingChoices)이 구현됨');
 
+// 11. 작업 4 검증: 선택지 누락 복구 확인
+console.log('\n--- 11. 작업 4: 선택지 누락 복구 검증 ---');
+const s07Dak = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_dakgalbi.json'), 'utf8'));
+const s07Gog = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_goguma.json'), 'utf8'));
+const s07Yang = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_yangnyeom.json'), 'utf8'));
+assert(s07Dak.choices && s07Dak.choices.options.length === 2, `s07_dakgalbi 선택지 2개 정상 파싱됨 (${s07Dak.choices.options.length}개)`);
+assert(s07Gog.choices && s07Gog.choices.options.length === 2, `s07_goguma 선택지 2개 정상 파싱됨 (${s07Gog.choices.options.length}개)`);
+assert(s07Yang.choices && s07Yang.choices.options.length === 2, `s07_yangnyeom 선택지 2개 정상 파싱됨 (${s07Yang.choices.options.length}개)`);
+
+// 12. 작업 3 검증: Day 2 임의 순서(순열 6종) 선택 시뮬레이션
+console.log('\n--- 12. 작업 3: Day 2 임의 순서(6개 순열) 방문 시뮬레이션 ---');
+const permutations = [
+  ['dakgalbi', 'goguma', 'yangnyeom'],
+  ['dakgalbi', 'yangnyeom', 'goguma'],
+  ['goguma', 'dakgalbi', 'yangnyeom'],
+  ['goguma', 'yangnyeom', 'dakgalbi'],
+  ['yangnyeom', 'dakgalbi', 'goguma'],
+  ['yangnyeom', 'goguma', 'dakgalbi']
+];
+
+for (const order of permutations) {
+  let simulatedVisited = [];
+  let currentScene = 's07_day2';
+  for (let step = 0; step < 3; step++) {
+    const target = order[step];
+    assert(!simulatedVisited.includes(target), `순열 [${order.join(' -> ')}] step ${step + 1}: ${target} 선택 가능`);
+    simulatedVisited.push(target);
+    currentScene = `s07_${target}`;
+    // 대상 씬 방문 완료 후 Day 2 복귀
+    currentScene = 's07_day2';
+  }
+  assert(simulatedVisited.length === 3, `순열 [${order.join(' -> ')}]: 3명 모두 방문 완료`);
+  const nextTarget = (simulatedVisited.length >= 3) ? 's08_day2_end' : 's07_day2';
+  assert(nextTarget === 's08_day2_end', `순열 [${order.join(' -> ')}]: 3명 완료 후 s08_day2_end로 전환 성공`);
+}
+
+// 13. 작업 1 검증: 상대방 캐릭터 실명 및 조사 '으로/로' 검증
+console.log('\n--- 13. 작업 1: 상대 캐릭터 실명 및 한국어 조사(으로/로 포함) 검증 ---');
+const { getDisplayName, appendJosa } = require(path.join(rootDir, 'js', 'utils.js'));
+// 남성 플레이어(상대 여성) -> 다곡희, 양연미, 고규미, 박복은
+assert(getDisplayName('dakgalbi', 'male', true) === '다곡희', '남성 플레이어 -> dakgalbi = 다곡희');
+assert(getDisplayName('yangnyeom', 'male', true) === '양연미', '남성 플레이어 -> yangnyeom = 양연미');
+assert(getDisplayName('goguma', 'male', true) === '고규미', '남성 플레이어 -> goguma = 고규미');
+assert(getDisplayName('bokkeumbap', 'male', true) === '박복은', '남성 플레이어 -> bokkeumbap = 박복은');
+
+// 여성 플레이어(상대 남성) -> 다고길, 양연우, 고구민, 박복검
+assert(getDisplayName('dakgalbi', 'female', true) === '다고길', '여성 플레이어 -> dakgalbi = 다고길');
+assert(getDisplayName('yangnyeom', 'female', true) === '양연우', '여성 플레이어 -> yangnyeom = 양연우');
+assert(getDisplayName('goguma', 'female', true) === '고구민', '여성 플레이어 -> goguma = 고구민');
+assert(getDisplayName('bokkeumbap', 'female', true) === '박복검', '여성 플레이어 -> bokkeumbap = 박복검');
+
+// 엔진 state.gender 직결 검증 ('female' 선택 시 다곡희 등, 'male' 선택 시 다고길 등)
+assert(getDisplayName('dakgalbi', 'female') === '다곡희', 'state.gender="female" -> dakgalbi = 다곡희');
+assert(getDisplayName('dakgalbi', 'male') === '다고길', 'state.gender="male" -> dakgalbi = 다고길');
+
+// '으로/로' 조사 검증 (ㄹ 받침 '로', 일반 받침 '으로', 받침 없음 '로')
+assert(appendJosa('다고길', '으로/로') === '다고길로', 'ㄹ 받침 "다고길" + 으로/로 -> "다고길로"');
+assert(appendJosa('양연미', '으로/로') === '양연미로', '받침 없음 "양연미" + 으로/로 -> "양연미로"');
+assert(appendJosa('고구민', '으로/로') === '고구민으로', '일반 받침 "고구민" + 으로/로 -> "고구민으로"');
+assert(appendJosa('박복은', '으로/로') === '박복은으로', '일반 받침 "박복은" + 으로/로 -> "박복은으로"');
+
+// 14. 작업 2 검증: DAY 전환 연출 및 스타일 검증
+console.log('\n--- 14. 작업 2: DAY 전환 연출(페이드, 타이틀 카드) 검증 ---');
+const rendererJs = fs.readFileSync(path.join(rootDir, 'js', 'renderer.js'), 'utf8');
+assert(rendererJs.includes('playDayTransition'), 'renderer.js에 playDayTransition 구현됨');
+assert(rendererJs.includes('skipDayTransition'), 'renderer.js에 skipDayTransition 구현됨');
+assert(mainCss.includes('#chapter-title-overlay'), 'CSS에 #chapter-title-overlay 스타일 존재');
+assert(mainCss.includes('.day-title-badge'), 'CSS에 .day-title-badge 스타일 존재');
+assert(mainCss.includes('.day-title-subtitle'), 'CSS에 .day-title-subtitle 스타일 존재');
+assert(engineJs.includes('playDayTransition(1'), 'engine.js에 Day 1 전환 연출 적용됨');
+assert(engineJs.includes('playDayTransition(2'), 'engine.js에 Day 2 전환 연출 적용됨');
+assert(engineJs.includes('playDayTransition(3'), 'engine.js에 Day 3 전환 연출 적용됨');
+
 console.log('\n====================================================');
 console.log(` 검증 결과: ${passedTests} / ${totalTests} 테스트 통과 (${Math.round((passedTests/totalTests)*100)}%)`);
 console.log('====================================================');

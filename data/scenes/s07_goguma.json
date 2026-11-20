@@ -202,8 +202,67 @@
             "text": "{player} 씨와 이야기하니 마음이 한결 따뜻해지네요.\" (+)"
           }
         ]
+      },
+      {
+        "key": "B",
+        "text": "\"부탁을 거절하는 연습부터 해봐요.\"",
+        "next": "s08_day2_end",
+        "effectDesc": "표시 없음",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null,
+          "characters": null
+        },
+        "followUp": [
+          {
+            "speaker": "고구마[당황]",
+            "text": "아, 역시... 그래야 할까요?"
+          },
+          {
+            "speaker": "고구마[당황]",
+            "text": "하지만 막상 부탁을 받으면 거절하기가 쉽지 않더라고요..."
+          }
+        ]
       }
     ]
   },
+  "midChoices": [
+    {
+      "id": "day2_goguma_1",
+      "question": "산책 이야기",
+      "options": [
+        {
+          "key": "A",
+          "text": "\"{고구마} 씨와 잘 어울리는 풍경이네요.\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": []
+        },
+        {
+          "key": "B",
+          "text": "\"산책을 자주 하시나요?\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": []
+        }
+      ]
+    }
+  ],
   "next": "s08_day2_end"
 }

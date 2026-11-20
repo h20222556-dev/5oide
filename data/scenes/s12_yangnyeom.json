@@ -10,7 +10,7 @@
     {
       "speaker": null,
       "speakerType": "narration",
-      "text": "낙엽이 쌓인 호숫가 길. 양념이 말없이 앞서 걷다가 멈춘다.",
+      "text": "낙엽이 쌓인 호숫가 길. {양념}이 말없이 앞서 걷다가 멈춘다.",
       "characters": []
     },
     {
@@ -42,7 +42,7 @@
     {
       "speaker": null,
       "speakerType": "narration",
-      "text": "주인공은 양념이 바람 부는 쪽에 계속 서 있다는 걸 알아챈다.",
+      "text": "주인공은 {양념}이 바람 부는 쪽에 계속 서 있다는 걸 알아챈다.",
       "characters": []
     },
     {

@@ -434,8 +434,8 @@ class Renderer {
     this.affinityBar.innerHTML = '';
 
     targetChars.forEach(cid => {
-      const cMeta = charactersMap[cid];
-      const name = cMeta ? cMeta.name : cid;
+      const cMeta = charactersMap ? charactersMap[cid] : null;
+      const name = cMeta ? cMeta.name : (typeof getDisplayName === 'function' ? getDisplayName(cid) : cid);
       const val = affinity?.[cid] ?? 0;
       const pct = Math.max(0, Math.min(100, Math.round((val / 12) * 100)));
 
@@ -728,9 +728,12 @@ class Renderer {
         card.className = `gallery-card ${achieved ? 'achieved' : 'locked'}`;
 
         if (achieved) {
+          const displayTitle = ed.char && typeof getDisplayName === 'function'
+            ? `${getDisplayName(ed.char)} 엔딩`
+            : ed.title;
           card.innerHTML = `
             <div class="gallery-card-badge">${ed.badge || '엔딩'}</div>
-            <h3 class="gallery-card-title">${ed.title}</h3>
+            <h3 class="gallery-card-title">${displayTitle}</h3>
             <p class="gallery-card-desc">${ed.description}</p>
           `;
         } else {
@@ -749,5 +752,73 @@ class Renderer {
 
   hideGalleryModal() {
     if (this.galleryModal) this.galleryModal.classList.add('hidden');
+  }
+
+  // ─── DAY 전환 타이틀 연출 ──────────────────────────────────────────────────
+
+  playDayTransition(dayNum, subtitle, onComplete) {
+    if (!this.chapterOverlay) {
+      if (typeof onComplete === 'function') onComplete();
+      return;
+    }
+
+    this.clearDayTransition();
+
+    this.chapterOverlay.innerHTML = `
+      <div class="day-title-badge">DAY ${dayNum}</div>
+      <div class="day-title-subtitle">${subtitle}</div>
+    `;
+
+    this.chapterOverlay.classList.remove('hidden');
+    void this.chapterOverlay.offsetWidth; // reflow 강제
+    this.chapterOverlay.classList.add('visible');
+
+    let completed = false;
+    const finish = () => {
+      if (completed) return;
+      completed = true;
+      if (this._dayTransitionTimer) {
+        clearTimeout(this._dayTransitionTimer);
+        this._dayTransitionTimer = null;
+      }
+      this.chapterOverlay.classList.remove('visible');
+      setTimeout(() => {
+        this.chapterOverlay.classList.add('hidden');
+        this.chapterOverlay.onclick = null;
+        if (typeof onComplete === 'function') onComplete();
+      }, 1200);
+    };
+
+    // 클릭 시 즉시 건너뛰기
+    this.chapterOverlay.onclick = (e) => {
+      e.stopPropagation();
+      finish();
+    };
+
+    // 1.2s 페이드인 + 2.2s 표시 유지 = 3.4s 후 자동 종료
+    this._dayTransitionTimer = setTimeout(() => {
+      finish();
+    }, 3400);
+
+    this._dayTransitionFinishFn = finish;
+  }
+
+  skipDayTransition() {
+    if (this._dayTransitionFinishFn) {
+      this._dayTransitionFinishFn();
+    }
+  }
+
+  clearDayTransition() {
+    if (this._dayTransitionTimer) {
+      clearTimeout(this._dayTransitionTimer);
+      this._dayTransitionTimer = null;
+    }
+    this._dayTransitionFinishFn = null;
+    if (this.chapterOverlay) {
+      this.chapterOverlay.onclick = null;
+      this.chapterOverlay.classList.remove('visible');
+      this.chapterOverlay.classList.add('hidden');
+    }
   }
 }

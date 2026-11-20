@@ -136,7 +136,16 @@ class GameEngine {
           this.state.gender = selectedGender;
           this._initNewGameState();
           this.renderer.showScreen('game');
-          this.goToScene('s01_prologue');
+          this.state.isTransitioning = true;
+          if (this.renderer && typeof this.renderer.playDayTransition === 'function') {
+            this.renderer.playDayTransition(1, "춘천에서의 첫 만남", () => {
+              this.state.isTransitioning = false;
+              this.goToScene('s01_prologue');
+            });
+          } else {
+            this.state.isTransitioning = false;
+            this.goToScene('s01_prologue');
+          }
         },
         (currentInput) => {
           // 이름 입력 단계에서 "뒤로" -> 성별 선택 복귀 (입력하던 이름 유지)
@@ -238,6 +247,11 @@ class GameEngine {
     this.state.isSkip = false;
     this.state.isTyping = false;
     this.state.choiceActive = false;
+    this.state.isTransitioning = false;
+
+    if (this.renderer && typeof this.renderer.clearDayTransition === 'function') {
+      this.renderer.clearDayTransition();
+    }
 
     if (saved.settings) {
       this.applySettings(saved.settings);
@@ -402,12 +416,8 @@ class GameEngine {
           for (const [cid, cData] of Object.entries(this.currentCharacters)) {
             if (cleanSpeaker.includes(cData.role) || cleanSpeaker.includes(cid) || cleanSpeaker.includes(cData.name)) {
               matched = true;
-              if (this.state.revealedSpeakers.has(cid)) {
-                speakerDisplayName = cData.name;
-                speakerColor = cData.color;
-              } else {
-                speakerDisplayName = '???';
-              }
+              speakerDisplayName = cData.name || (typeof getDisplayName === 'function' ? getDisplayName(cid, this.state.gender) : cData.role);
+              speakerColor = cData.color;
               break;
             }
           }
@@ -521,7 +531,7 @@ class GameEngine {
   }
 
   nextDialogue() {
-    if (this.state.choiceActive) return;
+    if (this.state.choiceActive || this.state.isTransitioning) return;
 
     const scene = this.scenes.get(this.state.sceneId);
     if (scene && scene.type === 'phone_message') {
@@ -585,6 +595,7 @@ class GameEngine {
       if (this.state.day2Visited.length >= 3) {
         this.goToScene('s08_day2_end');
       } else {
+        this.state.sceneId = 's07_day2';
         this._presentDay2RemainingChoices();
       }
       return;
@@ -643,7 +654,36 @@ class GameEngine {
       return;
     }
 
-    // 12. 다음 씬이 지정되어 있으면 이동 (또는 기본 씬 연결 맵)
+    // 12. DAY 전환 연출 (s06_day1_end -> DAY 2, s08_day2_end -> DAY 3)
+    if (scene.id === 's06_day1_end') {
+      this.state.isTransitioning = true;
+      if (this.renderer && typeof this.renderer.playDayTransition === 'function') {
+        this.renderer.playDayTransition(2, "조금씩 가까워지는 사이", () => {
+          this.state.isTransitioning = false;
+          this.goToScene('s07_day2');
+        });
+      } else {
+        this.state.isTransitioning = false;
+        this.goToScene('s07_day2');
+      }
+      return;
+    }
+
+    if (scene.id === 's08_day2_end') {
+      this.state.isTransitioning = true;
+      if (this.renderer && typeof this.renderer.playDayTransition === 'function') {
+        this.renderer.playDayTransition(3, "남이섬으로 향하는 배", () => {
+          this.state.isTransitioning = false;
+          this.goToScene('s09_pier');
+        });
+      } else {
+        this.state.isTransitioning = false;
+        this.goToScene('s09_pier');
+      }
+      return;
+    }
+
+    // 13. 다음 씬이 지정되어 있으면 이동 (또는 기본 씬 연결 맵)
     const fallbackNextMap = {
       "s01_prologue": "s02_place_select",
       "s03_lego": "s03_lego_phone",
@@ -704,6 +744,8 @@ class GameEngine {
   }
 
   _presentDay2RemainingChoices() {
+    this.state.sceneId = 's07_day2';
+
     if (this.state.day2Visited.length >= 3) {
       this.goToScene('s08_day2_end');
       return;
@@ -715,23 +757,24 @@ class GameEngine {
       { id: 'goguma', role: '고구마', next: 's07_goguma' },
     ];
 
-    const available = allChars
-      .filter(c => !this.state.day2Visited.includes(c.id))
-      .map((c, idx) => {
-        const charName = this.currentCharacters[c.id]?.name || c.role;
-        return {
-          key: String.fromCharCode(65 + idx),
-          charId: c.id,
-          text: `${String.fromCharCode(65 + idx)}: ${charName}에게 연락한다`,
-          next: c.next
-        };
-      });
+    const options = allChars.map((c, idx) => {
+      const charName = this.currentCharacters[c.id]?.name || (typeof getDisplayName === 'function' ? getDisplayName(c.id, this.state.gender) : c.role);
+      const isVisited = this.state.day2Visited.includes(c.id);
+      return {
+        key: String.fromCharCode(65 + idx),
+        charId: c.id,
+        text: `${String.fromCharCode(65 + idx)}: ${charName}에게 연락한다`,
+        disabled: isVisited,
+        lockedReason: isVisited ? "연락 완료" : null,
+        next: isVisited ? null : c.next
+      };
+    });
 
     const question = this.state.day2Visited.length === 0
       ? "누구에게 먼저 연락해볼까?"
-      : "다음은 누구에게 연락해볼까?"; // 임시 문구 (작업 보고서 명시)
+      : "다음은 누구에게 연락해볼까?";
 
-    this._presentChoices(question, available);
+    this._presentChoices(question, options);
   }
 
   // ─── s14 선착장 해질녘 판정 ────────────────────────────────────────────────
@@ -888,9 +931,6 @@ class GameEngine {
         else if (chosen.key === 'C') cid = 'goguma';
       }
       if (cid) {
-        if (!this.state.day2Visited.includes(cid)) {
-          this.state.day2Visited.push(cid);
-        }
         this.state.day2Target = cid;
       }
     }
@@ -904,6 +944,7 @@ class GameEngine {
       if (this.state.day2Visited.length >= 3) {
         this.goToScene('s08_day2_end');
       } else {
+        this.state.sceneId = 's07_day2';
         this._presentDay2RemainingChoices();
       }
       return;

@@ -523,15 +523,31 @@ while (i < lines.length) {
           effects: parsedEffects,
           followUp: followUpDialogues
         });
+        // ★ FIX: j 루프가 하위 블록을 모두 건너뛴 위치로 점프 (기존 i++ → i = j)
+        i = j;
+      } else {
+        i++;
       }
-      i++;
     }
 
-    currentScene.choices = {
-      id: choiceId,
-      question: question,
-      options: options
-    };
+    // 같은 씬에 CHOICE가 여러 개인 경우, 나중 것의 옵션 목록만 사용
+    // (첫 번째 CHOICE는 중간 대화 선택으로, 두 번째가 호감도에 영향을 주는 메인 선택)
+    if (!currentScene.choices) {
+      currentScene.choices = {
+        id: choiceId,
+        question: question,
+        options: options
+      };
+    } else {
+      // 이전 선택지를 중간 선택지(midChoices)로 보존하고, 새 것을 메인으로 등록
+      if (!currentScene.midChoices) currentScene.midChoices = [];
+      currentScene.midChoices.push(currentScene.choices);
+      currentScene.choices = {
+        id: choiceId,
+        question: question,
+        options: options
+      };
+    }
     continue;
   }
 

@@ -201,8 +201,81 @@
             "text": "조금... 위로가 되네요. 고마워요...\" (+)"
           }
         ]
+      },
+      {
+        "key": "B",
+        "text": "\"그냥 솔직하게 말하면 되는 거 아닌가요?\"",
+        "next": "s08_day2_end",
+        "effectDesc": "표시 없음",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null,
+          "characters": null
+        },
+        "followUp": [
+          {
+            "speaker": "양념[짜증]",
+            "text": "그게 말처럼 쉬웠으면 고민도 안 했겠죠."
+          }
+        ]
       }
     ]
   },
+  "midChoices": [
+    {
+      "id": "day2_yangnyeom_1",
+      "question": "먹거리 이야기",
+      "options": [
+        {
+          "key": "A",
+          "text": "\"다음에는 {양념} 씨가 추천하는 맛집 꼭 가보고 싶어요.\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "양념[기본]",
+              "text": "제 추천이요? ...좋아요. 괜찮은 곳으로 골라드릴게요."
+            },
+            {
+              "speaker": "양념[멋쩍음]",
+              "text": "원하신다면... 따라가 줄 수도 있고요."
+            }
+          ]
+        },
+        {
+          "key": "B",
+          "text": "\"저는 먹는 것보다 구경하는 게 더 좋은 것 같아요.\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "양념[멋쩍음]",
+              "text": "뭐, 사람마다... 다르니까요."
+            },
+            {
+              "speaker": "양념[기본]",
+              "text": "그래도 춘천에는 먹거리 말고도 구경할 곳이 많으니까요."
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "next": "s08_day2_end"
 }

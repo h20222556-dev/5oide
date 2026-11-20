@@ -283,6 +283,25 @@
             "text": "저도 지금의 {player} 씨가...\" (+)"
           }
         ]
+      },
+      {
+        "key": "B",
+        "text": "\"그걸 제가 어떻게 알아요?\"",
+        "next": "s08_day2_end",
+        "effectDesc": "표시 없음",
+        "effects": {
+          "score": 0,
+          "scale": null,
+          "troubleState": null,
+          "targetChar": null,
+          "characters": null
+        },
+        "followUp": [
+          {
+            "speaker": "닭갈비[당황]",
+            "text": "아, 그러네요... 제가 갑자기 너무 어려운 질문을 드렸죠? 죄송해요...!"
+          }
+        ]
       }
     ]
   },

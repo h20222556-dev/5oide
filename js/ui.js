@@ -120,9 +120,9 @@ class UIController {
   }
 
   _handleAdvanceDialogue() {
-    // 모달이 열려있거나 선택지가 떠 있으면 대사 넘김 차단
+    // 모달이 열려있거나 선택지가 떠 있거나 DAY 전환 중이면 대사 넘김 차단
     if (this._saveModalOpen || this._settingsModalOpen || this._galleryModalOpen) return;
-    if (this._choicesActive) return;
+    if (this._choicesActive || this.engine?.state?.isTransitioning) return;
 
     if (this.engine) {
       this.engine.nextDialogue();

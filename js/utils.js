@@ -112,16 +112,75 @@ function pickJosa(word, josaPair) {
 }
 
 /**
+ * 캐릭터 표시 이름 매핑 (성별에 따른 이름)
+ * - 남성 플레이어(여성 캐릭터가 나옴): 닭갈비=다곡희, 양념=양연미, 고구마=고규미, 볶음밥=박복은
+ * - 여성 플레이어(남성 캐릭터가 나옴): 닭갈비=다고길, 양념=양연우, 고구마=고구민, 볶음밥=박복검
+ */
+const CHARACTER_DISPLAY_NAMES = {
+  female: {
+    dakgalbi: '다곡희',
+    yangnyeom: '양연미',
+    goguma: '고규미',
+    bokkeumbap: '박복은',
+  },
+  male: {
+    dakgalbi: '다고길',
+    yangnyeom: '양연우',
+    goguma: '고구민',
+    bokkeumbap: '박복검',
+  }
+};
+
+/**
+ * 캐릭터 ID와 플레이어/대상 성별을 기반으로 표시 이름 반환
+ * @param {string} characterId - 캐릭터 ID ('dakgalbi', 'goguma' 등) 또는 역할명 ('닭갈비' 등)
+ * @param {string} gender - 상대 성별 또는 플레이어 성별 ('female' 또는 'male')
+ * @param {boolean} isPlayerGender - 두 번째 인자가 플레이어의 성별인지 여부 (기본 false: 대상 캐릭터 성별)
+ * @returns {string} 사람 이름 (다곡희, 다고길 등)
+ */
+function getDisplayName(characterId, gender = 'female', isPlayerGender = false) {
+  if (!characterId) return '';
+  let targetGender = gender;
+  if (isPlayerGender) {
+    targetGender = (gender === 'male') ? 'female' : 'male';
+  }
+  const genderKey = (targetGender === 'male') ? 'male' : 'female';
+  const idMap = {
+    '닭갈비': 'dakgalbi',
+    '닭고기': 'dakgalbi',
+    '양념': 'yangnyeom',
+    '고구마': 'goguma',
+    '볶음밥': 'bokkeumbap',
+    'dakgalbi': 'dakgalbi',
+    'yangnyeom': 'yangnyeom',
+    'goguma': 'goguma',
+    'bokkeumbap': 'bokkeumbap'
+  };
+  const key = idMap[characterId] || characterId;
+  return CHARACTER_DISPLAY_NAMES[genderKey]?.[key] || characterId;
+}
+
+/**
+ * 단어에 적절한 조사를 붙여서 반환
+ * @param {string} word - 단어
+ * @param {string} josaPair - 조사 쌍 ('은/는', '이/가', '을/를', '과/와', '아/야', '으로/로')
+ * @returns {string} 조사가 붙은 단어
+ */
+function appendJosa(word, josaPair) {
+  return word + pickJosa(word, josaPair);
+}
+
+/**
  * 텍스트 템플릿 변수 치환 및 조사 자동 교정
  * 
  * 1) 변수 치환:
  *    - {player} -> 플레이어 이름
- *    - {닭갈비} -> 성별에 따른 이름 (다곡희/다고길)
- *    - {양념} -> 성별에 따른 이름 (양연미/양연우)
- *    - {고구마} -> 성별에 따른 이름 (고규미/고구민)
- *    - {볶음밥} -> 성별에 따른 이름 (박복은/박복검)
+ *    - {닭갈비} / {name:dakgalbi} -> 성별에 따른 이름 (다곡희/다고길)
+ *    - {양념} / {name:yangnyeom} -> 성별에 따른 이름 (양연미/양연우)
+ *    - {고구마} / {name:goguma} -> 성별에 따른 이름 (고규미/고구민)
+ *    - {볶음밥} / {name:bokkeumbap} -> 성별에 따른 이름 (박복은/박복검)
  * 
- * 2) 명시적 템플릿 조사: {player:은는}, {닭갈비:이가}, {양념:을를} 등
+ * 2) 명시적 템플릿 조사: {player:은는}, {닭갈비:이가}, {양념:을를}, {고구마:으로로} 등
  * 
  * 3) 원문 자연 텍스트 뒤에 붙은 조사 교정:
  *    - "{player}이라고" -> 받침에 따라 '길이라고' / '희라고'
@@ -130,24 +189,35 @@ function pickJosa(word, josaPair) {
  *    - "{player}이" / "{player}가"
  *    - "{player}을" / "{player}를"
  *    - "{player}과" / "{player}와"
+ *    - "{player}으로" / "{player}로"
  * 
  * @param {string} text
  * @param {object} variables - { player, dakgalbi, yangnyeom, goguma, bokkeumbap }
  * @returns {string} 치환 및 조사가 교정된 텍스트
  */
-function resolveTextVariables(text, variables) {
+function resolveTextVariables(text, variables = {}) {
   if (!text || typeof text !== 'string') return text;
 
   const names = {
     player: variables.player || '주인공',
-    dakgalbi: variables.dakgalbi || '닭갈비',
-    yangnyeom: variables.yangnyeom || '양념',
-    goguma: variables.goguma || '고구마',
-    bokkeumbap: variables.bokkeumbap || '볶음밥',
+    dakgalbi: variables.dakgalbi || '다곡희',
+    yangnyeom: variables.yangnyeom || '양연미',
+    goguma: variables.goguma || '고규미',
+    bokkeumbap: variables.bokkeumbap || '박복은',
   };
 
-  // 1) 템플릿 형태 치환: {변수:조사} 예: {player:은는}
-  let result = text.replace(/\{(player|닭갈비|양념|고구마|볶음밥):([가-힣\/]+)\}/g, (_, key, josaPattern) => {
+  let result = text;
+
+  // 0) {name:캐릭터ID} 또는 {name:캐릭터ID:조사}를 표준 플레이스홀더로 정규화
+  result = result.replace(/\{name:(dakgalbi|yangnyeom|goguma|bokkeumbap|닭갈비|양념|고구마|볶음밥)(?::([가-힣\/]+))?\}/g, (_, cid, josa) => {
+    const k = (cid === '닭갈비' || cid === 'dakgalbi') ? '닭갈비' :
+              (cid === '양념' || cid === 'yangnyeom') ? '양념' :
+              (cid === '고구마' || cid === 'goguma') ? '고구마' : '볶음밥';
+    return josa ? `{${k}:${josa}}` : `{${k}}`;
+  });
+
+  // 1) 템플릿 형태 치환: {변수:조사} 예: {player:은는}, {고구마:으로로}
+  result = result.replace(/\{(player|닭갈비|양념|고구마|볶음밥):([가-힣\/]+)\}/g, (_, key, josaPattern) => {
     const k = key === '닭갈비' ? 'dakgalbi' : (key === '양념' ? 'yangnyeom' : (key === '고구마' ? 'goguma' : (key === '볶음밥' ? 'bokkeumbap' : 'player')));
     const name = names[k];
     const josa = pickJosa(name, josaPattern);
@@ -155,7 +225,6 @@ function resolveTextVariables(text, variables) {
   });
 
   // 2) 일반 변수 뒤에 붙은 한국어 조사 교정
-  // 예: {player}이라고/라고, {player}이에요/예요, {player}은/는 등
   const varKeys = ['player', '닭갈비', '양념', '고구마', '볶음밥'];
   for (const vKey of varKeys) {
     const k = vKey === '닭갈비' ? 'dakgalbi' : (vKey === '양념' ? 'yangnyeom' : (vKey === '고구마' ? 'goguma' : (vKey === '볶음밥' ? 'bokkeumbap' : 'player')));
@@ -200,7 +269,15 @@ function resolveTextVariables(text, variables) {
       return name + (hasJong ? '을' : '를');
     });
 
+    // {var}으로/로
+    result = result.replace(new RegExp(`\\{${vKey}\\}(으로|로)`, 'g'), () => {
+      return name + pickJosa(name, '으로/로');
+    });
 
+    // {var}아야/아/야
+    result = result.replace(new RegExp(`\\{${vKey}\\}(아|야)`, 'g'), () => {
+      return name + (hasJong ? '아' : '야');
+    });
 
     // 남은 단순 {var} 치환
     result = result.replace(new RegExp(`\\{${vKey}\\}`, 'g'), name);
@@ -218,6 +295,9 @@ if (typeof module !== 'undefined' && module.exports) {
     loadJSON,
     hasJongseong,
     pickJosa,
+    appendJosa,
+    getDisplayName,
+    CHARACTER_DISPLAY_NAMES,
     resolveTextVariables
   };
 }
