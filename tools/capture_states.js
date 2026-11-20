@@ -47,3 +47,4 @@ fs.writeFileSync('/tmp/test_name.html', testHtmlName);
 const cmd3 = `"${CHROME}" --headless --disable-gpu --user-data-dir=/tmp/c_name --no-first-run --no-default-browser-check --window-size=390,844 --screenshot="${artifactDir}/mobile_modal_name_390x844.png" "file:///tmp/test_name.html"`;
 execSync(cmd3);
 console.log('Captured name modal screenshot:', fs.statSync(`${artifactDir}/mobile_modal_name_390x844.png`).size, 'bytes');
+

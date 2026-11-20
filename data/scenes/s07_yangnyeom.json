@@ -182,13 +182,14 @@
       {
         "key": "A",
         "text": "\"말투보다 그 안에 담긴 마음이 더 중요하죠.\"",
-        "next": null,
+        "next": "s08_day2_end",
         "effectDesc": "양념 호감 상승 표시 (+)",
         "effects": {
           "score": 3,
           "scale": "(+)",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": "yangnyeom",
+          "characters": null
         },
         "followUp": [
           {

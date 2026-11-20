@@ -46,40 +46,43 @@
     "options": [
       {
         "key": "A",
-        "text": "\"저도 같이 주울래요\" — 효과: 크게↑ / 고민이 풀리기 시작",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"저도 같이 주울래요\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "크게↑ / 고민이 풀리기 시작",
         "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null
+          "score": 6,
+          "scale": "크게↑",
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "B",
-        "text": "\"제가 주워서 드릴게요\" (받는 쪽을 경험) — 효과: ↑",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"제가 주워서 드릴게요\" (받는 쪽을 경험)",
+        "next": "s14_pier_sunset",
+        "effectDesc": "↑",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 4,
+          "scale": "↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       },
       {
         "key": "C",
-        "text": "\"사진만 찍어준다\" — 효과: 소폭↑",
-        "next": null,
-        "effectDesc": "",
+        "text": "\"사진만 찍어준다\"",
+        "next": "s14_pier_sunset",
+        "effectDesc": "소폭↑",
         "effects": {
-          "score": 0,
-          "scale": null,
+          "score": 2,
+          "scale": "소폭↑",
           "troubleState": null,
-          "targetChar": null
+          "targetChar": null,
+          "characters": null
         },
         "followUp": []
       }
