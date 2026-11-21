@@ -1,0 +1,44 @@
+{
+  "id": "s10_2_seat",
+  "title": "#10-2 좌석 배치",
+  "type": "normal",
+  "background": "bg_boat",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [],
+  "choices": {
+    "id": "day3_seat",
+    "question": "",
+    "options": [
+      {
+        "key": "A",
+        "charId": "dakgalbi",
+        "text": "갑판 난간 2인석 — {닭갈비}",
+        "next": "s10_3_dakgalbi",
+        "effectDesc": "",
+        "effects": null,
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "charId": "yangnyeom",
+        "text": "선내 창가 2인석 — {양념}",
+        "next": "s10_4_yangnyeom",
+        "effectDesc": "",
+        "effects": null,
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "charId": "goguma",
+        "text": "선미 벤치 — {고구마}",
+        "next": "s10_5_goguma",
+        "effectDesc": "",
+        "effects": null,
+        "followUp": []
+      }
+    ]
+  }
+}

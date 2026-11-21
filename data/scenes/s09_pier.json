@@ -1,61 +1,28 @@
 {
   "id": "s09_pier",
-  "title": "선착장 — 세 사람이 서로 아는 사이 (다음 날 아침)",
+  "title": "#9 선착장 집합",
   "type": "normal",
-  "background": "bg_boat",
-  "time": "낮",
+  "background": "bg_pier_morning",
+  "time": "아침",
   "bgm": "bgm_main",
-  "direction": [
-    "영상 속에서 닭갈비가 밝게 웃고 있다."
-  ],
+  "direction": [],
+  "day": 3,
   "dialogues": [
     {
-      "speaker": "전광판 영상 속 닭갈비",
-      "speakerType": "normal",
-      "text": "남이섬 가려고 가평까지 돌아가셨죠? 이제 안 그래도 돼요!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "전광판 영상 속 닭갈비",
-      "speakerType": "normal",
-      "text": "춘천에서 타면 바로 남이섬! 환승 0번, 가평 경유 0번!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": null,
-      "speakerType": "subtitle",
-      "text": "춘천 → 남이섬 직행 수상버스 | 약 40분",
-      "characters": []
-    },
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "주인공이 약속보다 조금 일찍 도착한다. 벤치 쪽에서 낯익은 목소리가 들려 돌아보니 세 명이 이미 모여 이야기하고 있다. 닭갈비는 홍보 어깨띠 없이 편한 차림이다.",
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "선착장에 도착했다. 그런데 낯익은 얼굴이 한둘이 아니다.",
       "characters": []
     },
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "오늘은 영상 속 내가 제일 멋있네. 실물은 쉬는 날이라 이렇게 편하게 나왔지만.",
+      "text": "어? {player}씨?! 여기서 뵙네요!",
       "characters": [
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
+          "expression": "웃음",
           "blush": false
         }
       ]
@@ -63,7 +30,7 @@
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "어제도 비슷했잖아.",
+      "text": "…뭐야, 당신이 왜 여기 있어요?",
       "characters": [
         {
           "id": "yangnyeom",
@@ -76,38 +43,26 @@
     {
       "speaker": "고구마",
       "speakerType": "normal",
-      "text": "오늘 호수 위는 바람이 찰 것 같아서 여분으로 목도리 챙겨왔어요. 필요하면 말해요.",
+      "text": "어머, 다들 {player}씨를 아세요?",
       "characters": [
         {
           "id": "goguma",
           "position": "center",
-          "expression": "기본",
+          "expression": "웃음",
           "blush": false
         }
       ]
-    },
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "주인공이 가까이 다가가며 이 장면이 이상하다는 걸 깨닫는다.",
-      "characters": []
     },
     {
       "speaker": "주인공",
-      "speakerType": "normal",
-      "text": "어? 세 분이 서로 아는 사이였어요?",
-      "characters": []
-    },
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "세 명이 동시에 돌아본다. 잠깐의 정적.",
+      "speakerType": "os",
+      "text": "어, 어제 만난 분들이 다 아는 사이였어요?",
       "characters": []
     },
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "어, {player}! 잠깐만, 너 우리 다 알아?",
+      "text": "저희 오래된 친구예요! 오늘 남이섬 같이 가기로 했거든요. 원래 한 명이 더 오기로 했었는데…",
       "characters": [
         {
           "id": "dakgalbi",
@@ -120,12 +75,12 @@
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "어제 가게에서 본 사람이 얘네랑 가는 사람이었네.",
+      "text": "…연락 안 되니까 그만 얘기해요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
+          "expression": "멋쩍음",
           "blush": false
         }
       ]
@@ -133,7 +88,7 @@
     {
       "speaker": "고구마",
       "speakerType": "normal",
-      "text": "저는 스카이워크에서 뵀는데... 각자 같은 날에 초대했던 거군요.",
+      "text": "괜찮으시면 같이 가요. 자리는 충분하니까요.",
       "characters": [
         {
           "id": "goguma",
@@ -142,149 +97,8 @@
           "blush": false
         }
       ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "아, 그래서 다들 아침 9시라고 한 거구나.",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "세 명이 \"초등학교 때부터 친구\"라고 차분히 설명해 주고, 닭갈비가 말을 잇는다.",
-      "characters": []
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "마침 잘됐다. 원래 넷이 가기로 했는데 한 명이 빠졌거든.",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "고구마",
-      "speakerType": "normal",
-      "text": "자리도 한 칸 비어 있었고요.",
-      "characters": [
-        {
-          "id": "goguma",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "양념",
-      "speakerType": "normal",
-      "text": "그 얘기는 나중에 해.",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "응, 맞다. 배 들어온다!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "주인공이 되물을 틈 없이 승선 안내 방송이 나오고 장면이 끝난다.",
-      "characters": []
     }
   ],
-  "choices": {
-    "id": "pier",
-    "question": "주인공의 반응",
-    "options": [
-      {
-        "key": "A",
-        "text": "\"처음부터 같이 간다고 말해줬으면 좋았잖아요\" 하고 웃는다",
-        "next": "s10_seat",
-        "effectDesc": "양념, 닭갈비 호감 소폭↑ (+)",
-        "effects": {
-          "score": 2,
-          "scale": "소폭↑",
-          "troubleState": null,
-          "targetChar": null,
-          "characters": {
-            "dakgalbi": 2,
-            "yangnyeom": 2
-          }
-        },
-        "followUp": []
-      },
-      {
-        "key": "B",
-        "text": "\"세 분이 친구라서 신기해요\"",
-        "next": "s10_seat",
-        "effectDesc": "고구마 호감 소폭↑ (+)",
-        "effects": {
-          "score": 2,
-          "scale": "소폭↑",
-          "troubleState": null,
-          "targetChar": "goguma",
-          "characters": null
-        },
-        "followUp": []
-      },
-      {
-        "key": "C",
-        "text": "\"제가 같이 가도 괜찮은 거예요?\" 하고 조심스레 묻는다",
-        "next": "s10_seat",
-        "effectDesc": "고구마 호감 소폭↑ (+)",
-        "effects": {
-          "score": 2,
-          "scale": "소폭↑",
-          "troubleState": null,
-          "targetChar": "goguma",
-          "characters": null
-        },
-        "followUp": []
-      },
-      {
-        "key": "D",
-        "text": "웃으며 조용히 지켜본다",
-        "next": "s10_seat",
-        "effectDesc": "변화 적음",
-        "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null,
-          "characters": null
-        },
-        "followUp": []
-      }
-    ]
-  },
-  "next": "s10_seat"
+  "choices": null,
+  "next": "s10_1_video"
 }

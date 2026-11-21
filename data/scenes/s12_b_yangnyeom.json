@@ -1,0 +1,192 @@
+{
+  "id": "s12_b_yangnyeom",
+  "title": "#12-B 양념 / 호숫가 산책로",
+  "type": "normal",
+  "background": "bg_lakeside_path",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "{양념}이 말없이 앞서 걷다가 멈춘다",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "여기 좋지? 사람 별로 없어서. 나는 이런 데가 편해.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "…할 말이 있는데, 말하면 또 세게 나올까 봐 그래.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "주인공은 {양념}이 바람 부는 쪽에 계속 서 있다는 걸 알아챈다",
+      "characters": []
+    }
+  ],
+  "choices": {
+    "id": "day3_island_yangnyeom",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"세게 나와도 괜찮으니까 말해봐요\"",
+        "next": "s11_2_place",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "yangnyeom": 3
+          },
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": "yangnyeom"
+        },
+        "followUp": [
+          {
+            "speaker": "양념",
+            "speakerType": "normal",
+            "text": "…오늘 와줘서 고마워. 그게 다야. 이렇게 말하는 것도 어렵네.",
+            "characters": [
+              {
+                "id": "yangnyeom",
+                "position": "center",
+                "expression": "기본",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": "양념",
+            "speakerType": "normal",
+            "text": "걔는 약속은 맨 먼저 꺼내놓고 정작 제일 늦게 오는 애야. 오늘도 그러네.",
+            "characters": [
+              {
+                "id": "yangnyeom",
+                "position": "center",
+                "expression": "멋쩍음",
+                "blush": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "B",
+        "text": "\"천천히 말해도 돼요\"",
+        "next": "s11_2_place",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "yangnyeom": 2
+          },
+          "troubleState": null,
+          "targetChar": "yangnyeom"
+        },
+        "followUp": [
+          {
+            "speaker": "양념",
+            "speakerType": "normal",
+            "text": "…오늘 와줘서 고마워. 그게 다야. 이렇게 말하는 것도 어렵네.",
+            "characters": [
+              {
+                "id": "yangnyeom",
+                "position": "center",
+                "expression": "기본",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": "양념",
+            "speakerType": "normal",
+            "text": "걔는 약속은 맨 먼저 꺼내놓고 정작 제일 늦게 오는 애야. 오늘도 그러네.",
+            "characters": [
+              {
+                "id": "yangnyeom",
+                "position": "center",
+                "expression": "멋쩍음",
+                "blush": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "C",
+        "text": "\"말하기 싫으면 안 해도 돼요\"",
+        "next": "s11_2_place",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "yangnyeom": -1
+          },
+          "troubleState": null,
+          "targetChar": "yangnyeom"
+        },
+        "followUp": [
+          {
+            "speaker": "양념",
+            "speakerType": "normal",
+            "text": "…오늘 와줘서 고마워. 그게 다야. 이렇게 말하는 것도 어렵네.",
+            "characters": [
+              {
+                "id": "yangnyeom",
+                "position": "center",
+                "expression": "기본",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": "양념",
+            "speakerType": "normal",
+            "text": "걔는 약속은 맨 먼저 꺼내놓고 정작 제일 늦게 오는 애야. 오늘도 그러네.",
+            "characters": [
+              {
+                "id": "yangnyeom",
+                "position": "center",
+                "expression": "멋쩍음",
+                "blush": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "lastExtra": {
+    "speaker": "양념",
+    "speakerType": "normal",
+    "text": "…이런 데 오면 걔가 제일 좋아했을 텐데.",
+    "characters": [
+      {
+        "id": "yangnyeom",
+        "position": "center",
+        "expression": "기본",
+        "blush": false
+      }
+    ]
+  }
+}

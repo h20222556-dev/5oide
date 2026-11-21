@@ -1,18 +1,12 @@
 {
   "id": "s15_final_choice",
-  "title": "최종 선택 화면",
-  "type": "choice_ending",
-  "background": "bg_black",
-  "time": "낮",
+  "title": "#15 최종 선택",
+  "type": "final",
+  "background": "bg_pier_night",
+  "time": "밤",
   "bgm": "bgm_main",
   "direction": [],
-  "dialogues": [
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "남이섬. 가평을 거치지 않고도 하루 만에 다녀올 수 있는 거리였다.",
-      "characters": []
-    }
-  ],
+  "day": 3,
+  "dialogues": [],
   "choices": null
 }

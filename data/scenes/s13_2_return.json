@@ -1,0 +1,20 @@
+{
+  "id": "s13_2_return",
+  "title": "#13-2 귀환 컷",
+  "type": "normal",
+  "background": "bg_sunset_lake",
+  "time": "노을",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "노을이 내려앉은 호수를 뒤로하고, 수상버스는 춘천으로 향했다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s14_pier_sunset"
+}

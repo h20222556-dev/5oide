@@ -23,8 +23,9 @@ class GameEngine {
 
       day1Visited: [],             // Day 1 방문한 장소 목록 ['lego', 'skywalk', ...]
       day2Visited: [],             // Day 2 만난 캐릭터 목록 ['dakgalbi', 'goguma', ...]
-      day3SeatVisited: [],         // Day 3 배에서 대화한 캐릭터
-      day3NamiVisited: [],         // Day 3 남이섬에서 방문한 캐릭터
+      day3SeatVisited: [],         // Day 3 수상버스 좌석 방문 목록
+      day3Order: [],               // Day 3 남이섬 이벤트 방문 순서 (visit_order)
+      day3Initialized: false,      // Day 3 진입 시 호감도 점수표(기준치 7) 보정 완료 여부
       day2Target: null,            // Day 2 선택한 캐릭터
       chosenSeat: null,            // s10에서 선택한 좌석 캐릭터
 
@@ -163,7 +164,8 @@ class GameEngine {
     this.state.day2Visited = [];
     this.state.day2Target = null;
     this.state.day3SeatVisited = [];
-    this.state.day3NamiVisited = [];
+    this.state.day3Order = [];
+    this.state.day3Initialized = false;
     this.state.chosenSeat = null;
 
     this.state.dialogueIndex = 0;
@@ -215,7 +217,8 @@ class GameEngine {
       day2Visited: [...this.state.day2Visited],
       day2Target: this.state.day2Target,
       day3SeatVisited: [...(this.state.day3SeatVisited || [])],
-      day3NamiVisited: [...(this.state.day3NamiVisited || [])],
+      day3Order: [...(this.state.day3Order || [])],
+      day3Initialized: !!this.state.day3Initialized,
       chosenSeat: this.state.chosenSeat,
       seenDialogues: [...this.state.seenDialogues],
       settings: { ...this.settings },
@@ -238,7 +241,8 @@ class GameEngine {
     this.state.day2Visited = [...(saved.day2Visited || [])];
     this.state.day2Target = saved.day2Target || null;
     this.state.day3SeatVisited = [...(saved.day3SeatVisited || [])];
-    this.state.day3NamiVisited = [...(saved.day3NamiVisited || [])];
+    this.state.day3Order = [...(saved.day3Order || [])];
+    this.state.day3Initialized = !!saved.day3Initialized;
     this.state.chosenSeat = saved.chosenSeat || null;
 
     this.state.seenDialogues = new Set(saved.seenDialogues || []);
@@ -264,12 +268,7 @@ class GameEngine {
       this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
     }
 
-    if (saved.sceneId === '__nami_select__') {
-      this.state.sceneId = 's12_dakgalbi';
-      this._presentDay3NamiChoices();
-    } else {
-      this.goToScene(saved.sceneId || 's01_prologue', this.state.dialogueIndex);
-    }
+    this.goToScene(saved.sceneId || 's01_prologue', this.state.dialogueIndex);
   }
 
   getSettings() { return { ...this.settings }; }
@@ -282,7 +281,9 @@ class GameEngine {
       if (this.settings.sfxVolume !== undefined) this.audioManager.setSfxVolume(this.settings.sfxVolume);
     }
     if (this.renderer) {
-      this.renderer.updateAffinityBar(this.state.affinity, this.currentCharacters, this.settings.showAffinity);
+      const curScene = this.scenes.get(this.state.sceneId);
+      const allowHud = !(curScene && curScene.day === 3) && this.settings.showAffinity;
+      this.renderer.updateAffinityBar(this.state.affinity, this.currentCharacters, allowHud);
     }
   }
 
@@ -314,11 +315,30 @@ class GameEngine {
       this.renderer.setBackground(scene.background);
       this.renderer.setTime(scene.time);
       this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
+      if (typeof this.renderer.showCG === 'function') this.renderer.showCG(null);
+      if (typeof this.renderer.setAffinityVisible === 'function') {
+        this.renderer.setAffinityVisible(scene.day !== 3 && this.settings.showAffinity !== false);
+      }
     }
 
     if (this.audioManager && scene.bgm) {
       this.audioManager.playBGM(scene.bgm);
     }
+
+    // Day 3 진입 초기화 (#9 진입 시 1회, Day 1~2 기존 점수를 md 3-2 점수표(A=4점, B=3점)로 보정)
+    if (scene.day === 3 && !this.state.day3Initialized) {
+      this.state.day3Initialized = true;
+      for (const cid of ['dakgalbi', 'yangnyeom', 'goguma']) {
+        const cur = this.state.affinity[cid] || 0;
+        if (cur < 4) {
+          this.state.affinity[cid] = cur >= 3 ? 4 : 3;
+        }
+      }
+    }
+
+    // Day 3 동적 장면 준비 (#11-2 장소 선택, #13 노을)
+    if (scene.type === 'place_select') this._prepPlaceSelect(scene);
+    if (scene.id === 's13_sunset') this._prepSunset(scene);
 
     // 특수 씬 진입 처리 (Day 1 방문 기록 등)
     if (sceneId === 's03_lego') this.state.day1Visited.push('lego');
@@ -347,6 +367,11 @@ class GameEngine {
 
     const dialogues = scene.dialogues || [];
 
+    // 조건부 대사 (볶음밥 등장 상태에서만 나오는 대사)
+    while (this.state.dialogueIndex < dialogues.length && dialogues[this.state.dialogueIndex].onlyIf === 'hidden' && !this.state.hiddenUnlocked) {
+      this.state.dialogueIndex++;
+    }
+
     // 대사 목록 끝 도달
     if (this.state.dialogueIndex >= dialogues.length) {
       this._onDialoguesFinished(scene);
@@ -357,6 +382,7 @@ class GameEngine {
     const dKey = `${this.state.sceneId}__${this.state.dialogueIndex}`;
     const alreadySeen = this.state.seenDialogues.has(dKey);
     this.state.seenDialogues.add(dKey);
+    if (d.reveal) this.state.revealedSpeakers.add(d.reveal);
 
     // 텍스트 변수 및 조사 치환 (현재 성별에 맞는 캐릭터 이름 전달)
     const vars = {
@@ -381,13 +407,15 @@ class GameEngine {
       if (d.speaker?.includes('양념')) this.state.revealedSpeakers.add('yangnyeom');
     }
 
-    // (b) 화자 라벨이 실제 이름(또는 역할)으로 지정되어 있고 "???"가 아닌 경우
-    for (const [cid, cData] of Object.entries(this.currentCharacters)) {
-      if (d.speaker && (d.speaker.includes(cData.role) || d.speaker.includes(cData.name)) && !d.speaker.includes('???')) {
-        if (!['s03_lego', 's03_skywalk', 's03_myeongdong'].includes(this.state.sceneId)) {
-          this.state.revealedSpeakers.add(cid);
-        } else if (hasRevealNotice || d.text.includes('제 이름은') || d.text.includes('입니다') || d.text.includes('이요')) {
-          this.state.revealedSpeakers.add(cid);
+    // (b) 화자 라벨이 실제 이름(또는 역할)으로 지정되어 있고 "???"가 아닌 경우 (speakerId로 명시 제어되는 화자 제외)
+    if (!d.speakerId) {
+      for (const [cid, cData] of Object.entries(this.currentCharacters)) {
+        if (d.speaker && (d.speaker.includes(cData.role) || d.speaker.includes(cData.name)) && !d.speaker.includes('???')) {
+          if (!['s03_lego', 's03_skywalk', 's03_myeongdong'].includes(this.state.sceneId)) {
+            this.state.revealedSpeakers.add(cid);
+          } else if (hasRevealNotice || d.text.includes('제 이름은') || d.text.includes('입니다') || d.text.includes('이요')) {
+            this.state.revealedSpeakers.add(cid);
+          }
         }
       }
     }
@@ -401,7 +429,16 @@ class GameEngine {
     let speakerDisplayName = d.speaker;
     let speakerColor = null;
 
-    if (d.speaker) {
+    if (d.speakerId) {
+      // 볶음밥 등 이름이 숨겨진 화자: 공개 전에는 항상 ???
+      const sc = this.currentCharacters[d.speakerId];
+      if (this.state.revealedSpeakers.has(d.speakerId) && sc) {
+        speakerDisplayName = sc.name;
+        speakerColor = sc.color;
+      } else {
+        speakerDisplayName = '???';
+      }
+    } else if (d.speaker) {
       if (d.speaker.includes('나레이션') || d.speaker.includes('내레이션') || d.speakerType === 'narration') {
         speakerDisplayName = null;
       } else {
@@ -426,6 +463,7 @@ class GameEngine {
               matched = true;
               speakerDisplayName = cData.name || (typeof getDisplayName === 'function' ? getDisplayName(cid, this.state.gender) : cData.role);
               speakerColor = cData.color;
+              if (cleanSpeaker.startsWith('영상 속')) speakerDisplayName = '영상 속 ' + speakerDisplayName;
               break;
             }
           }
@@ -438,6 +476,7 @@ class GameEngine {
 
     if (this.renderer) {
       this.renderer.setSpeaker(speakerDisplayName, speakerColor, d.speakerType);
+      if (typeof this.renderer.showCG === 'function') this.renderer.showCG(d.cg || null);
       this.renderer.setDialogueStyle(d.speakerType);
       this.renderer.setCharacters(d.characters, d.speaker, this.state.gender);
       this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
@@ -587,11 +626,11 @@ class GameEngine {
       return;
     }
 
-    // Day 3 좌석: 이미 대화한 인물은 비활성으로 남은 인물 선택
-    if (scene.id === 's10_seat' && (this.state.day3SeatVisited || []).length > 0) {
-      this._presentDay3SeatChoices();
-      return;
-    }
+    // Day 3 동적 장면 처리
+    if (scene.id === 's10_2_seat') { this._presentDay3SeatChoices(); return; }
+    if (scene.type === 'place_select') { this._presentPlaceSelect(scene); return; }
+    if (scene.type === 'judge') { this._handlePierSunsetJudgement(); return; }
+    if (scene.type === 'final') { this._presentFinalChoice(); return; }
 
     // 1. Day 1 메시지 및 남은 장소 씬 (s03_2_day1_messages)
     if (scene.id === 's03_2_day1_messages') {
@@ -626,24 +665,6 @@ class GameEngine {
       return;
     }
 
-    // 5. 선착장 해질녘 판정 (s14_pier_sunset)
-    if (scene.id === 's14_pier_sunset') {
-      this._handlePierSunsetJudgement();
-      return;
-    }
-
-    // 6. 분기 A/B 종료 후 -> s15_final_choice
-    if (scene.id === 's14_pier_sunset_a' || scene.id === 's14_pier_sunset_b') {
-      this.goToScene('s15_final_choice');
-      return;
-    }
-
-    // 7. 최종 선택 화면 (s15_final_choice)
-    if (scene.id === 's15_final_choice') {
-      this._presentFinalChoice();
-      return;
-    }
-
     // 8. 엔딩 씬 대사 종료 후 -> 타이틀 복귀 버튼
     if (scene.type === 'ending') {
       this._presentChoices("이야기가 마무리되었습니다.", [
@@ -665,17 +686,6 @@ class GameEngine {
       }
 
       this._presentChoices(scene.choices.question, scene.choices.options);
-      return;
-    }
-
-    // 10. 뱃길 대화 종료 후 -> 남이섬으로 연결 (선택지 없는 경우의 폴백)
-    if (scene.id === 's11_dakgalbi') { this.goToScene('s12_dakgalbi'); return; }
-    if (scene.id === 's11_yangnyeom') { this.goToScene('s12_yangnyeom'); return; }
-    if (scene.id === 's11_goguma') { this.goToScene('s12_goguma'); return; }
-
-    // 11. 남이섬 이벤트 종료 후 -> s14_pier_sunset (선택지 없는 경우의 폴백)
-    if (scene.id === 's12_dakgalbi' || scene.id === 's12_yangnyeom' || scene.id === 's12_goguma') {
-      this.goToScene('s14_pier_sunset');
       return;
     }
 
@@ -777,55 +787,92 @@ class GameEngine {
     setTimeout(() => { if (this.state.isTransitioning) unlock(); }, c.fadeOutMs + c.holdMs + c.fadeInMs + 3000);
   }
 
-  // ─── Day 3: 배 좌석 / 남이섬 장소 순차 선택 ───
+  // ─── Day 3: #10-2 수상버스 좌석 선택 (세 자리를 모두 방문, 본 자리는 선택지에서 사라짐) ───
   _presentDay3SeatChoices() {
-    this.state.sceneId = 's10_seat';
+    this.state.sceneId = 's10_2_seat';
+    const src = this.scenes.get('s10_2_seat')?.choices?.options || [];
     const visited = this.state.day3SeatVisited || [];
-    if (visited.length >= 3) { this._presentDay3NamiChoices(); return; }
-    const src = this.scenes.get('s10_seat')?.choices?.options || [];
-    const seats = [
-      { id: 'dakgalbi', next: 's11_dakgalbi', fallback: '{닭갈비} 옆에 앉는다' },
-      { id: 'yangnyeom', next: 's11_yangnyeom', fallback: '{양념} 옆에 앉는다' },
-      { id: 'goguma', next: 's11_goguma', fallback: '{고구마} 옆에 앉는다' },
-    ];
-    const options = seats.map((s, idx) => {
-      const done = visited.includes(s.id);
-      return {
-        key: String.fromCharCode(65 + idx),
-        charId: s.id,
-        text: src[idx]?.text || s.fallback,
-        disabled: done,
-        lockedReason: done ? '대화 완료' : null,
-        next: done ? null : s.next,
-      };
-    });
-    this._presentChoices(visited.length === 0 ? '누구 옆에 앉을까?' : '다음은 누구 옆으로 가볼까?', options);
+    const remain = src.filter(o => !visited.includes(o.charId));
+    if (remain.length === 0) { this.goToScene('s11_1_arrive'); return; }
+    this._presentChoices('', remain);
   }
 
-  _presentDay3NamiChoices() {
-    this.state.sceneId = '__nami_select__';
-    const visited = this.state.day3NamiVisited || [];
-    if (visited.length >= 3) { this.goToScene('s14_pier_sunset'); return; }
-    const spots = [
-      { id: 'dakgalbi', next: 's12_dakgalbi', text: '메타세쿼이아길 — {닭갈비}' },
-      { id: 'yangnyeom', next: 's12_yangnyeom', text: '산책로 — {양념}' },
-      { id: 'goguma', next: 's12_goguma', text: '은행나무길 — {고구마}' },
-    ];
-    const options = spots.map((s, idx) => {
-      const done = visited.includes(s.id);
-      return {
-        key: String.fromCharCode(65 + idx),
-        charId: s.id,
-        text: s.text,
-        disabled: done,
-        lockedReason: done ? '방문 완료' : null,
-        next: done ? null : s.next,
-      };
-    });
-    this._presentChoices(visited.length === 0 ? '남이섬에서 어디부터 가볼까?' : '다음은 어디로 가볼까?', options);
+  // ─── Day 3: #11-2 남이섬 장소 선택 (본 이벤트 사라짐, 마지막 하나는 자동 진행) ───
+  _prepPlaceSelect(scene) {
+    const order = this.state.day3Order || [];
+    const remain = scene.places.filter(p => !order.includes(p.id));
+    if (remain.length === 1 && order.length > 0) {
+      scene.dialogues = [{ speaker: null, speakerType: 'narration', text: scene.lastCall, characters: [] }];
+    } else {
+      scene.dialogues = remain.map(p => {
+        if (order.length === 0) return p.proposal;
+        const t = p.proposal.text.replace(/^(저는\s*|…\s*)/, '');
+        return { ...p.proposal, text: `그럼 저는… ${t}` };
+      });
+    }
+  }
+
+  _presentPlaceSelect(scene) {
+    const order = this.state.day3Order || [];
+    const remain = scene.places.filter(p => !order.includes(p.id));
+    if (remain.length === 0) { this.goToScene('s13_sunset'); return; }
+    if (remain.length === 1) { this.goToScene(remain[0].next); return; }
+    this._presentChoices('', remain.map((p, i) => ({
+      key: String.fromCharCode(65 + i),
+      charId: p.id,
+      text: p.optionText,
+      next: p.next,
+      effectDesc: '',
+      effects: null,
+      followUp: [],
+    })));
+  }
+
+  // ─── Day 3: #13 노을 (호감도 1위 캐릭터 한 줄, 동점이면 마지막으로 본 이벤트 캐릭터) ───
+  _prepSunset(scene) {
+    if (!scene._base) scene._base = scene.dialogues.slice();
+    const aff = this.state.affinity || {};
+    const ids = ['dakgalbi', 'yangnyeom', 'goguma'];
+    const max = Math.max(...ids.map(i => aff[i] || 0));
+    const tops = ids.filter(i => (aff[i] || 0) === max);
+    let top = tops[0];
+    if (tops.length > 1) {
+      const order = this.state.day3Order || [];
+      top = tops.slice().sort((x, y) => order.indexOf(y) - order.indexOf(x))[0];
+    }
+    const line = scene.topLines && scene.topLines[top];
+    scene.dialogues = scene._base.concat(line ? [line] : []);
+  }
+
+  // ─── Day 3: 호감도 반영 (내부 affinity 사용, 화면에는 숫자 대신 문구 + 막대 바만 표시) ───
+  _applyLikeEffects(effects) {
+    const charName = (id) => this.currentCharacters[id]?.name || id;
+    if (effects.likeVisual) {
+      // #10-1 반응 선택지: 막대만 움직이고 판정 점수에는 반영하지 않음
+      for (const id of effects.likeVisual) {
+        const cur = this.state.affinity[id] || 0;
+        if (this.renderer && typeof this.renderer.showLikeFeedback === 'function') {
+          this.renderer.showLikeFeedback(id, charName(id), 1, cur, Math.min(10, cur + 1), true);
+        }
+      }
+      return;
+    }
+    for (const [id, delta] of Object.entries(effects.like || {})) {
+      const prev = this.state.affinity[id] || 0;
+      const next = Math.max(0, Math.min(10, prev + delta));
+      this.state.affinity[id] = next;
+      if (effects.troubleState) this.state.troubleStates[id] = effects.troubleState;
+      if (this.renderer && typeof this.renderer.showLikeFeedback === 'function') {
+        this.renderer.showLikeFeedback(id, charName(id), delta, prev, next, false);
+      }
+    }
+    if (this.renderer) {
+      this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
+    }
   }
 
   _followUpToDialogue(f) {
+    if (f && f.characters !== undefined) return f;
     const m = (f.speaker || '').match(/^([^\[]+)(?:\[([^\]]+)\])?$/);
     const name = (m ? m[1] : f.speaker || '').trim();
     let expr = m && m[2] ? m[2].trim() : '기본';
@@ -882,43 +929,36 @@ class GameEngine {
 
   _handlePierSunsetJudgement() {
     const thresholds = this.config?.endingThresholds || {
-      hidden_all_three_each: 6,
+      hidden_all_three_each: 7,
       reunion_temp: 10
     };
 
-    let isUnlocked = false;
-    const mode = this.config?.hidden_unlock?.mode || 'all_three';
-
-    if (mode === 'all_three') {
-      const th = thresholds.hidden_all_three_each ?? 6;
-      isUnlocked = (
-        this.state.affinity.dakgalbi >= th &&
-        this.state.affinity.yangnyeom >= th &&
-        this.state.affinity.goguma >= th
-      );
-    } else {
-      isUnlocked = this.state.reunion_temp >= (thresholds.reunion_temp ?? 10);
-    }
+    const th = thresholds.hidden_all_three_each ?? 7;
+    const isUnlocked = (
+      (this.state.affinity.dakgalbi || 0) >= th &&
+      (this.state.affinity.yangnyeom || 0) >= th &&
+      (this.state.affinity.goguma || 0) >= th
+    );
 
     this.state.hiddenUnlocked = isUnlocked;
 
-    // 분기 A (볶음밥 등장) 또는 분기 B (미등장)로 이동
+    // #14-B (조건 충족: 볶음밥 등장) 또는 #14-A (미충족: 실루엣 나레이션)
     if (isUnlocked) {
-      this.goToScene('s14_pier_sunset_a');
+      this.goToScene('s14_b_bokkeumbap');
     } else {
-      this.goToScene('s14_pier_sunset_b');
+      this.goToScene('s14_a_silhouette');
     }
   }
 
   // ─── s15 최종 선택 화면 (버튼 잠김 / 히든 노출) ─────────────────────────────
 
   _presentFinalChoice() {
-    const th = this.config?.endingThresholds || { dakgalbi: 8, yangnyeom: 8, goguma: 8 };
+    const th = this.config?.endingThresholds || { dakgalbi: 7, yangnyeom: 7, goguma: 7 };
     const options = [];
 
     // 1. 닭갈비
     const dakgalbiName = this.currentCharacters.dakgalbi.name;
-    const dakgalbiOk = this.state.affinity.dakgalbi >= (th.dakgalbi ?? 8);
+    const dakgalbiOk = this.state.affinity.dakgalbi >= (th.dakgalbi ?? 7);
     options.push({
       text: `${dakgalbiName}에게 마음을 전한다`,
       disabled: !dakgalbiOk,
@@ -928,7 +968,7 @@ class GameEngine {
 
     // 2. 양념
     const yangnyeomName = this.currentCharacters.yangnyeom.name;
-    const yangnyeomOk = this.state.affinity.yangnyeom >= (th.yangnyeom ?? 8);
+    const yangnyeomOk = this.state.affinity.yangnyeom >= (th.yangnyeom ?? 7);
     options.push({
       text: `${yangnyeomName}에게 마음을 전한다`,
       disabled: !yangnyeomOk,
@@ -938,7 +978,7 @@ class GameEngine {
 
     // 3. 고구마
     const gogumaName = this.currentCharacters.goguma.name;
-    const gogumaOk = this.state.affinity.goguma >= (th.goguma ?? 8);
+    const gogumaOk = this.state.affinity.goguma >= (th.goguma ?? 7);
     options.push({
       text: `${gogumaName}에게 마음을 전한다`,
       disabled: !gogumaOk,
@@ -1029,7 +1069,9 @@ class GameEngine {
         id: '__followup__',
         type: 'normal',
         bgm: null,
-        dialogues: chosen.followUp.map(f => this._followUpToDialogue(f)),
+        dialogues: chosen.followUp.map(f => this._followUpToDialogue(f)).concat(
+          (origScene.lastExtra && (this.state.day3Order || []).length === 2 && !(this.state.day3Order || []).includes(origScene.lastExtra.characters?.[0]?.id)) ? [origScene.lastExtra] : []
+        ),
         choices: null,
         midChoices: null,
         next: null,
@@ -1043,28 +1085,21 @@ class GameEngine {
       return;
     }
 
-    // 특수 좌석 선택 기록 (s10_seat) - 첫 선택만 기록
-    if (this.state.sceneId === 's10_seat' && !this.state.chosenSeat) {
-      if (chosen.key === 'A') this.state.chosenSeat = 'dakgalbi';
-      else if (chosen.key === 'B') this.state.chosenSeat = 'yangnyeom';
-      else if (chosen.key === 'C') this.state.chosenSeat = 'goguma';
-    }
-
-    // Day 3 배 위 대화 종료 -> 남은 인물 선택 / 모두 만났으면 남이섬 장소 선택
-    if (['s11_dakgalbi', 's11_yangnyeom', 's11_goguma'].includes(this.state.sceneId)) {
-      const cid = this.state.sceneId.replace('s11_', '');
+    // Day 3 수상버스 좌석 대화 종료 -> 남은 자리 선택 / 3자리 완료 시 #11-1 남이섬 도착
+    const seatMap = { s10_3_dakgalbi: 'dakgalbi', s10_4_yangnyeom: 'yangnyeom', s10_5_goguma: 'goguma' };
+    if (seatMap[this.state.sceneId]) {
+      const cid = seatMap[this.state.sceneId];
       if (!this.state.day3SeatVisited.includes(cid)) this.state.day3SeatVisited.push(cid);
-      if (this.state.day3SeatVisited.length >= 3) this._presentDay3NamiChoices();
-      else this._presentDay3SeatChoices();
+      this.goToScene(this.state.day3SeatVisited.length >= 3 ? 's11_1_arrive' : 's10_2_seat');
       return;
     }
 
-    // Day 3 남이섬 대화 종료 -> 남은 장소 선택 / 모두 끝났으면 선착장
-    if (['s12_dakgalbi', 's12_yangnyeom', 's12_goguma'].includes(this.state.sceneId)) {
-      const cid = this.state.sceneId.replace('s12_', '');
-      if (!this.state.day3NamiVisited.includes(cid)) this.state.day3NamiVisited.push(cid);
-      if (this.state.day3NamiVisited.length >= 3) this.goToScene('s14_pier_sunset');
-      else this._presentDay3NamiChoices();
+    // Day 3 남이섬 이벤트 종료 -> visited/visit_order 기록 후 #11-2 복귀 (3개 완료 시 #13 노을)
+    const evMap = { s12_a_dakgalbi: 'dakgalbi', s12_b_yangnyeom: 'yangnyeom', s12_c_goguma: 'goguma' };
+    if (evMap[this.state.sceneId]) {
+      const cid = evMap[this.state.sceneId];
+      if (!this.state.day3Order.includes(cid)) this.state.day3Order.push(cid);
+      this.goToScene(this.state.day3Order.length >= 3 ? 's13_sunset' : 's11_2_place');
       return;
     }
 
@@ -1133,6 +1168,10 @@ class GameEngine {
   }
 
   applyEffects(effects) {
+    if (effects && (effects.like || effects.likeVisual)) {
+      this._applyLikeEffects(effects);
+      return;
+    }
     let delta = effects.score || 0;
     if (!delta && effects.scale && this.scoreScale) {
       delta = this.scoreScale[effects.scale] || 0;

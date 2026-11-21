@@ -1,0 +1,73 @@
+{
+  "id": "s10_4_yangnyeom",
+  "title": "#10-4 선내 창가 2인석 — 양념",
+  "type": "normal",
+  "background": "bg_boat",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "…아까 선착장에서 내가 말 세게 했나. 나는 원래 이런데, 다들 놀라거나 조용해지더라고.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "day3_seat_yangnyeom",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"솔직한 게 좋아요. 속마음은 다 보이던데요\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "yangnyeom": 3
+          },
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": "yangnyeom"
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "\"누가 직접 상처받았다고 말했어요?\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "yangnyeom": 2
+          },
+          "troubleState": "대화가 이어짐",
+          "targetChar": "yangnyeom"
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "\"조금만 부드럽게 말해보면 어때요?\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "yangnyeom": -1
+          },
+          "troubleState": "고민 자극",
+          "targetChar": "yangnyeom"
+        },
+        "followUp": []
+      }
+    ]
+  }
+}

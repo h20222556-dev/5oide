@@ -1,0 +1,79 @@
+{
+  "id": "s10_5_goguma",
+  "title": "#10-5 선미 쪽 벤치 — 고구마",
+  "type": "normal",
+  "background": "bg_boat",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "챙겨주시는 거 힘들지 않아요?",
+      "characters": []
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "저는 챙기는 게 편해요. 그런데 제가 뭘 하고 싶은지는 요즘 잘 모르겠더라고요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "day3_seat_goguma",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"그럼 오늘은 하고 싶은 거 하나만 골라봐요\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "goguma": 3
+          },
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": "goguma"
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "\"천천히 찾아도 돼요\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "goguma": 2
+          },
+          "troubleState": null,
+          "targetChar": "goguma"
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "\"챙겨주는 모습이 좋아요\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "goguma": 1
+          },
+          "troubleState": "고민은 그대로",
+          "targetChar": "goguma"
+        },
+        "followUp": []
+      }
+    ]
+  }
+}

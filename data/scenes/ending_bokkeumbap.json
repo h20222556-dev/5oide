@@ -1,22 +1,114 @@
 {
   "id": "ending_bokkeumbap",
-  "title": "볶음밥 히든 엔딩",
+  "title": "#16-재회 (볶음밥)",
   "type": "ending",
-  "background": "bg_sunset_pier",
-  "time": "황혼",
-  "bgm": "bgm_ending",
+  "background": "bg_pier_night",
+  "time": "밤",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
   "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "…남이섬, 다녀왔어.",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "기본",
+      "text": "알아. 나 빼고 갔잖아.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "네가 안 왔으니까.",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "쓸쓸",
+      "text": "…맞아. 내가 안 갔지.",
+      "characters": []
+    },
     {
       "speaker": null,
       "speakerType": "narration",
-      "text": "[누락] 엔딩 원고 필요 (원문에 없는 대사로, 원고 수급 후 data 파일에 입력)",
+      "text": "짧은 침묵. 호수 쪽에서 물결 소리",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "기본",
+      "text": "다음 주 토요일. 남이섬. 이번엔 내가 먼저 도착해 있을게.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "…정말?",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "웃음",
+      "text": "응. 이번엔 진짜.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "거짓말이면 가만 안 둬요.",
       "characters": [
         {
-          "id": "bokkeumbap",
+          "id": "yangnyeom",
           "position": "center",
-          "expression": "웃음"
+          "expression": "기본",
+          "blush": false
         }
       ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "은행잎은 아직 많이 남아 있어요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그럼 이번엔 안내는 제가 할게요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "막연하기만 했던 약속에, 처음으로 날짜가 생겼다.",
+      "characters": [],
+      "cue": "prologue_audio_end"
     }
   ],
   "choices": null

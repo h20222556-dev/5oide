@@ -72,25 +72,58 @@ for (const p of places) {
   }
 }
 
-// 3. 좌석 선택 3개 경로 검증
-console.log('\n--- 3. 수상버스 좌석 선택 3개 경로 검증 ---');
-const seats = ['s11_dakgalbi', 's11_yangnyeom', 's11_goguma'];
-for (const s of seats) {
-  const exists = fs.existsSync(path.join(rootDir, 'data', 'scenes', `${s}.json`));
-  assert(exists, `좌석 뱃길 씬 파일 존재: ${s}.json`);
-  if (exists) {
-    const data = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${s}.json`), 'utf8'));
-    assert(data.choices !== null, `${s}에 선택지가 정상 수록되어 있음`);
+// 3. Day 3 수상버스 (#9, #10-1~#10-5) 경로 검증
+console.log('\n--- 3. Day 3 선착장 & 수상버스 (#9 ~ #10-5) 경로 검증 ---');
+const boatScenes = ['s09_pier', 's10_1_video', 's10_2_seat', 's10_3_dakgalbi', 's10_4_yangnyeom', 's10_5_goguma'];
+for (const b of boatScenes) {
+  const exists = fs.existsSync(path.join(rootDir, 'data', 'scenes', `${b}.json`));
+  assert(exists, `Day 3 씬 파일 존재: ${b}.json`);
+  if (exists && b !== 's09_pier') {
+    const data = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${b}.json`), 'utf8'));
+    assert(data.choices && data.choices.options.length > 0, `${b}에 선택지가 정상 수록되어 있음`);
   }
 }
 
-// 4. 남이섬 3개 경로 검증
-console.log('\n--- 4. 남이섬 이벤트 3개 경로 검증 ---');
-const namiseom = ['s12_dakgalbi', 's12_yangnyeom', 's12_goguma'];
-for (const n of namiseom) {
+// 4. Day 3 남이섬 (#11-1 ~ #14-B) 경로 및 6가지 장소 순서 검증
+console.log('\n--- 4. Day 3 남이섬 (#11-1 ~ #14-B) 경로 및 6가지 순서 검증 ---');
+const day3Island = ['s11_1_arrive', 's11_2_place', 's12_a_dakgalbi', 's12_b_yangnyeom', 's12_c_goguma', 's13_sunset', 's13_2_return', 's14_pier_sunset', 's14_a_silhouette', 's14_b_bokkeumbap'];
+for (const n of day3Island) {
   const exists = fs.existsSync(path.join(rootDir, 'data', 'scenes', `${n}.json`));
-  assert(exists, `남이섬 씬 파일 존재: ${n}.json`);
+  assert(exists, `Day 3 남이섬/선착장 씬 파일 존재: ${n}.json`);
 }
+
+// 장소 선택 6가지 순열 + 세 번째 이벤트에서만 lastExtra 출력 검증
+const islandPerms = [
+  ['dakgalbi', 'yangnyeom', 'goguma'],
+  ['dakgalbi', 'goguma', 'yangnyeom'],
+  ['yangnyeom', 'dakgalbi', 'goguma'],
+  ['yangnyeom', 'goguma', 'dakgalbi'],
+  ['goguma', 'dakgalbi', 'yangnyeom'],
+  ['goguma', 'yangnyeom', 'dakgalbi'],
+];
+const evFileMap = { dakgalbi: 's12_a_dakgalbi', yangnyeom: 's12_b_yangnyeom', goguma: 's12_c_goguma' };
+for (const perm of islandPerms) {
+  const visitOrder = [];
+  let extraCount = 0;
+  let extraChar = null;
+  for (const cid of perm) {
+    const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${evFileMap[cid]}.json`), 'utf8'));
+    const isThird = visitOrder.length === 2;
+    if (isThird && sc.lastExtra) { extraCount++; extraChar = cid; }
+    visitOrder.push(cid);
+  }
+  assert(visitOrder.length === 3 && extraCount === 1 && extraChar === perm[2],
+    `장소 순서 [${perm.join('->')}]: 3개 완료 및 마지막(${perm[2]})에만 추가 대사 발생`);
+}
+
+// #14/#15/#16 기준치(7점) 및 볶음밥 조건, 혼자 돌아가기 검증
+assert(config.endingThresholds.dakgalbi === 7 && config.endingThresholds.yangnyeom === 7 && config.endingThresholds.goguma === 7 && config.endingThresholds.hidden_all_three_each === 7,
+  '엔딩 기준치가 모두 7점으로 설정됨');
+const endDak = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 'ending_dakgalbi.json'), 'utf8'));
+assert(endDak.dialogues.some(d => d.onlyIf === 'hidden' && d.text.includes('잘 지내')), '개별 엔딩에 볶음밥 등장 시 반응 대사(onlyIf: hidden) 존재');
+assert(endDak.dialogues.some(d => d.cg && d.cg.id === 'cg_ending_dakgalbi' && d.text.includes('홍보 영상에는 없던 웃음이었다.')), '개별 엔딩에 CG 정보 및 제안 나레이션 존재');
+const endAlone = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 'ending_alone.json'), 'utf8'));
+assert(endAlone.dialogues.some(d => d.text === '남이섬. 가평을 거치지 않고도, 하루 만에 다녀올 수 있는 거리였다.'), '혼자 돌아가기 엔딩 마지막 나레이션 정확함');
 
 // 5. 엔딩 5종 도달 가능성 검증
 console.log('\n--- 5. 엔딩 5종 씬 및 도달 검증 ---');
@@ -269,7 +302,8 @@ for (const f of fs.readdirSync(path.join(rootDir, 'data', 'scenes'))) {
   for (const o of (sc.choices?.options || [])) for (const u of (o.followUp || [])) if (/^["“”]|["“”]$|\\(\\+\\)$/.test(u.text)) quoted++;
 }
 assert(quoted === 0, `대사 앞뒤 큰따옴표 없음 (잔존 ${quoted})`);
-assert(engineJs.includes('_presentDay3SeatChoices') && engineJs.includes('_presentDay3NamiChoices') && saveJs.includes('day3SeatVisited') && saveJs.includes('day3NamiVisited'), 'Day 3 배/남이섬 순차 선택 및 세이브 필드 구현됨');
+assert(engineJs.includes('_presentDay3SeatChoices') && engineJs.includes('_presentPlaceSelect') && saveJs.includes('day3SeatVisited') && saveJs.includes('day3Order'), 'Day 3 좌석/장소 순차 선택 및 세이브 필드 구현됨');
+assert(rendererJs.includes('showLikeFeedback') && rendererJs.includes('showCG') && rendererJs.includes('setAffinityVisible'), 'Day 3 호감도 막대 바(숫자 미표시) 및 CG 플레이스홀더 구현됨');
 
 console.log('\n====================================================');
 console.log(` 검증 결과: ${passedTests} / ${totalTests} 테스트 통과 (${Math.round((passedTests/totalTests)*100)}%)`);

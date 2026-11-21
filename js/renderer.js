@@ -818,4 +818,94 @@ class Renderer {
       this.chapterOverlay.classList.add('hidden');
     }
   }
+
+  // ─── Day 3 전용: 호감도 HUD 표시 제어 / 막대 바 피드백(숫자 미표시) / 엔딩 CG 플레이스홀더 ───
+
+  setAffinityVisible(visible) {
+    if (!this.affinityBar) return;
+    this.affinityBar.style.display = visible ? 'flex' : 'none';
+  }
+
+  showLikeFeedback(charId, charName, delta, prevVal, nextVal, isVisualOnly = false) {
+    const wrapper = this.gameWrapper || document.body;
+    let stack = wrapper.querySelector('.like-feedback-stack');
+    if (!stack) {
+      stack = document.createElement('div');
+      stack.className = 'like-feedback-stack';
+      wrapper.appendChild(stack);
+    }
+
+    let label = '호감도가 상승했다';
+    let tone = 'up';
+    if (delta >= 3) {
+      label = '호감도가 크게 상승했다';
+      tone = 'up-big';
+    } else if (delta < 0) {
+      label = '호감도가 감소했다';
+      tone = 'down';
+    }
+
+    const fromPct = Math.max(0, Math.min(100, (prevVal / 10) * 100));
+    const toPct = Math.max(0, Math.min(100, (nextVal / 10) * 100));
+
+    const card = document.createElement('div');
+    card.className = `like-feedback-card ${tone}`;
+    card.innerHTML = `
+      <div class="like-feedback-header">
+        <span class="like-feedback-name">${charName}</span>
+        <span class="like-feedback-text">${label}</span>
+      </div>
+      <div class="like-bar-track">
+        <div class="like-bar-fill" style="width: ${fromPct}%"></div>
+      </div>
+    `;
+    stack.appendChild(card);
+
+    // 한 번 움직였다가 사라짐
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const fill = card.querySelector('.like-bar-fill');
+        if (fill) fill.style.width = `${toPct}%`;
+      });
+    });
+
+    setTimeout(() => {
+      card.classList.add('fade-out');
+      setTimeout(() => {
+        if (card.parentNode) card.remove();
+      }, 450);
+    }, 1800);
+  }
+
+  showCG(cgObj) {
+    const wrapper = this.gameWrapper || document.body;
+    const old = wrapper.querySelector('.cg-display-layer');
+    if (old) old.remove();
+    if (!cgObj) return;
+
+    const layer = document.createElement('div');
+    layer.className = 'cg-display-layer';
+
+    const img = new Image();
+    const imgPath = `assets/cg/${cgObj.id}.png`;
+    img.onload = () => {
+      layer.innerHTML = `<img class="cg-image" src="${imgPath}" alt="${cgObj.caption || '엔딩 CG'}">`;
+    };
+    img.onerror = () => {
+      layer.innerHTML = `
+        <div class="cg-placeholder-box">
+          <div class="cg-placeholder-tag">엔딩 CG (${cgObj.id}.png)</div>
+          <div class="cg-placeholder-caption">${cgObj.caption || ''}</div>
+        </div>
+      `;
+    };
+    img.src = imgPath;
+
+    const dialogueBox = this.dialogueBox;
+    if (dialogueBox && dialogueBox.parentNode === wrapper) {
+      wrapper.insertBefore(layer, dialogueBox);
+    } else {
+      wrapper.appendChild(layer);
+    }
+  }
 }

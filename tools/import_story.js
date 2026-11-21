@@ -122,6 +122,11 @@ const gameConfig = {
   "bgmVolume": 0.5,
   "sfxVolume": 0.7,
   "showAffinity": true,
+  "dayTransition": {
+    "fadeOutMs": 1500,
+    "holdMs": 3500,
+    "fadeInMs": 1500
+  },
   "genderSelection": {
     "prompt": "당신의 성별(또는 상대 캐릭터들의 성별)을 선택하세요.",
     "options": [
@@ -134,10 +139,10 @@ const gameConfig = {
     "description": "all_three: 닭갈비/양념/고구마 호감도가 모두 기준치 이상일 때 볶음밥 등장 | reunion_temp: 히든 재회온도 기준치 이상"
   },
   "endingThresholds": {
-    "dakgalbi": 8,
-    "yangnyeom": 8,
-    "goguma": 8,
-    "hidden_all_three_each": 6,
+    "dakgalbi": 7,
+    "yangnyeom": 7,
+    "goguma": 7,
+    "hidden_all_three_each": 7,
     "reunion_temp": 10
   },
   "flags": {
@@ -636,6 +641,13 @@ const defaultNextMap = {
   "s14_pier_sunset_a": "s15_final_choice",
   "s14_pier_sunset_b": "s15_final_choice"
 };
+
+// ★ Day 3(남이섬 파트)는 '남이섬_Day3_스토리.md' 기준으로 교체 (기존 s09~s15, ending_* 장면은 대체됨)
+const { generateDay3 } = require('./import_day3.js');
+for (let k = allScenes.length - 1; k >= 0; k--) {
+  if (/^(s09|s10|s11|s12|s13|s14|s15|ending)_/.test(allScenes[k].id)) allScenes.splice(k, 1);
+}
+allScenes.push(...generateDay3({ rootDir, report }));
 
 const sceneFileList = [];
 for (const scene of allScenes) {

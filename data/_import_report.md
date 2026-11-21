@@ -48,13 +48,21 @@
 | `bg_cafe.png` | bg_cafe (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_chuncheon_city.png` | bg_chuncheon_city (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_chuncheon_station.png` | bg_chuncheon_station (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_ginkgo_road.png` | bg_ginkgo_road (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_hotel.png` | bg_hotel (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_lakeside_path.png` | bg_lakeside_path (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_legoland.png` | bg_legoland (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_metasequoia.png` | bg_metasequoia (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_myeongdong.png` | bg_myeongdong (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_namiseom.png` | bg_namiseom (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_namiseom_entrance.png` | bg_namiseom_entrance (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_night_sky.png` | bg_night_sky (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_phone_screen.png` | bg_phone_screen (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_pier_morning.png` | bg_pier_morning (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_pier_night.png` | bg_pier_night (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_skywalk.png` | bg_skywalk (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_sunset_lake.png` | bg_sunset_lake (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
+| `bg_sunset_pier.png` | bg_sunset_pier (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 | `bg_train_window.png` | bg_train_window (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |
 
 ### 2) 캐릭터 표정 및 오버레이 (`assets/characters/{id}/{female|male}/{표정}.png`)
@@ -84,23 +92,25 @@
 - `s07_goguma`: Day 2 — 고구마 (카페) (대사 17개)
 - `s07_yangnyeom`: Day 2 — 양념 (명동 거리) (대사 17개)
 - `s08_day2_end`: Day 2 마무리 (대사 7개)
-- `s09_pier`: 선착장 — 세 사람이 서로 아는 사이 (다음 날 아침) (대사 20개)
-- `s10_seat`: 수상버스 좌석 선택 (대사 0개)
-- `s11_boat`: 뱃길 위 (약 40분) (대사 1개)
-- `s11_dakgalbi`: 갑판 난간 옆 2인석 — 닭갈비 (대사 4개)
-- `s11_yangnyeom`: 선내 창가 2인석 — 양념 (대사 5개)
-- `s11_goguma`: 선미 쪽 벤치 — 고구마 (대사 5개)
-- `s12_namiseom`: 남이섬 (대사 0개)
-- `s12_dakgalbi`: 메타세쿼이아길 — 닭갈비 (대사 6개)
-- `s12_yangnyeom`: 산책로 — 양념 (대사 5개)
-- `s12_goguma`: 은행나무길 — 고구마 (대사 3개)
-- `s13_return_notes`: 돌아가는 길 (대사 1개)
-- `s14_pier_sunset`: 춘천 선착장 해질녘 (대사 1개)
-- `s14_pier_sunset_a`: 분기 A — 히든 조건 충족 (볶음밥 등장) (대사 16개)
-- `s14_pier_sunset_b`: 분기 B — 히든 조건 미충족 (대사 1개)
-- `s15_final_choice`: 최종 선택 화면 (대사 1개)
-- `ending_dakgalbi`: 닭갈비 엔딩 (대사 1개)
-- `ending_yangnyeom`: 양념 엔딩 (대사 1개)
-- `ending_goguma`: 고구마 엔딩 (대사 1개)
-- `ending_bokkeumbap`: 볶음밥 히든 엔딩 (대사 1개)
-- `ending_alone`: 혼자 돌아가는 엔딩 (대사 1개)
+- `s09_pier`: #9 선착장 집합 (대사 8개)
+- `s10_1_video`: #10-1 전광판 영상 (대사 5개)
+- `s10_2_seat`: #10-2 좌석 배치 (대사 0개)
+- `s10_3_dakgalbi`: #10-3 갑판 난간 옆 2인석 — 닭갈비 (대사 1개)
+- `s10_4_yangnyeom`: #10-4 선내 창가 2인석 — 양념 (대사 1개)
+- `s10_5_goguma`: #10-5 선미 쪽 벤치 — 고구마 (대사 2개)
+- `s11_1_arrive`: #11-1 남이섬 도착 (대사 7개)
+- `s11_2_place`: #11-2 장소 선택 (대사 0개)
+- `s12_a_dakgalbi`: #12-A 닭갈비 / 메타세쿼이아길 (대사 4개)
+- `s12_b_yangnyeom`: #12-B 양념 / 호숫가 산책로 (대사 4개)
+- `s12_c_goguma`: #12-C 고구마 / 은행나무길 (대사 1개)
+- `s13_sunset`: #13 노을 (대사 5개)
+- `s13_2_return`: #13-2 귀환 컷 (대사 1개)
+- `s14_pier_sunset`: #14 춘천 선착장 (분기 판정) (대사 0개)
+- `s14_a_silhouette`: #14-A 조건 미충족 (대사 3개)
+- `s14_b_bokkeumbap`: #14-B 조건 충족 (대사 10개)
+- `s15_final_choice`: #15 최종 선택 (대사 0개)
+- `ending_bokkeumbap`: #16-재회 (볶음밥) (대사 12개)
+- `ending_dakgalbi`: #16-개별 닭갈비 엔딩 (대사 3개)
+- `ending_yangnyeom`: #16-개별 양념 엔딩 (대사 3개)
+- `ending_goguma`: #16-개별 고구마 엔딩 (대사 3개)
+- `ending_alone`: #16-혼자 혼자 돌아가기 (대사 2개)
