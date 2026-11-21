@@ -1,22 +1,38 @@
 {
   "id": "ending_yangnyeom",
-  "title": "양념 엔딩",
+  "title": "#16-개별 양념 엔딩",
   "type": "ending",
-  "background": "bg_sunset_pier",
-  "time": "황혼",
-  "bgm": "bgm_ending",
+  "background": "bg_lakeside_path",
+  "time": "노을",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
   "dialogues": [
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "쓸쓸",
+      "text": "…그래. 잘 지내.",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
     {
       "speaker": null,
       "speakerType": "narration",
-      "text": "[누락] 엔딩 원고 필요 (원문에 없는 대사로, 원고 수급 후 data 파일에 입력)",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
+      "text": "{볶음밥}이 천천히 돌아서고, 주인공은 붙잡지 않는다",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "서툰 말 대신, 겉옷 한 벌이 먼저 건너왔다.",
+      "characters": [],
+      "cg": {
+        "id": "cg_ending_yangnyeom",
+        "caption": "호숫가에서 고개를 돌린 채 귀만 빨개져 있고, 손에는 주인공에게 줄 겉옷이 들려 있는 모습"
+      }
     }
   ],
   "choices": null

@@ -1,0 +1,107 @@
+{
+  "id": "s14_b_bokkeumbap",
+  "title": "#14-B 조건 충족",
+  "type": "normal",
+  "background": "bg_pier_night",
+  "time": "밤",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "선착장 끝에서 누군가 이쪽을 보고 서 있었다.",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "이번에는, 사라지지 않았다.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "vo",
+      "speakerId": "bokkeumbap",
+      "text": "우리 나중에 꼭 같이 가자, 남이섬.",
+      "characters": [],
+      "cue": "prologue_audio"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "…….",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "기본",
+      "text": "…늦었지.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "거봐, 제일 늦게 온다니까.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "어? 잠깐만요. 둘이 서로 아는 사이였어요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "당황",
+          "blush": false
+        }
+      ],
+      "reveal": "bokkeumbap"
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "…뭐야. 오늘 하루 종일 우리가 \"걔\" 얘기한 상대가 {player}씨였어?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "당황",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "아… 그래서 은행잎 얘기할 때 그런 표정이셨던 거군요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "쓸쓸",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "세 사람이 한 걸음 뒤로 물러서고, 주인공과 {볶음밥}만 화면에 남는다",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s15_final_choice"
+}

@@ -1,0 +1,69 @@
+{
+  "id": "s11_2_place",
+  "title": "#11-2 장소 선택",
+  "type": "place_select",
+  "background": "bg_namiseom_entrance",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [],
+  "choices": null,
+  "places": [
+    {
+      "id": "dakgalbi",
+      "proposal": {
+        "speaker": "닭갈비",
+        "speakerType": "normal",
+        "text": "저는 메타세쿼이아길 추천해요! 남이섬에서 제일 유명한 길이거든요.",
+        "characters": [
+          {
+            "id": "dakgalbi",
+            "position": "center",
+            "expression": "웃음",
+            "blush": false
+          }
+        ]
+      },
+      "optionText": "{닭갈비}와 메타세쿼이아길로 간다",
+      "next": "s12_a_dakgalbi"
+    },
+    {
+      "id": "yangnyeom",
+      "proposal": {
+        "speaker": "양념",
+        "speakerType": "normal",
+        "text": "…호숫가 쪽이 낫죠. 사람도 적고, 조용하고.",
+        "characters": [
+          {
+            "id": "yangnyeom",
+            "position": "center",
+            "expression": "기본",
+            "blush": false
+          }
+        ]
+      },
+      "optionText": "{양념}과 호숫가 산책로로 간다",
+      "next": "s12_b_yangnyeom"
+    },
+    {
+      "id": "goguma",
+      "proposal": {
+        "speaker": "고구마",
+        "speakerType": "normal",
+        "text": "저는 은행나무길이 좋아요. 지금 딱 노랗게 물들었을 거예요.",
+        "characters": [
+          {
+            "id": "goguma",
+            "position": "center",
+            "expression": "웃음",
+            "blush": false
+          }
+        ]
+      },
+      "optionText": "{고구마}와 은행나무길로 간다",
+      "next": "s12_c_goguma"
+    }
+  ],
+  "lastCall": "마지막으로 가볼 곳이 남았네요."
+}

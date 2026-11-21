@@ -1,0 +1,95 @@
+{
+  "id": "s10_1_video",
+  "title": "#10-1 전광판 영상",
+  "type": "normal",
+  "background": "bg_boat",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "[전광판 영상]",
+      "characters": []
+    },
+    {
+      "speaker": "영상 속 닭갈비",
+      "speakerType": "normal",
+      "text": "남이섬 가려고 가평까지 돌아가셨죠? 이제 안 그래도 돼요!",
+      "characters": []
+    },
+    {
+      "speaker": "영상 속 닭갈비",
+      "speakerType": "normal",
+      "text": "춘천에서 타면, 바로 남이섬! 환승 0번, 가평 경유 0번!",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "자막: 춘천 → 남이섬 직행 수상버스",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "약 40분 영상 속에서 {닭갈비}가 밝게 웃고 있다",
+      "characters": []
+    }
+  ],
+  "choices": {
+    "id": "day3_video_reaction",
+    "question": "주인공의 반응",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"처음부터 같이 간다고 말해줬으면 좋았잖아요\" 하고 웃는다",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "likeVisual": [
+            "dakgalbi",
+            "yangnyeom"
+          ]
+        },
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "\"세 분이 친구라서 신기해요\"",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "likeVisual": [
+            "goguma"
+          ]
+        },
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "text": "\"제가 같이 가도 괜찮은 거예요?\" 하고 조심스레 묻는다",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "likeVisual": [
+            "goguma"
+          ]
+        },
+        "followUp": []
+      },
+      {
+        "key": "D",
+        "text": "웃으며 조용히 지켜본다",
+        "next": "s10_2_seat",
+        "effectDesc": "",
+        "effects": {
+          "likeVisual": []
+        },
+        "followUp": []
+      }
+    ]
+  }
+}

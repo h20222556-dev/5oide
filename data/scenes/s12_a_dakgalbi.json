@@ -1,0 +1,221 @@
+{
+  "id": "s12_a_dakgalbi",
+  "title": "#12-A 닭갈비 / 메타세쿼이아길",
+  "type": "normal",
+  "background": "bg_metasequoia",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "지나가던 관광객이 {닭갈비}를 알아보고 말을 건다",
+      "characters": []
+    },
+    {
+      "speaker": "관광객",
+      "speakerType": "normal",
+      "text": "어, 홍보 영상에 나오는 분이죠? 같이 사진 찍어도 돼요?",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "{닭갈비}가 순식간에 밝은 홍보대사의 얼굴이 되어 응대한다. 사람들이 떠나고 둘만 남는다",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "…나 방금 어땠어? 이 길에만 서면 내가 아니라 영상 속의 내가 되는 느낌이야.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "day3_island_dakgalbi",
+    "question": "선택하세요",
+    "options": [
+      {
+        "key": "A",
+        "text": "\"방금도, 지금도 둘 다 {닭갈비} 씨 같아요\"",
+        "next": "s11_2_place",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "dakgalbi": 3
+          },
+          "troubleState": "고민이 풀리기 시작",
+          "targetChar": "dakgalbi"
+        },
+        "followUp": [
+          {
+            "speaker": "닭갈비",
+            "speakerType": "normal",
+            "text": "…고마워. 이 길, 처음 걸어보는 느낌이야.",
+            "characters": [
+              {
+                "id": "dakgalbi",
+                "position": "center",
+                "expression": "기본",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": null,
+            "speakerType": "narration",
+            "text": "두 사람이 천천히 나란히 걷는다",
+            "characters": []
+          },
+          {
+            "speaker": "닭갈비",
+            "speakerType": "normal",
+            "text": "원래 여기, 넷이 같이 걷기로 했거든. 걔는 남이섬 가자는 말만 몇 번을 해놓고…",
+            "characters": [
+              {
+                "id": "dakgalbi",
+                "position": "center",
+                "expression": "쓸쓸",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": "주인공",
+            "speakerType": "vo",
+            "text": "걔? …누구 얘기지?",
+            "characters": []
+          }
+        ]
+      },
+      {
+        "key": "B",
+        "text": "\"힘들면 쉬어도 돼요\"",
+        "next": "s11_2_place",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "dakgalbi": 2
+          },
+          "troubleState": null,
+          "targetChar": "dakgalbi"
+        },
+        "followUp": [
+          {
+            "speaker": "닭갈비",
+            "speakerType": "normal",
+            "text": "…고마워. 이 길, 처음 걸어보는 느낌이야.",
+            "characters": [
+              {
+                "id": "dakgalbi",
+                "position": "center",
+                "expression": "기본",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": null,
+            "speakerType": "narration",
+            "text": "두 사람이 천천히 나란히 걷는다",
+            "characters": []
+          },
+          {
+            "speaker": "닭갈비",
+            "speakerType": "normal",
+            "text": "원래 여기, 넷이 같이 걷기로 했거든. 걔는 남이섬 가자는 말만 몇 번을 해놓고…",
+            "characters": [
+              {
+                "id": "dakgalbi",
+                "position": "center",
+                "expression": "쓸쓸",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": "주인공",
+            "speakerType": "vo",
+            "text": "걔? …누구 얘기지?",
+            "characters": []
+          }
+        ]
+      },
+      {
+        "key": "C",
+        "text": "\"역시 대단하세요\"",
+        "next": "s11_2_place",
+        "effectDesc": "",
+        "effects": {
+          "like": {
+            "dakgalbi": 1
+          },
+          "troubleState": "고민은 오히려 깊어짐",
+          "targetChar": "dakgalbi"
+        },
+        "followUp": [
+          {
+            "speaker": "닭갈비",
+            "speakerType": "normal",
+            "text": "…고마워. 이 길, 처음 걸어보는 느낌이야.",
+            "characters": [
+              {
+                "id": "dakgalbi",
+                "position": "center",
+                "expression": "기본",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": null,
+            "speakerType": "narration",
+            "text": "두 사람이 천천히 나란히 걷는다",
+            "characters": []
+          },
+          {
+            "speaker": "닭갈비",
+            "speakerType": "normal",
+            "text": "원래 여기, 넷이 같이 걷기로 했거든. 걔는 남이섬 가자는 말만 몇 번을 해놓고…",
+            "characters": [
+              {
+                "id": "dakgalbi",
+                "position": "center",
+                "expression": "쓸쓸",
+                "blush": false
+              }
+            ]
+          },
+          {
+            "speaker": "주인공",
+            "speakerType": "vo",
+            "text": "걔? …누구 얘기지?",
+            "characters": []
+          }
+        ]
+      }
+    ]
+  },
+  "lastExtra": {
+    "speaker": "닭갈비",
+    "speakerType": "normal",
+    "text": "걔도 여기 오면 분명 같이 사진 찍자고 했을 텐데.",
+    "characters": [
+      {
+        "id": "dakgalbi",
+        "position": "center",
+        "expression": "기본",
+        "blush": false
+      }
+    ]
+  }
+}

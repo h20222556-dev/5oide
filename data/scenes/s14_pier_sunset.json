@@ -1,20 +1,12 @@
 {
   "id": "s14_pier_sunset",
-  "title": "춘천 선착장 해질녘",
-  "type": "choice_ending",
-  "background": "bg_black",
-  "time": "낮",
+  "title": "#14 춘천 선착장 (분기 판정)",
+  "type": "judge",
+  "background": "bg_pier_night",
+  "time": "밤",
   "bgm": "bgm_main",
-  "direction": [
-    "노을이 지는 선착장. 불이 하나둘 켜진다. 네 명이 배에서 내린다."
-  ],
-  "dialogues": [
-    {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "남이섬에서의 시간이 끝나고, 배는 해질녘의 춘천 선착장에 닿았다.",
-      "characters": []
-    }
-  ],
+  "direction": [],
+  "day": 3,
+  "dialogues": [],
   "choices": null
 }

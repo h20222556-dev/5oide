@@ -1,0 +1,32 @@
+{
+  "id": "s14_a_silhouette",
+  "title": "#14-A 조건 미충족",
+  "type": "normal",
+  "background": "bg_pier_night",
+  "time": "밤",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "선착장 끝에서 누군가 이쪽을 보고 서 있었던 것 같다.",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "하지만 고개를 돌렸을 때는, 저녁 바람에 흔들리는 불빛뿐이었다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "…기분 탓이겠지.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s15_final_choice"
+}

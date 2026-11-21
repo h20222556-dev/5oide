@@ -1,0 +1,63 @@
+{
+  "id": "s11_1_arrive",
+  "title": "#11-1 남이섬 도착",
+  "type": "normal",
+  "background": "bg_namiseom_entrance",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "수상버스가 천천히 선착장에 닿았다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "남이섬. 막연하게만 남아 있던 그 약속의 이름.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "이곳에 서면 뭔가 달라질 줄 알았는데, 생각보다 조용하다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "같이 가자는 말만 있었지, 와서 뭘 하자는 말은 없었으니까.",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "잠깐 멈춰 선 주인공",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "{player}씨? 안 가세요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아, 가요. 잠깐 생각할 게 있어서요.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s11_2_place"
+}
