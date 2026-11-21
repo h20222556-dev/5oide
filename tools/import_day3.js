@@ -161,7 +161,14 @@ function generateDay3({ rootDir, report }) {
   // #10-2 좌석 선택
   const seatRows = parseTable(S['#10-2'].tables[0].lines);
   const seatIds = { dakgalbi: 's10_3_dakgalbi', yangnyeom: 's10_4_yangnyeom', goguma: 's10_5_goguma' };
+  const seatBullets = S['#10-2'].bullets.join('\n');
+  const firstM = seatBullets.match(/첫 선택 문구:\s*(.+)/);
+  const revisitM = seatBullets.match(/재선택 문구:\s*(.+)/);
   scenes.push(mk('s10_2_seat', '#10-2 좌석 배치', 'bg_boat', '낮', {
+    seatPrompts: {
+      first: firstM ? firstM[1].trim() : '',
+      revisit: revisitM ? revisitM[1].trim() : '',
+    },
     choices: {
       id: 'day3_seat', question: '',
       options: seatRows.map((r, i) => {

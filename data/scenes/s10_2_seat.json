@@ -40,5 +40,9 @@
         "followUp": []
       }
     ]
+  },
+  "seatPrompts": {
+    "first": "누구 옆에 앉아볼까?",
+    "revisit": "다른 사람 옆에도 가볼까?"
   }
 }
