@@ -23,6 +23,28 @@ if (!fs.existsSync(storyMdPath)) {
 const mdContent = fs.readFileSync(storyMdPath, 'utf8');
 const lines = mdContent.split(/\r?\n/);
 
+// 대사 전체를 감싸는 바깥 따옴표만 제거 (대사 중간의 인용 따옴표는 유지)
+// 끝에 붙은 작성자 표시 (+) 도 화면에 보이지 않게 제거
+function cleanDialogueText(raw) {
+  let t = (raw || '').trim();
+  t = t.replace(/\s*\(\+\)\s*$/, '').trim();
+  const dq = /^["“”]/;
+  const dqEnd = /["“”]$/;
+  if (dq.test(t)) t = t.slice(1);
+  if (dqEnd.test(t)) t = t.slice(0, -1);
+  t = t.trim();
+  // ' ' 로 전체가 감싸진 경우 (내부에 같은 홑따옴표가 없을 때만)
+  if (t.length > 1 && /^['‘]/.test(t) && /['’]$/.test(t) && !/['‘’]/.test(t.slice(1, -1))) {
+    t = t.slice(1, -1).trim();
+  }
+  return t;
+}
+
+// 호감도 수치 문자열의 음수 부호 정규화 (유니코드 마이너스, 엔대시, 전각 하이픈 -> '-')
+function normalizeMinus(s) {
+  return (s || '').replace(/[−–－﹣‐]/g, '-');
+}
+
 // 리포트 수집용 데이터
 const report = {
   warningItems: [],
@@ -350,7 +372,7 @@ while (i < lines.length) {
   if (dialMatch && !line.startsWith('- A:') && !line.startsWith('- B:') && !line.startsWith('- C:') && !line.startsWith('- D:')) {
     let speakerRaw = dialMatch[1].trim();
     const exprRaw = dialMatch[2] ? dialMatch[2].trim() : "기본";
-    let text = dialMatch[3].trim();
+    let text = cleanDialogueText(dialMatch[3]);
 
     // 나레이션 / 내레이션인 경우 화자 이름 제거
     if (speakerRaw.includes('나레이션') || speakerRaw.includes('내레이션')) {
@@ -460,7 +482,7 @@ while (i < lines.length) {
             // 이어지는 대사
             const m = subLine.match(/^-\s*([^:]+):\s*"?(.*?)"?$/);
             if (m) {
-              followUpDialogues.push({ speaker: m[1].trim(), text: m[2].trim() });
+              followUpDialogues.push({ speaker: m[1].trim(), text: cleanDialogueText(m[2]) });
             }
           }
           j++;
@@ -484,7 +506,9 @@ while (i < lines.length) {
         const parsedEffects = { score: 0, scale: null, troubleState: null, targetChar: null, characters: null };
         let baseScore = 0;
         let scale = null;
-        if (effectText.includes('크게↑')) { baseScore = 6; scale = '크게↑'; }
+        const numMatch = normalizeMinus(effectText).match(/호감\s*([+-]\d+)/);
+        if (numMatch) { baseScore = parseInt(numMatch[1], 10); scale = numMatch[1]; }
+        else if (effectText.includes('크게↑')) { baseScore = 6; scale = '크게↑'; }
         else if (effectText.includes('소폭↑')) { baseScore = 2; scale = '소폭↑'; }
         else if (effectText.includes('소폭↓')) { baseScore = -2; scale = '소폭↓'; }
         else if (effectText.includes('↑')) { baseScore = 4; scale = '↑'; }
@@ -523,15 +547,31 @@ while (i < lines.length) {
           effects: parsedEffects,
           followUp: followUpDialogues
         });
+        // ★ FIX: j 루프가 하위 블록을 모두 건너뛴 위치로 점프 (기존 i++ → i = j)
+        i = j;
+      } else {
+        i++;
       }
-      i++;
     }
 
-    currentScene.choices = {
-      id: choiceId,
-      question: question,
-      options: options
-    };
+    // 같은 씬에 CHOICE가 여러 개인 경우, 나중 것의 옵션 목록만 사용
+    // (첫 번째 CHOICE는 중간 대화 선택으로, 두 번째가 호감도에 영향을 주는 메인 선택)
+    if (!currentScene.choices) {
+      currentScene.choices = {
+        id: choiceId,
+        question: question,
+        options: options
+      };
+    } else {
+      // 이전 선택지를 중간 선택지(midChoices)로 보존하고, 새 것을 메인으로 등록
+      if (!currentScene.midChoices) currentScene.midChoices = [];
+      currentScene.midChoices.push(currentScene.choices);
+      currentScene.choices = {
+        id: choiceId,
+        question: question,
+        options: options
+      };
+    }
     continue;
   }
 

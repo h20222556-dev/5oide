@@ -40,7 +40,7 @@
     "options": [
       {
         "key": "A",
-        "text": "닭갈비",
+        "text": "{닭갈비}에게 연락한다",
         "next": "s07_dakgalbi",
         "effectDesc": "",
         "effects": {
@@ -54,7 +54,7 @@
       },
       {
         "key": "B",
-        "text": "양념",
+        "text": "{양념}에게 연락한다",
         "next": "s07_yangnyeom",
         "effectDesc": "",
         "effects": {
@@ -68,7 +68,7 @@
       },
       {
         "key": "C",
-        "text": "고구마",
+        "text": "{고구마}에게 연락한다",
         "next": "s07_goguma",
         "effectDesc": "",
         "effects": {
