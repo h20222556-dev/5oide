@@ -790,11 +790,14 @@ class GameEngine {
   // ─── Day 3: #10-2 수상버스 좌석 선택 (세 자리를 모두 방문, 본 자리는 선택지에서 사라짐) ───
   _presentDay3SeatChoices() {
     this.state.sceneId = 's10_2_seat';
-    const src = this.scenes.get('s10_2_seat')?.choices?.options || [];
+    const seatScene = this.scenes.get('s10_2_seat');
+    const src = seatScene?.choices?.options || [];
     const visited = this.state.day3SeatVisited || [];
     const remain = src.filter(o => !visited.includes(o.charId));
     if (remain.length === 0) { this.goToScene('s11_1_arrive'); return; }
-    this._presentChoices('', remain);
+    const prompts = seatScene?.seatPrompts || {};
+    const promptText = visited.length === 0 ? (prompts.first || '') : (prompts.revisit || '');
+    this._presentChoices(promptText, remain, { isNarration: true });
   }
 
   // ─── Day 3: #11-2 남이섬 장소 선택 (본 이벤트 사라짐, 마지막 하나는 자동 진행) ───
@@ -1008,7 +1011,7 @@ class GameEngine {
 
   // ─── 선택지 팝업 및 선택 처리 ──────────────────────────────────────────────
 
-  _presentChoices(question, options) {
+  _presentChoices(question, options, choiceOpts = {}) {
     this.state.choiceActive = true;
     this._stopAutoTimer();
     this.state.isSkip = false;
@@ -1043,7 +1046,7 @@ class GameEngine {
       this.renderer.updateMenuBar(this.state.isAuto, this.state.isSkip);
       this.renderer.showChoices(question, processedOptions, (idx) => {
         this.selectChoice(options, idx);
-      });
+      }, choiceOpts);
     }
   }
 
@@ -1181,10 +1184,16 @@ class GameEngine {
     if (effects.characters) {
       for (const [cid, val] of Object.entries(effects.characters)) {
         if (this.state.affinity[cid] !== undefined) {
-          this.state.affinity[cid] = Math.max(0, this.state.affinity[cid] + val);
+          const prev = this.state.affinity[cid];
+          const next = Math.max(0, prev + val);
+          this.state.affinity[cid] = next;
           const charName = this.currentCharacters[cid]?.name;
-          if (this.settings.showAffinity && this.renderer) {
-            this.renderer.showAffinityPopup(cid, val, charName);
+          if (this.settings.showAffinity && this.renderer && val) {
+            if (typeof this.renderer.showLikeFeedback === 'function') {
+              this.renderer.showLikeFeedback(cid, charName, val, prev, next, false);
+            } else {
+              this.renderer.showAffinityPopup(cid, val, charName);
+            }
           }
         }
       }
@@ -1198,11 +1207,17 @@ class GameEngine {
       }
 
       if (targetChar && delta) {
-        this.state.affinity[targetChar] = Math.max(0, (this.state.affinity[targetChar] || 0) + delta);
+        const prev = this.state.affinity[targetChar] || 0;
+        const next = Math.max(0, prev + delta);
+        this.state.affinity[targetChar] = next;
         const charName = this.currentCharacters[targetChar]?.name;
 
         if (this.settings.showAffinity && this.renderer) {
-          this.renderer.showAffinityPopup(targetChar, delta, charName);
+          if (typeof this.renderer.showLikeFeedback === 'function') {
+            this.renderer.showLikeFeedback(targetChar, charName, delta, prev, next, false);
+          } else {
+            this.renderer.showAffinityPopup(targetChar, delta, charName);
+          }
         }
       }
 

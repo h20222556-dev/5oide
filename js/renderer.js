@@ -376,14 +376,14 @@ class Renderer {
 
   // ─── 선택지 ────────────────────────────────────────────────────────────────
 
-  showChoices(question, options, onSelect) {
+  showChoices(question, options, onSelect, opts = {}) {
     if (!this.choicesContainer) return;
     this.choicesContainer.innerHTML = '';
     this.choicesContainer.classList.remove('hidden');
 
     if (question) {
       const qEl = document.createElement('div');
-      qEl.className = 'choice-question';
+      qEl.className = opts && opts.isNarration ? 'choice-question narration-prompt' : 'choice-question';
       qEl.textContent = question;
       this.choicesContainer.appendChild(qEl);
     }
