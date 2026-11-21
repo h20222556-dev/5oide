@@ -30,6 +30,8 @@ class SaveManager {
       day1Visited: [...(gameState.day1Visited || [])],
       day2Visited: [...(gameState.day2Visited || [])],
       day2Target: gameState.day2Target || null,
+      day3SeatVisited: [...(gameState.day3SeatVisited || [])],
+      day3NamiVisited: [...(gameState.day3NamiVisited || [])],
       chosenSeat: gameState.chosenSeat || null,
       revealedSpeakers: Array.isArray(gameState.revealedSpeakers)
         ? gameState.revealedSpeakers

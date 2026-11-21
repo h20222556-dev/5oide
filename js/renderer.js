@@ -435,7 +435,7 @@ class Renderer {
 
     targetChars.forEach(cid => {
       const cMeta = charactersMap ? charactersMap[cid] : null;
-      const name = cMeta ? cMeta.name : (typeof getDisplayName === 'function' ? getDisplayName(cid) : cid);
+      const name = cMeta ? cMeta.name : (typeof getDisplayName === 'function' ? getDisplayName(cid, this.gender || 'female') : cid);
       const val = affinity?.[cid] ?? 0;
       const pct = Math.max(0, Math.min(100, Math.round((val / 12) * 100)));
 
@@ -459,7 +459,7 @@ class Renderer {
 
     const name = charName || characterId;
     const isPositive = delta > 0;
-    const text = `${name} 호감도 ${isPositive ? '+' : ''}${delta}`;
+    const text = `${name} 호감도 ${isPositive ? '+' : '-'}${Math.abs(delta)}`;
 
     const popup = document.createElement('div');
     popup.className = `affinity-popup ${isPositive ? 'positive' : 'negative'}`;
@@ -728,9 +728,7 @@ class Renderer {
         card.className = `gallery-card ${achieved ? 'achieved' : 'locked'}`;
 
         if (achieved) {
-          const displayTitle = ed.char && typeof getDisplayName === 'function'
-            ? `${getDisplayName(ed.char)} 엔딩`
-            : ed.title;
+          const displayTitle = ed.title;
           card.innerHTML = `
             <div class="gallery-card-badge">${ed.badge || '엔딩'}</div>
             <h3 class="gallery-card-title">${displayTitle}</h3>
@@ -756,67 +754,66 @@ class Renderer {
 
   // ─── DAY 전환 타이틀 연출 ──────────────────────────────────────────────────
 
-  playDayTransition(dayNum, subtitle, onComplete) {
+  playDayTransition(dayNum, subtitle, onComplete, onSwitch) {
+    const cfg = Object.assign({ fadeOutMs: 1500, holdMs: 3500, fadeInMs: 1500 }, this.dayTransitionConfig || {});
     if (!this.chapterOverlay) {
+      if (typeof onSwitch === 'function') onSwitch();
       if (typeof onComplete === 'function') onComplete();
       return;
     }
 
     this.clearDayTransition();
+    const overlay = this.chapterOverlay;
 
-    this.chapterOverlay.innerHTML = `
-      <div class="day-title-badge">DAY ${dayNum}</div>
-      <div class="day-title-subtitle">${subtitle}</div>
+    overlay.innerHTML = `
+      <div class="day-title-badge" style="opacity:0;transition:opacity 600ms ease">DAY ${dayNum}</div>
+      <div class="day-title-subtitle" style="opacity:0;transition:opacity 600ms ease">${subtitle}</div>
     `;
+    // 연출 중에는 클릭/터치를 오버레이가 흡수하고 건너뛰기 없음
+    overlay.onclick = (e) => { e.stopPropagation(); e.preventDefault(); };
+    overlay.style.transition = `opacity ${cfg.fadeOutMs}ms ease`;
+    overlay.classList.remove('hidden');
+    void overlay.offsetWidth;
+    overlay.classList.add('visible');
 
-    this.chapterOverlay.classList.remove('hidden');
-    void this.chapterOverlay.offsetWidth; // reflow 강제
-    this.chapterOverlay.classList.add('visible');
-
+    this._dayTimers = [];
     let completed = false;
+    const later = (fn, ms) => { this._dayTimers.push(setTimeout(fn, ms)); };
+
     const finish = () => {
       if (completed) return;
       completed = true;
-      if (this._dayTransitionTimer) {
-        clearTimeout(this._dayTransitionTimer);
-        this._dayTransitionTimer = null;
-      }
-      this.chapterOverlay.classList.remove('visible');
-      setTimeout(() => {
-        this.chapterOverlay.classList.add('hidden');
-        this.chapterOverlay.onclick = null;
-        if (typeof onComplete === 'function') onComplete();
-      }, 1200);
+      this.clearDayTransition();
+      if (typeof onComplete === 'function') onComplete();
     };
 
-    // 클릭 시 즉시 건너뛰기
-    this.chapterOverlay.onclick = (e) => {
-      e.stopPropagation();
-      finish();
-    };
+    // 1) 페이드 아웃 완료 -> 타이틀 표시
+    later(() => {
+      overlay.querySelectorAll('.day-title-badge, .day-title-subtitle').forEach(el => { el.style.opacity = '1'; });
+    }, cfg.fadeOutMs);
 
-    // 1.2s 페이드인 + 2.2s 표시 유지 = 3.4s 후 자동 종료
-    this._dayTransitionTimer = setTimeout(() => {
-      finish();
-    }, 3400);
+    // 2) 유지 시간 종료 -> 새 하루의 첫 장면을 검은 화면 뒤에서 준비 후 페이드 인
+    later(() => {
+      if (typeof onSwitch === 'function') onSwitch();
+      overlay.style.transition = `opacity ${cfg.fadeInMs}ms ease`;
+      overlay.classList.remove('visible');
+    }, cfg.fadeOutMs + cfg.holdMs);
 
-    this._dayTransitionFinishFn = finish;
-  }
+    // 3) 페이드 인 완료
+    later(finish, cfg.fadeOutMs + cfg.holdMs + cfg.fadeInMs);
 
-  skipDayTransition() {
-    if (this._dayTransitionFinishFn) {
-      this._dayTransitionFinishFn();
-    }
+    // 안전장치: 어떤 경우에도 입력 잠금이 풀리도록 강제 종료
+    later(finish, cfg.fadeOutMs + cfg.holdMs + cfg.fadeInMs + 1500);
   }
 
   clearDayTransition() {
-    if (this._dayTransitionTimer) {
-      clearTimeout(this._dayTransitionTimer);
-      this._dayTransitionTimer = null;
+    if (this._dayTimers) {
+      this._dayTimers.forEach(t => clearTimeout(t));
+      this._dayTimers = [];
     }
-    this._dayTransitionFinishFn = null;
     if (this.chapterOverlay) {
       this.chapterOverlay.onclick = null;
+      this.chapterOverlay.style.transition = '';
       this.chapterOverlay.classList.remove('visible');
       this.chapterOverlay.classList.add('hidden');
     }

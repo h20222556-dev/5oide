@@ -18,7 +18,7 @@
   ],
   "choices": {
     "id": "place_2",
-    "question": "처음 간 곳을 제외한 장소 선택 (보기 2개)",
+    "question": "처음 간 곳을 제외한 장소 선택",
     "options": []
   }
 }

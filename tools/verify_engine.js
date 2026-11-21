@@ -200,24 +200,40 @@ for (const order of permutations) {
   assert(nextTarget === 's08_day2_end', `순열 [${order.join(' -> ')}]: 3명 완료 후 s08_day2_end로 전환 성공`);
 }
 
-// 13. 작업 1 검증: 상대방 캐릭터 실명 및 조사 '으로/로' 검증
-console.log('\n--- 13. 작업 1: 상대 캐릭터 실명 및 한국어 조사(으로/로 포함) 검증 ---');
+// 13. 작업 6 검증: 시작 화면에서 고른 성별 = 상대 캐릭터 성별
+console.log('\n--- 13. 작업 6: 선택한 성별 = 상대 캐릭터 성별 이름 매핑 ---');
 const { getDisplayName, appendJosa } = require(path.join(rootDir, 'js', 'utils.js'));
-// 남성 플레이어(상대 여성) -> 다곡희, 양연미, 고규미, 박복은
-assert(getDisplayName('dakgalbi', 'male', true) === '다곡희', '남성 플레이어 -> dakgalbi = 다곡희');
-assert(getDisplayName('yangnyeom', 'male', true) === '양연미', '남성 플레이어 -> yangnyeom = 양연미');
-assert(getDisplayName('goguma', 'male', true) === '고규미', '남성 플레이어 -> goguma = 고규미');
-assert(getDisplayName('bokkeumbap', 'male', true) === '박복은', '남성 플레이어 -> bokkeumbap = 박복은');
+const NAME_MAP = {
+  male: { dakgalbi: '다고길', yangnyeom: '양연우', goguma: '고구민', bokkeumbap: '박복검' },
+  female: { dakgalbi: '다곡희', yangnyeom: '양연미', goguma: '고규미', bokkeumbap: '박복은' },
+};
+for (const g of ['male', 'female']) {
+  for (const cid of Object.keys(NAME_MAP[g])) {
+    assert(getDisplayName(cid, g) === NAME_MAP[g][cid], `${g} 선택 -> ${cid} = ${NAME_MAP[g][cid]}`);
+  }
+}
 
-// 여성 플레이어(상대 남성) -> 다고길, 양연우, 고구민, 박복검
-assert(getDisplayName('dakgalbi', 'female', true) === '다고길', '여성 플레이어 -> dakgalbi = 다고길');
-assert(getDisplayName('yangnyeom', 'female', true) === '양연우', '여성 플레이어 -> yangnyeom = 양연우');
-assert(getDisplayName('goguma', 'female', true) === '고구민', '여성 플레이어 -> goguma = 고구민');
-assert(getDisplayName('bokkeumbap', 'female', true) === '박복검', '여성 플레이어 -> bokkeumbap = 박복검');
-
-// 엔진 state.gender 직결 검증 ('female' 선택 시 다곡희 등, 'male' 선택 시 다고길 등)
-assert(getDisplayName('dakgalbi', 'female') === '다곡희', 'state.gender="female" -> dakgalbi = 다곡희');
-assert(getDisplayName('dakgalbi', 'male') === '다고길', 'state.gender="male" -> dakgalbi = 다고길');
+// 전 장면을 두 성별로 훑으며 반대 성별 이름이 섞이지 않는지 검증
+for (const g of ['male', 'female']) {
+  const other = g === 'male' ? 'female' : 'male';
+  const names = { player: '테스터' };
+  for (const cid of Object.keys(NAME_MAP[g])) { names[cid] = NAME_MAP[g][cid]; }
+  let leaked = [];
+  const check = (txt, where) => {
+    if (typeof txt !== 'string') return;
+    const out = resolveTextVariables(txt, names);
+    for (const n of Object.values(NAME_MAP[other])) if (out.includes(n)) leaked.push(where + ':' + n);
+    if (/\{(닭갈비|양념|고구마|볶음밥|player)/.test(out)) leaked.push(where + ':미치환');
+  };
+  for (const f of fs.readdirSync(path.join(rootDir, 'data', 'scenes'))) {
+    if (!f.endsWith('.json')) continue;
+    const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', f), 'utf8'));
+    (sc.dialogues || []).forEach((d, i) => check(d.text, f + '#' + i));
+    (sc.messages || []).forEach((m, i) => check(m.text, f + '#msg' + i));
+    for (const o of (sc.choices?.options || [])) { check(o.text, f + '#opt'); (o.followUp || []).forEach(u => check(u.text, f + '#fu')); }
+  }
+  assert(leaked.length === 0, `${g} 시작: 전 장면에서 반대 성별 이름/미치환 변수 없음 ${leaked.slice(0, 3).join(', ')}`);
+}
 
 // '으로/로' 조사 검증 (ㄹ 받침 '로', 일반 받침 '으로', 받침 없음 '로')
 assert(appendJosa('다고길', '으로/로') === '다고길로', 'ㄹ 받침 "다고길" + 으로/로 -> "다고길로"');
@@ -229,13 +245,31 @@ assert(appendJosa('박복은', '으로/로') === '박복은으로', '일반 받�
 console.log('\n--- 14. 작업 2: DAY 전환 연출(페이드, 타이틀 카드) 검증 ---');
 const rendererJs = fs.readFileSync(path.join(rootDir, 'js', 'renderer.js'), 'utf8');
 assert(rendererJs.includes('playDayTransition'), 'renderer.js에 playDayTransition 구현됨');
-assert(rendererJs.includes('skipDayTransition'), 'renderer.js에 skipDayTransition 구현됨');
+assert(!rendererJs.includes('skipDayTransition'), 'DAY 전환 건너뛰기(skipDayTransition) 제거됨');
+assert(!/chapterOverlay\.onclick = \(e\) => \{\s*e\.stopPropagation\(\);\s*finish\(\)/.test(rendererJs), '클릭으로 DAY 전환 종료하는 핸들러 없음');
+assert(config.dayTransition && config.dayTransition.fadeOutMs === 1500 && config.dayTransition.holdMs === 3500 && config.dayTransition.fadeInMs === 1500, 'DAY 전환 시간이 config.dayTransition 상수로 분리됨(1.5/3.5/1.5초)');
+assert(engineJs.includes('_runDayTransition') && engineJs.includes('setTimeout(() => { if (this.state.isTransitioning) unlock()'), 'DAY 전환 입력 잠금 해제 안전장치 존재');
 assert(mainCss.includes('#chapter-title-overlay'), 'CSS에 #chapter-title-overlay 스타일 존재');
 assert(mainCss.includes('.day-title-badge'), 'CSS에 .day-title-badge 스타일 존재');
 assert(mainCss.includes('.day-title-subtitle'), 'CSS에 .day-title-subtitle 스타일 존재');
-assert(engineJs.includes('playDayTransition(1'), 'engine.js에 Day 1 전환 연출 적용됨');
-assert(engineJs.includes('playDayTransition(2'), 'engine.js에 Day 2 전환 연출 적용됨');
-assert(engineJs.includes('playDayTransition(3'), 'engine.js에 Day 3 전환 연출 적용됨');
+assert(engineJs.includes('_runDayTransition(1,') && engineJs.includes('_runDayTransition(2,') && engineJs.includes('_runDayTransition(3,'), 'Day 1/2/3 전환 연출 적용됨');
+
+// 15. 작업 4/5/1/2 및 Day 3 검증
+console.log('\\n--- 15. 반응 대사 / 호감도 부호 / 메모 숨김 / 따옴표 / Day 3 순차 선택 ---');
+assert(engineJs.includes('_onDone') && engineJs.includes('__followup__'), '선택지 followUp 반응 대사 재생 구현됨');
+assert(rendererJs.includes("isPositive ? '+' : '-'") && rendererJs.includes('Math.abs(delta)'), '호감도 팝업이 +N / -N 부호를 항상 표시');
+assert(engineJs.includes('Math.max(0,'), '호감도가 0 미만으로 내려가지 않음');
+const s02 = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's02_place_select.json'), 'utf8'));
+assert(!/각 보기에/.test(s02.choices.question), '장소 선택 안내 메모 문구 제거됨');
+let quoted = 0;
+for (const f of fs.readdirSync(path.join(rootDir, 'data', 'scenes'))) {
+  if (!f.endsWith('.json')) continue;
+  const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', f), 'utf8'));
+  for (const d of (sc.dialogues || [])) if (/^["“”]|["“”]$/.test(d.text)) quoted++;
+  for (const o of (sc.choices?.options || [])) for (const u of (o.followUp || [])) if (/^["“”]|["“”]$|\\(\\+\\)$/.test(u.text)) quoted++;
+}
+assert(quoted === 0, `대사 앞뒤 큰따옴표 없음 (잔존 ${quoted})`);
+assert(engineJs.includes('_presentDay3SeatChoices') && engineJs.includes('_presentDay3NamiChoices') && saveJs.includes('day3SeatVisited') && saveJs.includes('day3NamiVisited'), 'Day 3 배/남이섬 순차 선택 및 세이브 필드 구현됨');
 
 console.log('\n====================================================');
 console.log(` 검증 결과: ${passedTests} / ${totalTests} 테스트 통과 (${Math.round((passedTests/totalTests)*100)}%)`);

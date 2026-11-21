@@ -42,7 +42,7 @@
   ],
   "choices": {
     "id": "place_1",
-    "question": "장소 선택 (각 보기에 장소 이미지)",
+    "question": "장소 선택",
     "options": [
       {
         "key": "A",

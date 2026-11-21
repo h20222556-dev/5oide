@@ -113,8 +113,8 @@ function pickJosa(word, josaPair) {
 
 /**
  * 캐릭터 표시 이름 매핑 (성별에 따른 이름)
- * - 남성 플레이어(여성 캐릭터가 나옴): 닭갈비=다곡희, 양념=양연미, 고구마=고규미, 볶음밥=박복은
- * - 여성 플레이어(남성 캐릭터가 나옴): 닭갈비=다고길, 양념=양연우, 고구마=고구민, 볶음밥=박복검
+ * - 남성 캐릭터 (playerGender / gender === 'male'): 닭갈비=다고길, 양념=양연우, 고구마=고구민, 볶음밥=박복검
+ * - 여성 캐릭터 (playerGender / gender === 'female'): 닭갈비=다곡희, 양념=양연미, 고구마=고규미, 볶음밥=박복은
  */
 const CHARACTER_DISPLAY_NAMES = {
   female: {
@@ -132,19 +132,17 @@ const CHARACTER_DISPLAY_NAMES = {
 };
 
 /**
- * 캐릭터 ID와 플레이어/대상 성별을 기반으로 표시 이름 반환
+ * 캐릭터 ID와 선택한 성별을 기반으로 표시 이름 반환
+ * 규칙: 시작 화면에서 고른 성별 = 상대 캐릭터들의 성별
+ * - 'male': 다고길, 양연우, 고구민, 박복검
+ * - 'female': 다곡희, 양연미, 고규미, 박복은
  * @param {string} characterId - 캐릭터 ID ('dakgalbi', 'goguma' 등) 또는 역할명 ('닭갈비' 등)
- * @param {string} gender - 상대 성별 또는 플레이어 성별 ('female' 또는 'male')
- * @param {boolean} isPlayerGender - 두 번째 인자가 플레이어의 성별인지 여부 (기본 false: 대상 캐릭터 성별)
+ * @param {string} gender - 선택한 성별 ('male' 또는 'female')
  * @returns {string} 사람 이름 (다곡희, 다고길 등)
  */
-function getDisplayName(characterId, gender = 'female', isPlayerGender = false) {
+function getDisplayName(characterId, gender = 'female') {
   if (!characterId) return '';
-  let targetGender = gender;
-  if (isPlayerGender) {
-    targetGender = (gender === 'male') ? 'female' : 'male';
-  }
-  const genderKey = (targetGender === 'male') ? 'male' : 'female';
+  const genderKey = (gender === 'male') ? 'male' : 'female';
   const idMap = {
     '닭갈비': 'dakgalbi',
     '닭고기': 'dakgalbi',
@@ -200,10 +198,10 @@ function resolveTextVariables(text, variables = {}) {
 
   const names = {
     player: variables.player || '주인공',
-    dakgalbi: variables.dakgalbi || '다곡희',
-    yangnyeom: variables.yangnyeom || '양연미',
-    goguma: variables.goguma || '고규미',
-    bokkeumbap: variables.bokkeumbap || '박복은',
+    dakgalbi: variables.dakgalbi || variables['닭갈비'] || '다곡희',
+    yangnyeom: variables.yangnyeom || variables['양념'] || '양연미',
+    goguma: variables.goguma || variables['고구마'] || '고규미',
+    bokkeumbap: variables.bokkeumbap || variables['볶음밥'] || '박복은',
   };
 
   let result = text;
