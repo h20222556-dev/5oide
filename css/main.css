@@ -330,16 +330,20 @@ button {
 
 .choice-btn {
   width: 100%;
+  min-height: 44px;
   padding: 12px 20px;
   background: rgba(10, 10, 30, 0.82);
   color: var(--color-text);
   font-size: 0.85em;
+  line-height: 1.45;
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 8px;
   text-align: center;
   transition: background var(--transition-fast), transform var(--transition-fast);
   backdrop-filter: blur(4px);
+  white-space: normal;
   word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 .choice-btn:hover {

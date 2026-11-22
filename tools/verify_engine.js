@@ -197,15 +197,25 @@ assert(saveJs.includes('day2Visited'), 'save.js 세이브 데이터에 day2Visit
 const engineJs = fs.readFileSync(path.join(rootDir, 'js', 'engine.js'), 'utf8');
 assert(engineJs.includes('_presentDay2RemainingChoices'), 'engine.js에 Day 2 남은 인물 순차 선택 로직(_presentDay2RemainingChoices)이 구현됨');
 
-// 11. 작업 4 검증: Day 1~2 인라인 선택지 파싱 확인
+// 11. 작업 4 검증: Day 1~2 순차 단일 선택지(12개) + Day 2 진짜 2지선다(3개) 파싱 확인
 console.log('\n--- 11. 작업 4: Day 1~2 선택지 파싱 검증 ---');
-const s07Dak = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_dakgalbi.json'), 'utf8'));
-const s07Gog = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_goguma.json'), 'utf8'));
-const s07Yang = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_yangnyeom.json'), 'utf8'));
-const countInlineChoices = (sc) => (sc.dialogues || []).filter(d => d.type === 'choice' && d.options?.length === 2).length;
-assert(countInlineChoices(s07Dak) === 2, `s07_dakgalbi 인라인 선택지 2묶음(각 2개) 정상 파싱됨 (${countInlineChoices(s07Dak)}묶음)`);
-assert(countInlineChoices(s07Gog) === 2, `s07_goguma 인라인 선택지 2묶음(각 2개) 정상 파싱됨 (${countInlineChoices(s07Gog)}묶음)`);
-assert(countInlineChoices(s07Yang) === 2, `s07_yangnyeom 인라인 선택지 2묶음(각 2개) 정상 파싱됨 (${countInlineChoices(s07Yang)}묶음)`);
+const singleCheckScenes = ['s03_lego', 's03_skywalk', 's03_myeongdong', 's07_dakgalbi', 's07_goguma', 's07_yangnyeom'];
+for (const sid of singleCheckScenes) {
+  const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${sid}.json`), 'utf8'));
+  const dlgs = sc.dialogues || [];
+  const singles = dlgs.map((d, idx) => ({ d, idx })).filter(x => x.d.type === 'choice' && x.d.options?.length === 1);
+  assert(singles.length === 2, `${sid} 순차 단일 선택지 2개(각 버튼 1개) 정상 파싱됨 (${singles.length}개)`);
+  const allFollowedByOs = singles.every(({ d, idx }) => {
+    const next = dlgs[idx + 1];
+    return next && next.speaker === '주인공' && next.speakerType === 'os' && next.text === d.options[0].text;
+  });
+  assert(allFollowedByOs, `${sid} 단일 선택지 직후 주인공(O.S.) 대사가 정상 배치됨`);
+}
+for (const sid of ['s07_dakgalbi', 's07_goguma', 's07_yangnyeom']) {
+  const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${sid}.json`), 'utf8'));
+  const realBranchCount = (sc.dialogues || []).filter(d => d.type === 'choice' && d.options?.length === 2).length;
+  assert(realBranchCount === 1, `${sid} 진짜 2지선다 분기 선택지 1묶음 유지됨 (${realBranchCount}묶음)`);
+}
 assert(config.SHOW_HUD === false, 'config.SHOW_HUD가 false로 설정되어 상시 HUD 숨김 제어됨');
 
 // 12. 작업 3 검증: Day 2 임의 순서(순열 6종) 선택 시뮬레이션
@@ -263,7 +273,15 @@ for (const g of ['male', 'female']) {
   for (const f of fs.readdirSync(path.join(rootDir, 'data', 'scenes'))) {
     if (!f.endsWith('.json')) continue;
     const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', f), 'utf8'));
-    (sc.dialogues || []).forEach((d, i) => check(d.text, f + '#' + i));
+    (sc.dialogues || []).forEach((d, i) => {
+      check(d.text, f + '#' + i);
+      if (d.type === 'choice' && Array.isArray(d.options)) {
+        d.options.forEach((o, j) => {
+          check(o.text, f + '#' + i + '.opt' + j);
+          (o.followUp || []).forEach(u => check(u.text, f + '#' + i + '.fu'));
+        });
+      }
+    });
     (sc.messages || []).forEach((m, i) => check(m.text, f + '#msg' + i));
     for (const o of (sc.choices?.options || [])) { check(o.text, f + '#opt'); (o.followUp || []).forEach(u => check(u.text, f + '#fu')); }
   }
