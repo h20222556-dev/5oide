@@ -1,0 +1,89 @@
+{
+  "title": "오이데 (춘천에서 5명의 이상한 데이트)",
+  "version": "1.0.0",
+  "textSpeed": 40,
+  "autoSpeed": 2000,
+  "skipSpeed": 25,
+  "bgmVolume": 0.5,
+  "sfxVolume": 0.7,
+  "showAffinity": true,
+  "dayTransition": {
+    "fadeOutMs": 1500,
+    "holdMs": 3500,
+    "fadeInMs": 1500
+  },
+  "genderSelection": {
+    "prompt": "당신의 성별(또는 상대 캐릭터들의 성별)을 선택하세요.",
+    "options": [
+      {
+        "id": "female",
+        "label": "여성 등장인물과 데이트 (다곡희, 양연미, 고규미, 박복은)"
+      },
+      {
+        "id": "male",
+        "label": "남성 등장인물과 데이트 (다고길, 양연우, 고구민, 박복검)"
+      }
+    ]
+  },
+  "hidden_unlock": {
+    "mode": "all_three",
+    "description": "all_three: 닭갈비/양념/고구마 호감도가 모두 기준치 이상일 때 볶음밥 등장 | reunion_temp: 히든 재회온도 기준치 이상"
+  },
+  "endingThresholds": {
+    "dakgalbi": 7,
+    "yangnyeom": 7,
+    "goguma": 7,
+    "hidden_all_three_each": 7,
+    "reunion_temp": 10
+  },
+  "flags": {
+    "day1_repeat": {
+      "messages_each_visit": true
+    },
+    "day2": {
+      "meet_all_three": true
+    }
+  },
+  "saveSlots": 3,
+  "debugKey": "KeyD",
+  "sceneFiles": [
+    "s01_prologue.json",
+    "s02_place_select.json",
+    "s03_lego_phone.json",
+    "s03_lego.json",
+    "s03_skywalk_phone.json",
+    "s03_skywalk.json",
+    "s03_myeongdong_phone.json",
+    "s03_myeongdong.json",
+    "s03_2_day1_messages.json",
+    "s04_s05_day1_repeat.json",
+    "s06_day1_end.json",
+    "s07_day2.json",
+    "s07_dakgalbi.json",
+    "s07_goguma.json",
+    "s07_yangnyeom.json",
+    "s08_day2_end.json",
+    "s09_pier.json",
+    "s10_1_video.json",
+    "s10_2_seat.json",
+    "s10_3_dakgalbi.json",
+    "s10_4_yangnyeom.json",
+    "s10_5_goguma.json",
+    "s11_1_arrive.json",
+    "s11_2_place.json",
+    "s12_a_dakgalbi.json",
+    "s12_b_yangnyeom.json",
+    "s12_c_goguma.json",
+    "s13_sunset.json",
+    "s13_2_return.json",
+    "s14_pier_sunset.json",
+    "s14_a_silhouette.json",
+    "s14_b_bokkeumbap.json",
+    "s15_final_choice.json",
+    "ending_bokkeumbap.json",
+    "ending_dakgalbi.json",
+    "ending_yangnyeom.json",
+    "ending_goguma.json",
+    "ending_alone.json"
+  ]
+}

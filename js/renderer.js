@@ -92,9 +92,13 @@ class Renderer {
   }
 
   setTime(timeStr) {
-    if (this.timeLabel) {
-      this.timeLabel.textContent = timeStr || '';
+    if (!this.timeLabel) return;
+    if (this._hudVisible === false) {
+      this.timeLabel.style.display = 'none';
+      return;
     }
+    this.timeLabel.textContent = timeStr || '';
+    this.timeLabel.style.display = timeStr ? 'block' : 'none';
   }
 
   // ─── 캐릭터 렌더링 (홍조 오버레이 지원) ────────────────────────────────────
@@ -424,7 +428,7 @@ class Renderer {
   updateAffinityBar(affinity, charactersMap, showAffinity) {
     if (!this.affinityBar) return;
 
-    if (!showAffinity) {
+    if (this._hudVisible === false || !showAffinity) {
       this.affinityBar.style.display = 'none';
       return;
     }
@@ -821,8 +825,22 @@ class Renderer {
 
   // ─── Day 3 전용: 호감도 HUD 표시 제어 / 막대 바 피드백(숫자 미표시) / 엔딩 CG 플레이스홀더 ───
 
+  setHudVisible(visible) {
+    this._hudVisible = !!visible;
+    if (this.timeLabel) {
+      this.timeLabel.style.display = this._hudVisible && this.timeLabel.textContent ? 'block' : 'none';
+    }
+    if (this.affinityBar) {
+      this.affinityBar.style.display = this._hudVisible ? 'flex' : 'none';
+    }
+  }
+
   setAffinityVisible(visible) {
     if (!this.affinityBar) return;
+    if (this._hudVisible === false) {
+      this.affinityBar.style.display = 'none';
+      return;
+    }
     this.affinityBar.style.display = visible ? 'flex' : 'none';
   }
 

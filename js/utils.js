@@ -206,12 +206,16 @@ function resolveTextVariables(text, variables = {}) {
 
   let result = text;
 
-  // 0) {name:캐릭터ID} 또는 {name:캐릭터ID:조사}를 표준 플레이스홀더로 정규화
-  result = result.replace(/\{name:(dakgalbi|yangnyeom|goguma|bokkeumbap|닭갈비|양념|고구마|볶음밥)(?::([가-힣\/]+))?\}/g, (_, cid, josa) => {
-    const k = (cid === '닭갈비' || cid === 'dakgalbi') ? '닭갈비' :
+  // 0) {name:캐릭터ID} 또는 [닭고기]/[고구마]/[양념]/[볶음밥] 대괄호 표기를 표준 플레이스홀더로 정규화
+  result = result.replace(/\{name:(dakgalbi|yangnyeom|goguma|bokkeumbap|닭갈비|닭고기|양념|고구마|볶음밥)(?::([가-힣\/]+))?\}/g, (_, cid, josa) => {
+    const k = (cid === '닭갈비' || cid === '닭고기' || cid === 'dakgalbi') ? '닭갈비' :
               (cid === '양념' || cid === 'yangnyeom') ? '양념' :
               (cid === '고구마' || cid === 'goguma') ? '고구마' : '볶음밥';
     return josa ? `{${k}:${josa}}` : `{${k}}`;
+  });
+  result = result.replace(/\[(닭고기|닭갈비|양념|고구마|볶음밥)\]/g, (_, cid) => {
+    const k = (cid === '닭고기' || cid === '닭갈비') ? '닭갈비' : cid;
+    return `{${k}}`;
   });
 
   // 1) 템플릿 형태 치환: {변수:조사} 예: {player:은는}, {고구마:으로로}
