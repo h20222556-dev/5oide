@@ -106,12 +106,13 @@
     },
     {
       "type": "choice",
-      "id": "day1_lego_1",
-      "question": "선택하세요",
+      "id": "single_s03_lego_1",
+      "question": "",
+      "single": true,
       "options": [
         {
           "key": "A",
-          "text": "\"누구세요?\"",
+          "text": "누구세요?",
           "next": null,
           "effectDesc": "",
           "effects": {
@@ -121,16 +122,38 @@
             "targetChar": null,
             "characters": null
           },
-          "followUp": [
-            {
-              "speaker": "???[닭갈비|기본]",
-              "text": "아, 제 소개가 늦었네요. 저는 춘천의 관광지를 알리는 일을 하고 있어요. 사람들에게 춘천의 매력을 소개하는 게 제 일이거든요."
-            }
-          ]
-        },
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "누구세요?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "아, 제 소개가 늦었네요. 저는 춘천의 관광지를 알리는 일을 하고 있어요. 사람들에게 춘천의 매력을 소개하는 게 제 일이거든요.",
+      "characters": [
         {
-          "key": "B",
-          "text": "\"굉장히 적극적이시네요.\"",
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_s03_lego_2",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "굉장히 적극적이시네요.",
           "next": null,
           "effectDesc": "",
           "effects": {
@@ -140,12 +163,26 @@
             "targetChar": null,
             "characters": null
           },
-          "followUp": [
-            {
-              "speaker": "???[닭갈비|웃음]",
-              "text": "하하, 저는 어디에 가도 잘 어울리는 편이거든요. 많은 사람들에게 춘천을 알리고 좋은 추억을 만들어 주는 게 제 목표랍니다!"
-            }
-          ]
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "굉장히 적극적이시네요.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "하하, 저는 어디에 가도 잘 어울리는 편이거든요. 많은 사람들에게 춘천을 알리고 좋은 추억을 만들어 주는 게 제 목표랍니다!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
         }
       ]
     },

@@ -380,6 +380,37 @@ while (i < lines.length) {
     i++;
     continue;
   }
+  // 단일 선택지 대사 감지: - > 주인공: "대사" (버튼 1개 -> 주인공(O.S.) 대사 1회 -> 바로 아래 응답 순차 진행)
+  const singleChoiceMatch = line.match(/^-\s*>\s*([^:\[]+)(?:\[([^\]]+)\])?:\s*"?(.*?)"?$/);
+  if (singleChoiceMatch) {
+    const text = cleanDialogueText(singleChoiceMatch[3]);
+    const seqNum = currentScene.dialogues.filter(d => d.type === 'choice' && d.single).length + 1;
+    report.choiceCount++;
+    currentScene.dialogues.push({
+      type: 'choice',
+      id: `single_${currentScene.id}_${seqNum}`,
+      question: '',
+      single: true,
+      options: [
+        {
+          key: 'A',
+          text: text,
+          next: null,
+          effectDesc: '',
+          effects: { score: 0, scale: null, troubleState: null, targetChar: null, characters: null },
+          followUp: []
+        }
+      ]
+    });
+    currentScene.dialogues.push({
+      speaker: '주인공',
+      speakerType: 'os',
+      text: text,
+      characters: []
+    });
+    i++;
+    continue;
+  }
   const dialMatch = line.match(/^-\s*(?:>\s*)?([^:\[]+)(?:\[([^\]]+)\])?:\s*"?(.*?)"?$/);
   if (dialMatch && !line.startsWith('- A:') && !line.startsWith('- B:') && !line.startsWith('- C:') && !line.startsWith('- D:')) {
     let speakerRaw = dialMatch[1].trim();
