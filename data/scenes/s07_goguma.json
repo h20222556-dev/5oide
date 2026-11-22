@@ -106,6 +106,51 @@
       ]
     },
     {
+      "type": "choice",
+      "id": "day2_goguma_1",
+      "question": "산책 이야기",
+      "options": [
+        {
+          "key": "A",
+          "text": "\"{고구마} 씨와 잘 어울리는 풍경이네요.\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "고구마[웃음]",
+              "text": "그런가요? 그런 얘기는 처음 들어보네요. 고마워요."
+            }
+          ]
+        },
+        {
+          "key": "B",
+          "text": "\"산책을 자주 하시나요?\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "고구마[기본]",
+              "text": "네, 천천히 걷다 보면 복잡했던 생각도 조금씩 정리되는 것 같아요."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{고구마} 씨는 항상 여유롭고 다정하신 것 같아요.",
@@ -146,13 +191,66 @@
     {
       "speaker": "고구마",
       "speakerType": "normal",
-      "text": "그것도... 잘. 다른 사람을 챙기다 보면 제 마음이 뒷전이 되어 버려서요.\" ⚠ (\"그것도... 잘\" 뒤에 \"모르겠어요\" 같은 말이 빠진 것으로 보임)",
+      "text": "그것도... 잘. 다른 사람을 챙기다 보면 제 마음이 뒷전이 되어 버려서요.",
       "characters": [
         {
           "id": "goguma",
           "position": "center",
           "expression": "쓸쓸",
           "blush": false
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "day2_goguma_2",
+      "question": "고구마의 고민에 대한 반응",
+      "options": [
+        {
+          "key": "A",
+          "text": "\"가끔은 자신을 먼저 챙겨도 괜찮아요.\"",
+          "next": null,
+          "effectDesc": "고구마 호감 상승 표시 (+)",
+          "effects": {
+            "score": 3,
+            "scale": "(+)",
+            "troubleState": null,
+            "targetChar": "goguma",
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "고구마[웃음]",
+              "text": "고마워요. 다른 사람만큼 저 자신에게도 다정해져야겠어요."
+            },
+            {
+              "speaker": "고구마[기본+홍조]",
+              "text": "{player} 씨와 이야기하니 마음이 한결 따뜻해지네요."
+            }
+          ]
+        },
+        {
+          "key": "B",
+          "text": "\"부탁을 거절하는 연습부터 해봐요.\"",
+          "next": null,
+          "effectDesc": "표시 없음",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "고구마[당황]",
+              "text": "아, 역시... 그래야 할까요?"
+            },
+            {
+              "speaker": "고구마[당황]",
+              "text": "하지만 막상 부탁을 받으면 거절하기가 쉽지 않더라고요..."
+            }
+          ]
         }
       ]
     },
@@ -176,93 +274,6 @@
       "characters": []
     }
   ],
-  "choices": {
-    "id": "day2_goguma_2",
-    "question": "고구마의 고민에 대한 반응",
-    "options": [
-      {
-        "key": "A",
-        "text": "\"가끔은 자신을 먼저 챙겨도 괜찮아요.\"",
-        "next": "s08_day2_end",
-        "effectDesc": "고구마 호감 상승 표시 (+)",
-        "effects": {
-          "score": 3,
-          "scale": "(+)",
-          "troubleState": null,
-          "targetChar": "goguma",
-          "characters": null
-        },
-        "followUp": [
-          {
-            "speaker": "고구마[웃음]",
-            "text": "고마워요. 다른 사람만큼 저 자신에게도 다정해져야겠어요."
-          },
-          {
-            "speaker": "고구마[기본+홍조]",
-            "text": "{player} 씨와 이야기하니 마음이 한결 따뜻해지네요."
-          }
-        ]
-      },
-      {
-        "key": "B",
-        "text": "\"부탁을 거절하는 연습부터 해봐요.\"",
-        "next": "s08_day2_end",
-        "effectDesc": "표시 없음",
-        "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null,
-          "characters": null
-        },
-        "followUp": [
-          {
-            "speaker": "고구마[당황]",
-            "text": "아, 역시... 그래야 할까요?"
-          },
-          {
-            "speaker": "고구마[당황]",
-            "text": "하지만 막상 부탁을 받으면 거절하기가 쉽지 않더라고요..."
-          }
-        ]
-      }
-    ]
-  },
-  "midChoices": [
-    {
-      "id": "day2_goguma_1",
-      "question": "산책 이야기",
-      "options": [
-        {
-          "key": "A",
-          "text": "\"{고구마} 씨와 잘 어울리는 풍경이네요.\"",
-          "next": null,
-          "effectDesc": "",
-          "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
-          },
-          "followUp": []
-        },
-        {
-          "key": "B",
-          "text": "\"산책을 자주 하시나요?\"",
-          "next": null,
-          "effectDesc": "",
-          "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
-          },
-          "followUp": []
-        }
-      ]
-    }
-  ],
+  "choices": null,
   "next": "s08_day2_end"
 }

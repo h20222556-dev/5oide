@@ -97,79 +97,59 @@
       ]
     },
     {
-      "speaker": "주인공",
-      "speakerType": "normal",
-      "text": "{닭갈비} 씨도 춘천처럼 매력이 여러 가지인가봐요?",
-      "characters": []
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "당연하죠! 저는 담백하면서도 부드럽고, 누구와도 잘 어울리는 환상의 궁합을 자랑하니까요!",
-      "characters": [
+      "type": "choice",
+      "id": "day2_dakgalbi_1",
+      "question": "선택하세요",
+      "options": [
         {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "하지만 그게 제 매력의 전부는 아니라고요!",
-      "characters": [
+          "key": "A",
+          "text": "\"{닭갈비} 씨도 춘천처럼 매력이 여러 가지인가봐요?\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "닭갈비[웃음]",
+              "text": "당연하죠! 저는 담백하면서도 부드럽고, 누구와도 잘 어울리는 환상의 궁합을 자랑하니까요!"
+            },
+            {
+              "speaker": "닭갈비[웃음]",
+              "text": "하지만 그게 제 매력의 전부는 아니라고요!"
+            }
+          ]
+        },
         {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "normal",
-      "text": "...아, 네...",
-      "characters": []
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "어라? 반응이 조금 미지근한데요?",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "역시, 겉으로 보이는 모습만으로는 제 매력을 다 알 수 없는 거겠죠?",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음",
-          "blush": false
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "겉바속촉이라는 말도 있잖아요? 겉모습만 보고 판단하면 안 되는 법이죠!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본",
-          "blush": false
+          "key": "B",
+          "text": "\"...아, 네...\"",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "닭갈비[기본]",
+              "text": "어라? 반응이 조금 미지근한데요?"
+            },
+            {
+              "speaker": "닭갈비[웃음]",
+              "text": "역시, 겉으로 보이는 모습만으로는 제 매력을 다 알 수 없는 거겠죠?"
+            },
+            {
+              "speaker": "닭갈비[기본]",
+              "text": "겉바속촉이라는 말도 있잖아요? 겉모습만 보고 판단하면 안 되는 법이죠!"
+            }
+          ]
         }
       ]
     },
@@ -238,6 +218,55 @@
       ]
     },
     {
+      "type": "choice",
+      "id": "day2_dakgalbi",
+      "question": "닭갈비의 고민에 대한 반응",
+      "options": [
+        {
+          "key": "A",
+          "text": "\"저는 지금의 {닭갈비} 씨가 좋아요.\"",
+          "next": null,
+          "effectDesc": "닭갈비 호감 상승 표시 (+)",
+          "effects": {
+            "score": 3,
+            "scale": "(+)",
+            "troubleState": null,
+            "targetChar": "dakgalbi",
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "닭갈비[웃음]",
+              "text": "정말요? 저라는 사람 자체를 봐주시는 것 같아서 정말 기뻐요!"
+            },
+            {
+              "speaker": "닭갈비[기본+홍조]",
+              "text": "저도 지금의 {player} 씨가..."
+            }
+          ]
+        },
+        {
+          "key": "B",
+          "text": "\"그걸 제가 어떻게 알아요?\"",
+          "next": null,
+          "effectDesc": "표시 없음",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": [
+            {
+              "speaker": "닭갈비[당황]",
+              "text": "아, 그러네요... 제가 갑자기 너무 어려운 질문을 드렸죠? 죄송해요...!"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "speaker": "닭갈비",
       "speakerType": "normal",
       "text": "큼... 오늘 정말 즐거웠어요! 다음에는 저만의 매력을 더 많이 보여드릴 테니까 기대하세요!",
@@ -257,53 +286,6 @@
       "characters": []
     }
   ],
-  "choices": {
-    "id": "day2_dakgalbi",
-    "question": "닭갈비의 고민에 대한 반응",
-    "options": [
-      {
-        "key": "A",
-        "text": "\"저는 지금의 {닭갈비} 씨가 좋아요.\"",
-        "next": "s08_day2_end",
-        "effectDesc": "닭갈비 호감 상승 표시 (+)",
-        "effects": {
-          "score": 3,
-          "scale": "(+)",
-          "troubleState": null,
-          "targetChar": "dakgalbi",
-          "characters": null
-        },
-        "followUp": [
-          {
-            "speaker": "닭갈비[웃음]",
-            "text": "정말요? 저라는 사람 자체를 봐주시는 것 같아서 정말 기뻐요!"
-          },
-          {
-            "speaker": "닭갈비[기본+홍조]",
-            "text": "저도 지금의 {player} 씨가..."
-          }
-        ]
-      },
-      {
-        "key": "B",
-        "text": "\"그걸 제가 어떻게 알아요?\"",
-        "next": "s08_day2_end",
-        "effectDesc": "표시 없음",
-        "effects": {
-          "score": 0,
-          "scale": null,
-          "troubleState": null,
-          "targetChar": null,
-          "characters": null
-        },
-        "followUp": [
-          {
-            "speaker": "닭갈비[당황]",
-            "text": "아, 그러네요... 제가 갑자기 너무 어려운 질문을 드렸죠? 죄송해요...!"
-          }
-        ]
-      }
-    ]
-  },
+  "choices": null,
   "next": "s08_day2_end"
 }

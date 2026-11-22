@@ -27,6 +27,7 @@ const lines = mdContent.split(/\r?\n/);
 // 끝에 붙은 작성자 표시 (+) 도 화면에 보이지 않게 제거
 function cleanDialogueText(raw) {
   let t = (raw || '').trim();
+  t = t.replace(/\s*⚠\s*\([^)]*\)\s*$/, '').trim();
   t = t.replace(/\s*\(\+\)\s*$/, '').trim();
   const dq = /^["“”]/;
   const dqEnd = /["“”]$/;
@@ -122,6 +123,7 @@ const gameConfig = {
   "bgmVolume": 0.5,
   "sfxVolume": 0.7,
   "showAffinity": true,
+  "SHOW_HUD": false,
   "dayTransition": {
     "fadeOutMs": 1500,
     "holdMs": 3500,
@@ -373,6 +375,11 @@ while (i < lines.length) {
   }
 
   // 대사 감지: - 화자[표정]: "대사" 또는 - 화자: "대사" 또는 - > 주인공: "대사"
+  // 단, '- ⚠' 검토 메모 줄은 대사로 파싱하지 않음
+  if (/^-\s*⚠/.test(line)) {
+    i++;
+    continue;
+  }
   const dialMatch = line.match(/^-\s*(?:>\s*)?([^:\[]+)(?:\[([^\]]+)\])?:\s*"?(.*?)"?$/);
   if (dialMatch && !line.startsWith('- A:') && !line.startsWith('- B:') && !line.startsWith('- C:') && !line.startsWith('- D:')) {
     let speakerRaw = dialMatch[1].trim();
@@ -483,6 +490,13 @@ while (i < lines.length) {
           const subLine = lines[j].trim();
           if (subLine.startsWith('효과:')) {
             effectText = subLine.replace('효과:', '').trim();
+          } else if (subLine.startsWith('이어지는 대사:') && subLine.replace('이어지는 대사:', '').trim().includes(':')) {
+            // 한 줄 형식 이어지는 대사: 고구마[웃음]: "대사"
+            const rest = subLine.replace('이어지는 대사:', '').trim();
+            const m = rest.match(/^([^:]+):\s*"?(.*?)"?$/);
+            if (m) {
+              followUpDialogues.push({ speaker: m[1].trim(), text: cleanDialogueText(m[2]) });
+            }
           } else if (subLine.startsWith('- ') && subLine.includes(':')) {
             // 이어지는 대사
             const m = subLine.match(/^-\s*([^:]+):\s*"?(.*?)"?$/);
@@ -559,9 +573,17 @@ while (i < lines.length) {
       }
     }
 
-    // 같은 씬에 CHOICE가 여러 개인 경우, 나중 것의 옵션 목록만 사용
-    // (첫 번째 CHOICE는 중간 대화 선택으로, 두 번째가 호감도에 영향을 주는 메인 선택)
-    if (!currentScene.choices) {
+    // Day 1 첫 만남 / Day 2 개별 만남의 CHOICE는 대사 흐름 정확한 위치에 인라인 선택지로 삽입
+    // (선택지 -> 고른 응답만 재생 -> 합류/공통 대사 순서 보장)
+    const inlineScenes = ['s03_lego', 's03_skywalk', 's03_myeongdong', 's07_dakgalbi', 's07_goguma', 's07_yangnyeom'];
+    if (inlineScenes.includes(currentScene.id)) {
+      currentScene.dialogues.push({
+        type: 'choice',
+        id: choiceId,
+        question: question,
+        options: options
+      });
+    } else if (!currentScene.choices) {
       currentScene.choices = {
         id: choiceId,
         question: question,

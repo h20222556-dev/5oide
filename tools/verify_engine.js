@@ -185,7 +185,7 @@ assert(s03_2.dialogues.length <= 2, `s03_2 대사창에서 메시지 A,B,C 텍�
 // 9. 이슈 4 (스카이워크 이름 공개 "???" 버그 수정) 검증
 console.log('\n--- 9. 이슈 4: 이름 ??? 공개 주석 및 세이브 필드 검증 ---');
 const skywalkData = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's03_skywalk.json'), 'utf8'));
-const skywalkRevealLine = skywalkData.dialogues.find(d => d.text.includes('제 이름은'));
+const skywalkRevealLine = skywalkData.dialogues.find(d => d.text && d.text.includes('제 이름은'));
 assert(skywalkRevealLine && skywalkRevealLine.text.includes('실제 이름으로 바뀜'), 's03_skywalk의 "제 이름은" 대사에 이름 공개 주석이 포함됨');
 const saveJs = fs.readFileSync(path.join(rootDir, 'js', 'save.js'), 'utf8');
 assert(saveJs.includes('revealedSpeakers'), 'save.js 세이브 데이터에 revealedSpeakers가 포함되어 영구 저장됨');
@@ -197,14 +197,16 @@ assert(saveJs.includes('day2Visited'), 'save.js 세이브 데이터에 day2Visit
 const engineJs = fs.readFileSync(path.join(rootDir, 'js', 'engine.js'), 'utf8');
 assert(engineJs.includes('_presentDay2RemainingChoices'), 'engine.js에 Day 2 남은 인물 순차 선택 로직(_presentDay2RemainingChoices)이 구현됨');
 
-// 11. 작업 4 검증: 선택지 누락 복구 확인
-console.log('\n--- 11. 작업 4: 선택지 누락 복구 검증 ---');
+// 11. 작업 4 검증: Day 1~2 인라인 선택지 파싱 확인
+console.log('\n--- 11. 작업 4: Day 1~2 선택지 파싱 검증 ---');
 const s07Dak = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_dakgalbi.json'), 'utf8'));
 const s07Gog = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_goguma.json'), 'utf8'));
 const s07Yang = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_yangnyeom.json'), 'utf8'));
-assert(s07Dak.choices && s07Dak.choices.options.length === 2, `s07_dakgalbi 선택지 2개 정상 파싱됨 (${s07Dak.choices.options.length}개)`);
-assert(s07Gog.choices && s07Gog.choices.options.length === 2, `s07_goguma 선택지 2개 정상 파싱됨 (${s07Gog.choices.options.length}개)`);
-assert(s07Yang.choices && s07Yang.choices.options.length === 2, `s07_yangnyeom 선택지 2개 정상 파싱됨 (${s07Yang.choices.options.length}개)`);
+const countInlineChoices = (sc) => (sc.dialogues || []).filter(d => d.type === 'choice' && d.options?.length === 2).length;
+assert(countInlineChoices(s07Dak) === 2, `s07_dakgalbi 인라인 선택지 2묶음(각 2개) 정상 파싱됨 (${countInlineChoices(s07Dak)}묶음)`);
+assert(countInlineChoices(s07Gog) === 2, `s07_goguma 인라인 선택지 2묶음(각 2개) 정상 파싱됨 (${countInlineChoices(s07Gog)}묶음)`);
+assert(countInlineChoices(s07Yang) === 2, `s07_yangnyeom 인라인 선택지 2묶음(각 2개) 정상 파싱됨 (${countInlineChoices(s07Yang)}묶음)`);
+assert(config.SHOW_HUD === false, 'config.SHOW_HUD가 false로 설정되어 상시 HUD 숨김 제어됨');
 
 // 12. 작업 3 검증: Day 2 임의 순서(순열 6종) 선택 시뮬레이션
 console.log('\n--- 12. 작업 3: Day 2 임의 순서(6개 순열) 방문 시뮬레이션 ---');
@@ -298,7 +300,7 @@ let quoted = 0;
 for (const f of fs.readdirSync(path.join(rootDir, 'data', 'scenes'))) {
   if (!f.endsWith('.json')) continue;
   const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', f), 'utf8'));
-  for (const d of (sc.dialogues || [])) if (/^["“”]|["“”]$/.test(d.text)) quoted++;
+  for (const d of (sc.dialogues || [])) if (d.text && /^["“”]|["“”]$/.test(d.text)) quoted++;
   for (const o of (sc.choices?.options || [])) for (const u of (o.followUp || [])) if (/^["“”]|["“”]$|\\(\\+\\)$/.test(u.text)) quoted++;
 }
 assert(quoted === 0, `대사 앞뒤 큰따옴표 없음 (잔존 ${quoted})`);

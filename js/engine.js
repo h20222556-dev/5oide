@@ -86,6 +86,9 @@ class GameEngine {
     this.scoreScale = await loadJSON('config/score_scale.json');
     this.charactersAll = await loadJSON('config/characters.json');
     if (this.renderer && this.config.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
+    if (this.renderer && typeof this.renderer.setHudVisible === 'function') {
+      this.renderer.setHudVisible(this.config.SHOW_HUD === true);
+    }
 
     // 2. 모든 씬 파일 로드
     const sceneFiles = this.config.sceneFiles || [];
@@ -306,6 +309,7 @@ class GameEngine {
     this.state.sceneId = sceneId;
     this.state.dialogueIndex = startDialogueIndex;
     this.state.choiceActive = false;
+    if (sceneId !== '__followup__') this._inlineChoice = null;
     this._stopAutoTimer();
 
     if (this.ui) this.ui.setChoicesActive(false);
@@ -340,10 +344,10 @@ class GameEngine {
     if (scene.type === 'place_select') this._prepPlaceSelect(scene);
     if (scene.id === 's13_sunset') this._prepSunset(scene);
 
-    // 특수 씬 진입 처리 (Day 1 방문 기록 등)
-    if (sceneId === 's03_lego') this.state.day1Visited.push('lego');
-    else if (sceneId === 's03_skywalk') this.state.day1Visited.push('skywalk');
-    else if (sceneId === 's03_myeongdong') this.state.day1Visited.push('myeongdong');
+    // 특수 씬 진입 처리 (Day 1 방문 기록 — 중복 방지)
+    if (sceneId === 's03_lego' && !this.state.day1Visited.includes('lego')) this.state.day1Visited.push('lego');
+    else if (sceneId === 's03_skywalk' && !this.state.day1Visited.includes('skywalk')) this.state.day1Visited.push('skywalk');
+    else if (sceneId === 's03_myeongdong' && !this.state.day1Visited.includes('myeongdong')) this.state.day1Visited.push('myeongdong');
 
     // 엔딩 씬이면 갤러리 등록
     if (scene.type === 'ending') {
@@ -379,6 +383,13 @@ class GameEngine {
     }
 
     const d = dialogues[this.state.dialogueIndex];
+    // 인라인 선택지 (대사 흐름 중간에 표시 -> 고른 응답만 재생 -> 합류/공통 대사로 계속)
+    if (d && d.type === 'choice') {
+      this._inlineChoice = { sceneId: this.state.sceneId, nextIndex: this.state.dialogueIndex + 1 };
+      this._presentChoices(d.question, d.options);
+      return;
+    }
+
     const dKey = `${this.state.sceneId}__${this.state.dialogueIndex}`;
     const alreadySeen = this.state.seenDialogues.has(dKey);
     this.state.seenDialogues.add(dKey);
@@ -575,8 +586,12 @@ class GameEngine {
         });
       }
     } else {
-      // 완료 후 s03_2_day1_messages 로 이동
-      this.goToScene(scene.next || 's03_2_day1_messages');
+      // 세 번째(마지막) 장소 방문 완료 시 "다음 장소로 이동해 볼까?"(s03_2)를 건너뛰고 바로 Day 1 마무리로 이동
+      if (this.state.day1Visited.length >= 3) {
+        this.goToScene('s06_day1_end');
+      } else {
+        this.goToScene(scene.next || 's03_2_day1_messages');
+      }
     }
   }
 
@@ -877,18 +892,36 @@ class GameEngine {
   _followUpToDialogue(f) {
     if (f && f.characters !== undefined) return f;
     const m = (f.speaker || '').match(/^([^\[]+)(?:\[([^\]]+)\])?$/);
-    const name = (m ? m[1] : f.speaker || '').trim();
+    let name = (m ? m[1] : f.speaker || '').trim();
     let expr = m && m[2] ? m[2].trim() : '기본';
+    let speakerType = 'normal';
+    if (name.includes('(V.O.)') || name.includes('(속마음)')) {
+      speakerType = 'vo';
+      name = name.replace(/\(V\.O\.\)|\(속마음\)/g, '').trim();
+    } else if (name.includes('(O.S.)') || name.includes('(화면 밖)') || name.includes('[화면 밖]')) {
+      speakerType = 'os';
+      name = name.replace(/\(O\.S\.\)|\(화면 밖\)|\[화면 밖\]/g, '').trim();
+    }
     let blush = false;
     if (expr.includes('+홍조')) { blush = true; expr = expr.replace('+홍조', '').trim(); }
     let id = null;
-    if (name.includes('닭갈비')) id = 'dakgalbi';
-    else if (name.includes('양념')) id = 'yangnyeom';
-    else if (name.includes('고구마')) id = 'goguma';
-    else if (name.includes('볶음밥')) id = 'bokkeumbap';
+    if (name === '???' && expr.includes('|')) {
+      const parts = expr.split('|');
+      const cName = parts[0].trim();
+      expr = parts[1] ? parts[1].trim() : '기본';
+      if (cName.includes('닭갈비') || cName.includes('닭고기')) id = 'dakgalbi';
+      else if (cName.includes('양념')) id = 'yangnyeom';
+      else if (cName.includes('고구마')) id = 'goguma';
+      else if (cName.includes('볶음밥')) id = 'bokkeumbap';
+    } else {
+      if (name.includes('닭갈비') || name.includes('닭고기')) id = 'dakgalbi';
+      else if (name.includes('양념')) id = 'yangnyeom';
+      else if (name.includes('고구마')) id = 'goguma';
+      else if (name.includes('볶음밥')) id = 'bokkeumbap';
+    }
     return {
       speaker: name,
-      speakerType: 'normal',
+      speakerType,
       text: f.text,
       characters: id ? [{ id, position: 'center', expression: expr, blush }] : [],
     };
@@ -1085,6 +1118,14 @@ class GameEngine {
         },
       });
       this.goToScene('__followup__');
+      return;
+    }
+
+    // 인라인 선택지 완료 -> 원래 씬의 다음 대사(합류/공통 대사)로 복귀
+    if (this._inlineChoice) {
+      const { sceneId, nextIndex } = this._inlineChoice;
+      this._inlineChoice = null;
+      this.goToScene(sceneId, nextIndex);
       return;
     }
 
