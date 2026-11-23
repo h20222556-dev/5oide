@@ -890,8 +890,14 @@ class Renderer {
   // ─── 메뉴바 상태 ───────────────────────────────────────────────────────────
 
   updateMenuBar(isAuto, isSkip) {
-    if (this.autoBtn) this.autoBtn.classList.toggle('active', !!isAuto);
-    if (this.skipBtn) this.skipBtn.classList.toggle('active', !!isSkip);
+    if (this.autoBtn) {
+      this.autoBtn.classList.toggle('active', !!isAuto);
+      this.autoBtn.setAttribute('aria-pressed', isAuto ? 'true' : 'false');
+    }
+    if (this.skipBtn) {
+      this.skipBtn.classList.toggle('active', !!isSkip);
+      this.skipBtn.setAttribute('aria-pressed', isSkip ? 'true' : 'false');
+    }
   }
 
   // ─── 성별 / 이름 모달 ──────────────────────────────────────────────────────

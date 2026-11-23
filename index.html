@@ -73,14 +73,40 @@
       <!-- 호감도 게이지 (우상단) -->
       <div id="affinity-bar"></div>
 
-      <!-- 상단 게임 메뉴바 -->
-      <div id="game-menu-bar">
-        <button class="menu-btn" id="btn-save">세이브</button>
-        <button class="menu-btn" id="btn-load">불러오기</button>
-        <button class="menu-btn" id="btn-settings">설정</button>
-        <button class="menu-btn" id="btn-to-title">타이틀</button>
-        <button class="menu-btn" id="btn-auto">자동</button>
-        <button class="menu-btn" id="btn-skip">스킵</button>
+      <!-- 상단 게임 메뉴바 (개별 이미지 버튼 6종, 접근성 레이블 및 텍스트 폴백 포함) -->
+      <div id="game-menu-bar" role="toolbar" aria-label="게임 시스템 메뉴">
+        <button type="button" class="menu-btn toolbar-img-btn theme-pink" id="btn-save" data-toolbar-key="save" aria-label="세이브">
+          <img class="toolbar-btn-img" src="assets/ui/ui_btn_save.png" srcset="assets/ui/ui_btn_save.png 1x, assets/ui/ui_btn_save@2x.png 2x" width="361" height="121" alt="" draggable="false">
+          <span class="visually-hidden">세이브</span>
+          <span class="toolbar-btn-fallback" aria-hidden="true">세이브</span>
+        </button>
+        <button type="button" class="menu-btn toolbar-img-btn theme-lavender" id="btn-load" data-toolbar-key="load" aria-label="불러오기">
+          <img class="toolbar-btn-img" src="assets/ui/ui_btn_load.png" srcset="assets/ui/ui_btn_load.png 1x, assets/ui/ui_btn_load@2x.png 2x" width="361" height="121" alt="" draggable="false">
+          <span class="visually-hidden">불러오기</span>
+          <span class="toolbar-btn-fallback" aria-hidden="true">불러오기</span>
+        </button>
+        <button type="button" class="menu-btn toolbar-img-btn theme-pink" id="btn-settings" data-toolbar-key="settings" aria-label="설정">
+          <img class="toolbar-btn-img" src="assets/ui/ui_btn_settings.png" srcset="assets/ui/ui_btn_settings.png 1x, assets/ui/ui_btn_settings@2x.png 2x" width="361" height="121" alt="" draggable="false">
+          <span class="visually-hidden">설정</span>
+          <span class="toolbar-btn-fallback" aria-hidden="true">설정</span>
+        </button>
+        <button type="button" class="menu-btn toolbar-img-btn theme-lavender" id="btn-to-title" data-toolbar-key="title" aria-label="타이틀">
+          <img class="toolbar-btn-img" src="assets/ui/ui_btn_title.png" srcset="assets/ui/ui_btn_title.png 1x, assets/ui/ui_btn_title@2x.png 2x" width="361" height="121" alt="" draggable="false">
+          <span class="visually-hidden">타이틀</span>
+          <span class="toolbar-btn-fallback" aria-hidden="true">타이틀</span>
+        </button>
+        <button type="button" class="menu-btn toolbar-img-btn theme-pink" id="btn-auto" data-toolbar-key="auto" aria-label="자동" aria-pressed="false">
+          <img class="toolbar-btn-img" src="assets/ui/ui_btn_auto.png" srcset="assets/ui/ui_btn_auto.png 1x, assets/ui/ui_btn_auto@2x.png 2x" width="361" height="121" alt="" draggable="false">
+          <span class="visually-hidden">자동</span>
+          <span class="toolbar-btn-fallback" aria-hidden="true">자동</span>
+          <span class="toolbar-on-badge" aria-hidden="true">ON</span>
+        </button>
+        <button type="button" class="menu-btn toolbar-img-btn theme-lavender" id="btn-skip" data-toolbar-key="skip" aria-label="스킵" aria-pressed="false">
+          <img class="toolbar-btn-img" src="assets/ui/ui_btn_skip.png" srcset="assets/ui/ui_btn_skip.png 1x, assets/ui/ui_btn_skip@2x.png 2x" width="361" height="121" alt="" draggable="false">
+          <span class="visually-hidden">스킵</span>
+          <span class="toolbar-btn-fallback" aria-hidden="true">스킵</span>
+          <span class="toolbar-on-badge" aria-hidden="true">ON</span>
+        </button>
       </div>
 
       <!-- 챕터 타이틀 오버레이 -->

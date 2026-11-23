@@ -5,6 +5,17 @@
 'use strict';
 
 class UIController {
+  static get TOOLBAR_BUTTONS() {
+    return [
+      { key: 'save',     id: 'btn-save',     label: '세이브',   imageBase: 'assets/ui/ui_btn_save',     theme: 'pink',     toggle: false },
+      { key: 'load',     id: 'btn-load',     label: '불러오기', imageBase: 'assets/ui/ui_btn_load',     theme: 'lavender', toggle: false },
+      { key: 'settings', id: 'btn-settings', label: '설정',     imageBase: 'assets/ui/ui_btn_settings', theme: 'pink',     toggle: false },
+      { key: 'title',    id: 'btn-to-title', label: '타이틀',   imageBase: 'assets/ui/ui_btn_title',    theme: 'lavender', toggle: false },
+      { key: 'auto',     id: 'btn-auto',     label: '자동',     imageBase: 'assets/ui/ui_btn_auto',     theme: 'pink',     toggle: true  },
+      { key: 'skip',     id: 'btn-skip',     label: '스킵',     imageBase: 'assets/ui/ui_btn_skip',     theme: 'lavender', toggle: true  },
+    ];
+  }
+
   constructor() {
     this.engine = null;
     this.renderer = null;
@@ -69,8 +80,47 @@ class UIController {
       });
     }
 
+    this._initToolbarButtons();
     this._bindEvents();
     this.resizeGame();
+  }
+
+  _initToolbarButtons() {
+    const dpr = (typeof window !== 'undefined' && window.devicePixelRatio > 1.25) ? 2 : 1;
+    UIController.TOOLBAR_BUTTONS.forEach(cfg => {
+      // 첫 화면에서 6개 버튼 이미지 프리로드
+      const pre1 = new Image();
+      pre1.src = `${cfg.imageBase}.png`;
+      if (dpr >= 2) {
+        const pre2 = new Image();
+        pre2.src = `${cfg.imageBase}@2x.png`;
+      }
+
+      const btn = document.getElementById(cfg.id);
+      if (!btn) return;
+      btn.setAttribute('aria-label', cfg.label);
+      if (cfg.toggle && !btn.hasAttribute('aria-pressed')) {
+        btn.setAttribute('aria-pressed', 'false');
+      }
+
+      const img = btn.querySelector('.toolbar-btn-img');
+      if (img) {
+        img.src = `${cfg.imageBase}.png`;
+        img.srcset = `${cfg.imageBase}.png 1x, ${cfg.imageBase}@2x.png 2x`;
+        img.alt = '';
+        img.draggable = false;
+        img.addEventListener('error', () => {
+          btn.classList.add('is-fallback');
+        });
+        img.addEventListener('load', () => {
+          btn.classList.remove('is-fallback');
+        });
+        // 이미 로드 실패한 상태로 들어온 경우 즉시 폴백 처리
+        if (img.complete && img.naturalWidth === 0) {
+          btn.classList.add('is-fallback');
+        }
+      }
+    });
   }
 
   setChoicesActive(active) {
