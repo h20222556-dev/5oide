@@ -32,6 +32,7 @@ class Renderer {
     this.phonePartnerName = document.getElementById('phone-partner-name');
     this.phoneMessagesList= document.getElementById('phone-messages-list');
     this.btnClosePhone    = document.getElementById('btn-close-phone');
+    this.chatListOverlay  = document.getElementById('chat-list-overlay');
 
     // 모달들
     this.genderModal      = document.getElementById('modal-gender');
@@ -123,7 +124,7 @@ class Renderer {
     this.timeLabel.style.display = timeStr ? 'block' : 'none';
   }
 
-  // ─── 캐릭터 렌더링 (에셋 매니페스트 + 여성 임시 이름 박스 지원) ────────────
+  // ─── 캐릭터 렌더링 (에셋 매니페스트 + 깜빡임 방지 + 여성 임시 이름 박스) ───
 
   setCharacters(characterList, speakingId, gender = 'female', charactersMap = null) {
     const slots = {
@@ -132,37 +133,56 @@ class Renderer {
       right: document.getElementById('char-slot-right'),
     };
 
-    Object.values(slots).forEach(s => {
-      if (s) {
+    const list = Array.isArray(characterList) ? characterList : [];
+    const usedPositions = new Set(list.map(c => c.position || 'center'));
+
+    // 더 이상 사용하지 않는 슬롯만 비움 (유지되는 캐릭터는 깜빡임 없이 보존)
+    for (const [pos, s] of Object.entries(slots)) {
+      if (s && !usedPositions.has(pos)) {
         s.innerHTML = '';
+        delete s.dataset.charKey;
         s.classList.remove('visible');
       }
-    });
+    }
 
-    if (!characterList || characterList.length === 0) return;
+    if (list.length === 0) return;
 
-    characterList.forEach(c => {
-      const slot = slots[c.position || 'center'];
+    list.forEach(c => {
+      const pos = c.position || 'center';
+      const slot = slots[pos];
       if (!slot) return;
       slot.classList.add('visible');
-
-      const isSpeaking = speakingId && (c.id === speakingId || speakingId.includes(c.id));
-      const wrap = document.createElement('div');
-      wrap.className = `char-wrapper ${isSpeaking ? 'speaking' : 'silent'}`;
-      wrap.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;';
 
       const rawExpr = c.expression || '기본';
       const displayName = (charactersMap && charactersMap[c.id]?.name)
         || (typeof getDisplayName === 'function' ? getDisplayName(c.id, gender) : c.id);
 
-      // 볶음밥은 모든 표정 태그에서 default 한 장만 사용
       const exprMap = this.assetManifest?.expressionMap?.[c.id] || {};
       const mappedKey = c.id === 'bokkeumbap' ? 'default' : (exprMap[rawExpr] || 'default');
       const genderTable = this.assetManifest?.characters?.[gender]?.[c.id] || {};
       const imgPath = genderTable[mappedKey] || genderTable['default'] || null;
 
+      const isSpeaking = !speakingId || speakingId === '주인공'
+        || speakingId === c.id
+        || (typeof speakingId === 'string' && (speakingId.includes(c.id) || speakingId.includes(displayName) || speakingId.includes(charactersMap?.[c.id]?.role || '__none__')));
+
+      const charKey = `${c.id}|${imgPath || 'placeholder'}|${rawExpr}|${displayName}`;
+      if (slot.dataset.charKey === charKey) {
+        const existingWrap = slot.querySelector('.char-wrapper');
+        if (existingWrap) {
+          existingWrap.className = `char-wrapper ${isSpeaking ? 'speaking' : 'silent'}`;
+        }
+        return;
+      }
+
+      slot.innerHTML = '';
+      slot.dataset.charKey = charKey;
+
+      const wrap = document.createElement('div');
+      wrap.className = `char-wrapper ${isSpeaking ? 'speaking' : 'silent'}`;
+      wrap.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;';
+
       if (!imgPath) {
-        // 여성 버전 등 스프라이트 미보유 시 이름이 적힌 임시 박스 표시
         wrap.innerHTML = this._makePlaceholderBox(c.id, displayName, rawExpr);
         slot.appendChild(wrap);
         return;
@@ -397,6 +417,97 @@ class Renderer {
     if (this.phoneOverlay) this.phoneOverlay.classList.add('hidden');
   }
 
+  // ─── 채팅 목록 UI (코드 제작 — #6 Day 1 밤, #7 Day 2 아침, #8 Day 2 밤) ────
+
+  showChatList(mode, { gender = 'female', day1Visited = [], charactersMap = {}, vars = {} } = {}) {
+    if (!this.chatListOverlay) return;
+    if (this._lastChatListMode === mode && !this.chatListOverlay.classList.contains('hidden')) return;
+    this._lastChatListMode = mode;
+
+    const placeToChar = { lego: 'dakgalbi', skywalk: 'goguma', myeongdong: 'yangnyeom' };
+    const colorMap = { dakgalbi: '#ff6b6b', yangnyeom: '#ee5253', goguma: '#feca57' };
+    const resolveTxt = (t) => (typeof resolveTextVariables === 'function' ? resolveTextVariables(t, vars) : t);
+
+    let rows = [];
+    let headerTime = '오후 9:30';
+
+    if (mode === 'day1') {
+      const visitedChars = (day1Visited || []).map(p => placeToChar[p]).filter(Boolean);
+      const baseOrder = visitedChars.length === 3
+        ? visitedChars.slice().reverse()
+        : ['dakgalbi', 'goguma', 'yangnyeom'];
+      const day1Msgs = {
+        dakgalbi: '다음에 또 만나면 그때는 더 재미있는 곳 소개해 드릴게요~!',
+        goguma: '언제든 환영이에요. {player}씨를 위해 따뜻한 음료를 준비해 둬야겠어요~',
+        yangnyeom: '궁금하시면 연락하세요.',
+      };
+      const times = ['오후 7:15', '오후 4:40', '오후 1:25'];
+      rows = baseOrder.map((cid, idx) => ({
+        id: cid,
+        msg: resolveTxt(day1Msgs[cid] || ''),
+        time: times[idx] || '오후 1:00',
+        unread: 0,
+      }));
+      headerTime = '오후 9:30';
+    } else if (mode && mode.startsWith('day2_step')) {
+      const stepNum = parseInt(mode.replace('day2_step', ''), 10) || 3;
+      const day2All = [
+        { id: 'dakgalbi', msg: '내일 친구들이랑 남이섬 가기로 했는데 혹시...', time: '오후 10:02', unread: 1 },
+        { id: 'yangnyeom', msg: '내일 남이섬 안 갈래요?', time: '오후 10:02', unread: 1 },
+        { id: 'goguma', msg: '내일 남이섬에 가려고 하는데, 함께 가면 좋을 것 같...', time: '오후 10:03', unread: 1 },
+      ];
+      rows = day2All.slice(0, stepNum);
+      headerTime = '오후 10:03';
+    }
+
+    const renderRow = (r, idx) => {
+      const name = charactersMap?.[r.id]?.name || (typeof getDisplayName === 'function' ? getDisplayName(r.id, gender) : r.id);
+      const spritePath = this.assetManifest?.characters?.[gender]?.[r.id]?.default || null;
+      const bgCol = colorMap[r.id] || '#7f8c8d';
+      const avatarHtml = spritePath
+        ? `<div class="chat-avatar"><img src="${spritePath}" alt="${name}"></div>`
+        : `<div class="chat-avatar chat-avatar-fallback" style="background:${bgCol};">${name.charAt(0)}</div>`;
+      const badgeHtml = r.unread > 0 ? `<span class="chat-unread-badge">${r.unread}</span>` : '';
+      return `
+        <div class="chat-row ${r.unread > 0 ? 'chat-row-arrive' : ''}" data-char="${r.id}" style="animation-delay:${idx * 60}ms">
+          ${avatarHtml}
+          <div class="chat-row-body">
+            <div class="chat-row-top">
+              <span class="chat-row-name">${name}</span>
+              <span class="chat-row-time">${r.time}</span>
+            </div>
+            <div class="chat-row-bottom">
+              <span class="chat-row-msg">${r.msg}</span>
+              ${badgeHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    };
+
+    this.chatListOverlay.innerHTML = `
+      <div class="chat-phone-frame">
+        <div class="chat-phone-status">
+          <span>${headerTime}</span>
+          <span>5G · 87%</span>
+        </div>
+        <div class="chat-phone-header">채팅</div>
+        <div class="chat-list-body">
+          ${rows.map(renderRow).join('')}
+        </div>
+      </div>
+    `;
+    this.chatListOverlay.classList.remove('hidden');
+  }
+
+  hideChatList() {
+    this._lastChatListMode = null;
+    if (this.chatListOverlay) {
+      this.chatListOverlay.classList.add('hidden');
+      this.chatListOverlay.innerHTML = '';
+    }
+  }
+
   // ─── 선택지 ────────────────────────────────────────────────────────────────
 
   showChoices(question, options, onSelect, opts = {}) {
@@ -406,7 +517,9 @@ class Renderer {
 
     if (question) {
       const qEl = document.createElement('div');
-      qEl.className = opts && opts.isNarration ? 'choice-question narration-prompt' : 'choice-question';
+      if (opts && opts.isEndingTitle) qEl.className = 'choice-question ending-title-heading';
+      else if (opts && opts.isNarration) qEl.className = 'choice-question narration-prompt';
+      else qEl.className = 'choice-question';
       qEl.textContent = question;
       this.choicesContainer.appendChild(qEl);
     }
@@ -421,7 +534,10 @@ class Renderer {
         .trim();
 
       if (opt.disabled) {
-        btn.innerHTML = `${cleanText} <span class="locked-badge">[${opt.lockedReason || '잠김'}]</span>`;
+        btn.innerHTML = `
+          <span class="choice-locked-main"><span class="lock-icon" aria-hidden="true">🔒</span> ${cleanText}</span>
+          <span class="locked-reason">${opt.lockedReason || '잠김'}</span>
+        `;
         btn.disabled = true;
       } else {
         btn.textContent = cleanText;
@@ -862,7 +978,7 @@ class Renderer {
     this.affinityBar.style.display = visible ? 'flex' : 'none';
   }
 
-  showLikeFeedback(charId, charName, delta, prevVal, nextVal, compact = false) {
+  showLikeFeedback(charId, charName, delta, prevVal, nextVal, compact = false, labelMode = null) {
     if (!delta || delta <= 0) return;
     const wrapper = this.gameWrapper || document.body;
     let stack = wrapper.querySelector('.like-feedback-stack');
@@ -872,8 +988,9 @@ class Renderer {
       wrapper.appendChild(stack);
     }
 
-    const label = delta >= 2 ? '호감도가 크게 상승했다' : '호감도가 상승했다';
-    const tone = delta >= 2 ? 'up-big' : 'up';
+    const isBig = labelMode === 'up' ? false : (delta >= 2);
+    const label = isBig ? '호감도가 크게 상승했다' : '호감도가 상승했다';
+    const tone = isBig ? 'up-big' : 'up';
 
     const fromPct = Math.max(0, Math.min(100, (prevVal / 10) * 100));
     const toPct = Math.max(0, Math.min(100, (nextVal / 10) * 100));

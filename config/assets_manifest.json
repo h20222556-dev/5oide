@@ -1,6 +1,7 @@
 {
   "version": "v2_full_spec",
   "backgrounds": {
+    "bg_title": "assets/backgrounds/bg_title.png",
     "bg_legoland": "assets/backgrounds/bg_legoland.jpg",
     "bg_skywalk": "assets/backgrounds/bg_skywalk.jpg",
     "bg_dakgalbi_alley": "assets/backgrounds/bg_dakgalbi_alley.jpg",
@@ -20,8 +21,6 @@
     "bg_chuncheon_station": "춘천역",
     "bg_brochure": "춘천 관광 안내책자",
     "bg_hotel": "숙소 내부",
-    "bg_chat_list": "채팅 목록",
-    "bg_cafe_entrance": "카페 입구",
     "bg_promo_video_m": "전광판 홍보 영상 (남성 버전) — 춘천 → 남이섬 직행 수상버스 약 40분",
     "bg_promo_video_f": "전광판 홍보 영상 (여성 버전) — 춘천 → 남이섬 직행 수상버스 약 40분",
     "bg_legoland": "레고랜드",

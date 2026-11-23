@@ -46,7 +46,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "네? 아, 안녕하세요!",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -65,7 +71,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "네, 이번에 처음 왔어요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -84,7 +96,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아직 제대로 정하지는 못했어요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -103,13 +121,25 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "하하, 감사합니다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "그런데...",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "type": "choice",
@@ -122,12 +152,7 @@
           "text": "누구세요?",
           "next": null,
           "effectDesc": "",
-          "effects": {
-            "like": {
-              "dakgalbi": 1
-            },
-            "compact": true
-          },
+          "effects": null,
           "followUp": []
         }
       ]
@@ -136,7 +161,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "누구세요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -164,9 +195,10 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "dakgalbi": 1
+              "dakgalbi": 2
             },
-            "compact": true
+            "compact": true,
+            "labelMode": "up"
           },
           "followUp": []
         }
@@ -176,7 +208,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "굉장히 적극적이시네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -195,7 +233,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "그럼, 혹시 관광 홍보 활동하시는 분이신가요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -214,7 +258,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아, 저는 {player}입니다. 반가워요!",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",

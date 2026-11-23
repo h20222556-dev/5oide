@@ -26,7 +26,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "안녕하세요! 오래 기다리셨어요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -44,7 +50,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "그러게요, 그건 그렇고 춘천은 생각보다 큰 도시군요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -62,7 +74,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아, 그래서 그런지 시내가 꽤 활기차네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -80,7 +98,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{닭갈비}씨는 춘천을 정말 좋아하시나 봐요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -107,9 +131,10 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "dakgalbi": 1
+              "dakgalbi": 2
             },
-            "compact": true
+            "compact": true,
+            "labelMode": "up"
           },
           "followUp": []
         }
@@ -119,7 +144,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{닭갈비}씨도 춘천처럼 매력이 여러 가지인가봐요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -156,12 +187,7 @@
           "text": "아...네...",
           "next": null,
           "effectDesc": "",
-          "effects": {
-            "like": {
-              "dakgalbi": 1
-            },
-            "compact": true
-          },
+          "effects": null,
           "followUp": []
         }
       ]
@@ -170,7 +196,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아...네...",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -212,7 +244,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "그럼 {닭갈비}씨의 속은 어떤데요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -242,7 +280,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "무슨 고민이요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "쓸쓸"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -355,7 +399,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "오늘 만남으로 {닭갈비}씨와 더 친해진 것 같아.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": null,

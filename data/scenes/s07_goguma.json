@@ -3,7 +3,7 @@
   "title": "#7 Day 2 — 고구마 (카페)",
   "type": "normal",
   "day": 2,
-  "background": "bg_cafe_entrance",
+  "background": "bg_cafe",
   "overlay": null,
   "time": "낮",
   "bgm": "bgm_main",
@@ -13,7 +13,7 @@
       "speakerType": "vo",
       "text": "여기가 {고구마}씨가 운영하는 카페란 말이지?",
       "characters": [],
-      "background": "bg_cafe_entrance",
+      "background": "bg_cafe",
       "overlay": null
     },
     {
@@ -26,15 +26,19 @@
           "position": "center",
           "expression": "기본"
         }
-      ],
-      "background": "bg_cafe",
-      "overlay": null
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "안녕하세요! 카페가 정말 아늑하네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -65,7 +69,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "음료도 맛있고 분위기도 좋네요. 춘천은 어딘가 여유로운 느낌이 있네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -83,13 +93,25 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{고구마}씨도 평소에 여유롭게 시간을 보내는 걸 좋아하시나봐요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "호수요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -116,9 +138,10 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "goguma": 1
+              "goguma": 2
             },
-            "compact": true
+            "compact": true,
+            "labelMode": "up"
           },
           "followUp": []
         }
@@ -128,7 +151,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{고구마}씨와 잘 어울리는 풍경이네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -153,12 +182,7 @@
           "text": "산책을 자주 하시나요?",
           "next": null,
           "effectDesc": "",
-          "effects": {
-            "like": {
-              "goguma": 1
-            },
-            "compact": true
-          },
+          "effects": null,
           "followUp": []
         }
       ]
@@ -167,7 +191,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "산책을 자주 하시나요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -185,7 +215,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{고구마}씨는 항상 여유롭고 다정하신 것 같아요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -215,7 +251,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "무슨 일을 하고 싶으신데요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "쓸쓸"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -328,9 +370,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "오늘 만남으로 {고구마}씨에 대해 많이 알 수 있었어.",
-      "characters": [],
-      "background": "bg_cafe_entrance",
-      "overlay": null
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     }
   ],
   "choices": null,

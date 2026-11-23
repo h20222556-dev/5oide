@@ -113,7 +113,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "저도요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -143,7 +149,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{양념}씨는 솔직한 성격에서 상대를 배려하는 마음을 담는 법을 배워가고 있었다. 이제는 서로의 마음을 숨기지 않고 솔직하게 나눌 수 있을 것 같다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
     }
   ],
   "choices": null,

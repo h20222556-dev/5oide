@@ -13,17 +13,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   const save     = new SaveManager();
   const audio    = new AudioManager();
 
+  const btnNewGame = document.getElementById('btn-new-game');
+  const btnLoad    = document.getElementById('btn-title-load');
+  const setTitleReady = (ready) => {
+    if (btnNewGame) {
+      btnNewGame.disabled = !ready;
+      btnNewGame.textContent = ready ? (btnNewGame.dataset.readyLabel || '새로 시작') : '불러오는 중…';
+    }
+    if (btnLoad) {
+      btnLoad.disabled = !ready;
+    }
+  };
+
+  // 로딩 중에는 시작 버튼을 명확히 비활성("불러오는 중…") 처리
+  setTitleReady(false);
+
+  // 2. 의존성 주입 및 이벤트 바인딩을 즉시 수행 (로딩 완료 직후 바로 클릭 가능)
+  engine.setRenderer(renderer);
+  engine.setUI(ui);
+  engine.setSaveManager(save);
+  engine.setAudioManager(audio);
+  ui.init(engine, renderer, save, audio);
+  renderer.showScreen('title');
+  ui.resizeGame();
+
   try {
-    // 2. 엔진 데이터 로드 (config, characters, scenes)
+    // 3. 엔진 데이터 병렬 로드 (config, manifest, characters, scenes)
     await engine.init();
-
-    // 3. 상호 의존성 주입
-    engine.setRenderer(renderer);
-    engine.setUI(ui);
-    engine.setSaveManager(save);
-    engine.setAudioManager(audio);
-
-    ui.init(engine, renderer, save, audio);
 
     // 4. 저장된 설정 복원 및 적용
     const savedSettings = save.loadSettings();
@@ -34,12 +50,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       audio.setSfxVolume(engine.settings.sfxVolume);
     }
 
-    // 5. 타이틀 화면 표시 및 크기 초기화
-    renderer.showScreen('title');
-    ui.resizeGame();
+    // 5. 준비 완료 -> 즉시 시작 버튼 활성화
+    setTitleReady(true);
 
   } catch (err) {
     console.error('[Main] 초기화 오류:', err);
+    setTitleReady(true);
     renderer.showScreen('title');
   }
 

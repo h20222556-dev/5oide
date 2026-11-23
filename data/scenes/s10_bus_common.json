@@ -32,8 +32,13 @@
       "text": "이야기하다 보니 시간이 정말 빠르게 지나갔네요.",
       "characters": [
         {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -44,8 +49,18 @@
       "text": "좋아! 오늘 하루 제대로 즐겨보자.",
       "characters": [
         {
-          "id": "yangnyeom",
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -54,7 +69,23 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "춘천에서 출발해 약 40분. 호수 위를 달리는 동안 남이섬에 대한 기대도 한층 커졌다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": null,

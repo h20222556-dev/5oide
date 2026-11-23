@@ -44,8 +44,13 @@
       "text": "뭐야, 저도 {player}씨랑 앉고 싶었는데요!",
       "characters": [
         {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "dakgalbi",
-          "position": "center",
+          "position": "right",
           "expression": "아쉬움"
         }
       ]
@@ -56,8 +61,18 @@
       "text": "저도 조금 아쉽네요. {player}씨와 더 이야기하고 싶었는데.",
       "characters": [
         {
-          "id": "goguma",
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "dakgalbi",
           "position": "center",
+          "expression": "아쉬움"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
           "expression": "아쉬움"
         }
       ]
@@ -66,7 +81,23 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{양념}씨는 아무렇지 않은 척하지만, 어쩐지 조금 기분이 좋아 보인다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "아쉬움"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "아쉬움"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -97,7 +128,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "섬 곳곳을 둘러보기에 괜찮겠네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -115,7 +152,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "생각보다 즐길 거리가 다양하네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -216,13 +259,25 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "평소보다 대화가 한결 편안하게 느껴진다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "오늘은 {양념}씨가 추천해 주는 대로 따라가 볼까 봐요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -240,7 +295,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "무심한 말투와 달리, 어쩐지 조금 뿌듯해 보인다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
     }
   ],
   "choices": null,

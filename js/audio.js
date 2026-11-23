@@ -29,6 +29,17 @@ class AudioManager {
     }
   }
 
+  setBgmVolume(bgm) {
+    this.bgmVolume = bgm;
+    if (this.currentBgm) {
+      this.currentBgm.volume = this.bgmVolume;
+    }
+  }
+
+  setSfxVolume(sfx) {
+    this.sfxVolume = sfx;
+  }
+
   /**
    * BGM을 재생합니다. 이미 같은 ID가 재생 중이면 무시합니다.
    * @param {string} id  assets/bgm/{id}.mp3

@@ -38,13 +38,25 @@
       "speaker": null,
       "speakerType": "narration",
       "text": "양념이 발끝으로 작은 낙엽을 툭 차서 주인공 쪽으로 보낸다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{양념}씨가 먼저 장난을 치는 건 처음 봐요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -62,7 +74,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "저는 이런 {양념}씨도 좋은데요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -92,7 +110,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{양념}씨가 저한테는 조금 더 편하게 대해줬으면 좋겠어요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "미소"
+        }
+      ]
     },
     {
       "type": "choice",
@@ -165,7 +189,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{양념}씨는 여전히 까칠하지만, 이제는 내 앞에서 자신의 마음을 표현하는 것을 피하지 않는 듯하다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "미소+홍조"
+        }
+      ]
     }
   ],
   "choices": null,

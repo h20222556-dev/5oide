@@ -59,7 +59,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아... 죄송해요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -78,7 +84,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아, 그게... 처음 와보는 곳이라 어디로 가야 할지 모르겠어서요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -97,7 +109,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "말투가 꽤 직설적이네...",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "type": "choice",
@@ -112,9 +130,10 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "yangnyeom": 1
+              "yangnyeom": 2
             },
-            "compact": true
+            "compact": true,
+            "labelMode": "up"
           },
           "followUp": []
         }
@@ -124,7 +143,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "혹시 이 근처에 괜찮은 식당 아세요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -156,7 +181,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "오! 감사합니다. 덕분에 결정할 수 있겠어요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음"
+        }
+      ]
     },
     {
       "type": "choice",
@@ -169,12 +200,7 @@
           "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
           "next": null,
           "effectDesc": "",
-          "effects": {
-            "like": {
-              "yangnyeom": 1
-            },
-            "compact": true
-          },
+          "effects": null,
           "followUp": []
         }
       ]
@@ -183,7 +209,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -202,7 +234,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아하...네.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -234,7 +272,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "그런데 성함이 어떻게 되세요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -253,7 +297,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "옷차림을 보니 대학생이신가봐요. 저는 {player}이에요. 춘천에 여행하러 왔고요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -283,7 +333,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "하하, {양념}씨다운 말이네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -301,13 +357,25 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "...휴대폰?",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": null,
       "speakerType": "narration",
       "text": "양념이 건네받은 휴대폰에 전화번호를 입력한다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "양념",
