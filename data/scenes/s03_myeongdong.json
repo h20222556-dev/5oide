@@ -119,9 +119,8 @@
     },
     {
       "type": "choice",
-      "id": "single_s03_myeongdong_1",
+      "id": "choice_s03_myeongdong_1",
       "question": "",
-      "single": true,
       "options": [
         {
           "key": "A",
@@ -135,138 +134,134 @@
             "compact": true,
             "labelMode": "up"
           },
-          "followUp": []
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "혹시 이 근처에 괜찮은 식당 아세요?",
-      "characters": [
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "혹시 이 근처에 괜찮은 식당 아세요?",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "...",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ],
+              "speakerId": "yangnyeom"
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "뭐, 처음 오신 거라면 저쪽 가게는 어때요? 음식도 괜찮고 사람들도 많이 가는 것 같던데...",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "멋쩍음"
+                }
+              ],
+              "speakerId": "yangnyeom"
+            },
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "오! 감사합니다. 덕분에 결정할 수 있겠어요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "멋쩍음"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        },
         {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "기본"
-        }
-      ]
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "...",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "기본"
-        }
-      ],
-      "speakerId": "yangnyeom"
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "뭐, 처음 오신 거라면 저쪽 가게는 어때요? 음식도 괜찮고 사람들도 많이 가는 것 같던데...",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "멋쩍음"
-        }
-      ],
-      "speakerId": "yangnyeom"
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "오! 감사합니다. 덕분에 결정할 수 있겠어요.",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "멋쩍음"
-        }
-      ]
-    },
-    {
-      "type": "choice",
-      "id": "single_s03_myeongdong_2",
-      "question": "",
-      "single": true,
-      "options": [
-        {
-          "key": "A",
+          "key": "B",
           "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
           "next": null,
           "effectDesc": "",
           "effects": null,
-          "followUp": []
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "그럼 굳이 돌려서 말해야 하나요? 저는 솔직하게 말하는 편이라서요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ],
+              "speakerId": "yangnyeom"
+            },
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "아하...네.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "...",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ],
+              "speakerId": "yangnyeom"
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "뭐, 기분 나쁘게 들렸다면 미안해요. 일부러 그러려던 건 아니니까요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "멋쩍음"
+                }
+              ],
+              "speakerId": "yangnyeom"
+            }
+          ],
+          "endingTitle": null
         }
       ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "멋쩍음"
-        }
-      ]
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "그럼 굳이 돌려서 말해야 하나요? 저는 솔직하게 말하는 편이라서요.",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "기본"
-        }
-      ],
-      "speakerId": "yangnyeom"
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "아하...네.",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "기본"
-        }
-      ]
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "...",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "기본"
-        }
-      ],
-      "speakerId": "yangnyeom"
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "뭐, 기분 나쁘게 들렸다면 미안해요. 일부러 그러려던 건 아니니까요.",
-      "characters": [
-        {
-          "id": "yangnyeom",
-          "position": "center",
-          "expression": "멋쩍음"
-        }
-      ],
-      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -276,7 +271,7 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음"
+          "expression": "기본"
         }
       ]
     },

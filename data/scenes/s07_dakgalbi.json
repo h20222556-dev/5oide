@@ -120,9 +120,8 @@
     },
     {
       "type": "choice",
-      "id": "single_s07_dakgalbi_1",
+      "id": "choice_s07_dakgalbi_1",
       "question": "",
-      "single": true,
       "options": [
         {
           "key": "A",
@@ -136,107 +135,103 @@
             "compact": true,
             "labelMode": "up"
           },
-          "followUp": []
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "{닭갈비}씨도 춘천처럼 매력이 여러 가지인가봐요?",
-      "characters": [
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "{닭갈비}씨도 춘천처럼 매력이 여러 가지인가봐요?",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "당연하죠! 저는 담백하면서도 부드럽고, 누구와도 잘 어울리는 환상의 궁합을 자랑하니까요!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "하지만 그게 제 매력의 전부는 아니라고요!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        },
         {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "당연하죠! 저는 담백하면서도 부드럽고, 누구와도 잘 어울리는 환상의 궁합을 자랑하니까요!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "하지만 그게 제 매력의 전부는 아니라고요!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "type": "choice",
-      "id": "single_s07_dakgalbi_2",
-      "question": "",
-      "single": true,
-      "options": [
-        {
-          "key": "A",
+          "key": "B",
           "text": "아...네...",
           "next": null,
           "effectDesc": "",
           "effects": null,
-          "followUp": []
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "아...네...",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "어라? 반응이 조금 미지근한데요?",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본"
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "역시 겉으로 보이는 모습만으로는 제 매력을 다 알 수 없는 거겠죠?",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "speaker": "닭갈비",
-      "speakerType": "normal",
-      "text": "겉바속촉이라는 말도 있잖아요? 겉모습만 보고 판단하면 안 되는 법이죠!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본"
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "아...네...",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "어라? 반응이 조금 미지근한데요?",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "역시 겉으로 보이는 모습만으로는 제 매력을 다 알 수 없는 거겠죠?",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "겉바속촉이라는 말도 있잖아요? 겉모습만 보고 판단하면 안 되는 법이죠!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
         }
       ]
     },
@@ -248,7 +243,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본"
+          "expression": "웃음"
         }
       ]
     },
@@ -314,7 +309,7 @@
     },
     {
       "type": "choice",
-      "id": "choice_s07_dakgalbi_1",
+      "id": "choice_s07_dakgalbi_2",
       "question": "",
       "options": [
         {

@@ -127,9 +127,8 @@
     },
     {
       "type": "choice",
-      "id": "single_s07_goguma_1",
+      "id": "choice_s07_goguma_1",
       "question": "",
-      "single": true,
       "options": [
         {
           "key": "A",
@@ -143,71 +142,67 @@
             "compact": true,
             "labelMode": "up"
           },
-          "followUp": []
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "{고구마}씨와 잘 어울리는 풍경이네요.",
-      "characters": [
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "{고구마}씨와 잘 어울리는 풍경이네요.",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "그런가요? 그런 얘기는 처음 들어보네요. 고마워요.",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        },
         {
-          "id": "goguma",
-          "position": "center",
-          "expression": "기본"
-        }
-      ]
-    },
-    {
-      "speaker": "고구마",
-      "speakerType": "normal",
-      "text": "그런가요? 그런 얘기는 처음 들어보네요. 고마워요.",
-      "characters": [
-        {
-          "id": "goguma",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "type": "choice",
-      "id": "single_s07_goguma_2",
-      "question": "",
-      "single": true,
-      "options": [
-        {
-          "key": "A",
+          "key": "B",
           "text": "산책을 자주 하시나요?",
           "next": null,
           "effectDesc": "",
           "effects": null,
-          "followUp": []
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "산책을 자주 하시나요?",
-      "characters": [
-        {
-          "id": "goguma",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ]
-    },
-    {
-      "speaker": "고구마",
-      "speakerType": "normal",
-      "text": "네, 천천히 걷다 보면 복잡했던 생각도 조금씩 정리되는 것 같아요.",
-      "characters": [
-        {
-          "id": "goguma",
-          "position": "center",
-          "expression": "기본"
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "산책을 자주 하시나요?",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "네, 천천히 걷다 보면 복잡했던 생각도 조금씩 정리되는 것 같아요.",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
         }
       ]
     },
@@ -273,7 +268,7 @@
     },
     {
       "type": "choice",
-      "id": "choice_s07_goguma_1",
+      "id": "choice_s07_goguma_2",
       "question": "",
       "options": [
         {

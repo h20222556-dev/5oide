@@ -143,9 +143,8 @@
     },
     {
       "type": "choice",
-      "id": "single_s03_lego_1",
+      "id": "choice_s03_lego_1",
       "question": "",
-      "single": true,
       "options": [
         {
           "key": "A",
@@ -153,43 +152,37 @@
           "next": null,
           "effectDesc": "",
           "effects": null,
-          "followUp": []
-        }
-      ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "누구세요?",
-      "characters": [
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "누구세요?",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "아, 제 소개가 늦었네요! 저는 춘천의 관광지를 알리는 일을 하고 있어요. 사람들에게 춘천의 매력을 소개하는 게 제 일이거든요.",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ],
+              "speakerId": "dakgalbi"
+            }
+          ],
+          "endingTitle": null
+        },
         {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본"
-        }
-      ]
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "아, 제 소개가 늦었네요! 저는 춘천의 관광지를 알리는 일을 하고 있어요. 사람들에게 춘천의 매력을 소개하는 게 제 일이거든요.",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본"
-        }
-      ],
-      "speakerId": "dakgalbi"
-    },
-    {
-      "type": "choice",
-      "id": "single_s03_lego_2",
-      "question": "",
-      "single": true,
-      "options": [
-        {
-          "key": "A",
+          "key": "B",
           "text": "굉장히 적극적이시네요.",
           "next": null,
           "effectDesc": "",
@@ -200,34 +193,36 @@
             "compact": true,
             "labelMode": "up"
           },
-          "followUp": []
+          "followUp": [
+            {
+              "speaker": "주인공",
+              "speakerType": "os",
+              "text": "굉장히 적극적이시네요.",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
+            },
+            {
+              "speaker": "???",
+              "speakerType": "normal",
+              "text": "하하, 저는 어디에 가도 잘 어울리는 편이거든요. 많은 사람들에게 춘천을 알리고 좋은 추억을 만들어 주는 게 제 목표랍니다!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ],
+              "speakerId": "dakgalbi"
+            }
+          ],
+          "endingTitle": null
         }
       ]
-    },
-    {
-      "speaker": "주인공",
-      "speakerType": "os",
-      "text": "굉장히 적극적이시네요.",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "기본"
-        }
-      ]
-    },
-    {
-      "speaker": "???",
-      "speakerType": "normal",
-      "text": "하하, 저는 어디에 가도 잘 어울리는 편이거든요. 많은 사람들에게 춘천을 알리고 좋은 추억을 만들어 주는 게 제 목표랍니다!",
-      "characters": [
-        {
-          "id": "dakgalbi",
-          "position": "center",
-          "expression": "웃음"
-        }
-      ],
-      "speakerId": "dakgalbi"
     },
     {
       "speaker": "주인공",
@@ -237,7 +232,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음"
+          "expression": "기본"
         }
       ]
     },

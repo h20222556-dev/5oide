@@ -14,6 +14,7 @@
     "holdMs": 3500,
     "fadeInMs": 1500
   },
+  "LIKE_THRESHOLD": 8,
   "endingThresholds": {
     "dakgalbi": 8,
     "yangnyeom": 8,
