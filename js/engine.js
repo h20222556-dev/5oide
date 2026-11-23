@@ -168,42 +168,23 @@ class GameEngine {
   startNewGameFlow() {
     if (!this.renderer) return;
 
-    let selectedGender = this.state.gender || 'female';
-    let typedName = this.state.playerName && this.state.playerName !== '주인공' ? this.state.playerName : '';
+    const selectedGender = this.state.gender || 'female';
+    const typedName = this.state.playerName && this.state.playerName !== '주인공' ? this.state.playerName : '';
 
-    const showGenderStep = () => {
-      this.renderer.showGenderModal(
-        (gender) => {
-          selectedGender = gender;
-          this.state.gender = gender;
-          showNameStep();
-        },
-        () => {
-          // 성별 선택 단계에서 "뒤로" -> 타이틀 메뉴로 복귀
-          this.renderer.showScreen('title');
-        }
-      );
-    };
-
-    const showNameStep = () => {
-      this.renderer.showNameModal(
-        (enteredName) => {
-          this.state.playerName = enteredName.trim() || '주인공';
-          this.state.gender = selectedGender;
-          this._initNewGameState();
-          this.renderer.showScreen('game');
-          this._runDayTransition(1, "춘천에서의 첫 만남", 's01_prologue');
-        },
-        (currentInput) => {
-          // 이름 입력 단계에서 "뒤로" -> 성별 선택 복귀 (입력하던 이름 유지)
-          typedName = currentInput;
-          showGenderStep();
-        },
-        typedName
-      );
-    };
-
-    showGenderStep();
+    this.renderer.showNameModal(
+      (enteredName) => {
+        this.state.playerName = enteredName.trim() || '주인공';
+        this.state.gender = selectedGender;
+        this._initNewGameState();
+        this.renderer.showScreen('game');
+        this._runDayTransition(1, "춘천에서의 첫 만남", 's01_prologue');
+      },
+      () => {
+        // 이름 입력 단계에서 "뒤로" -> 타이틀 화면으로 복귀
+        this.renderer.showScreen('title');
+      },
+      typedName
+    );
   }
 
   _initNewGameState() {
@@ -243,6 +224,7 @@ class GameEngine {
       if (typeof this.renderer.hideChatList === 'function') this.renderer.hideChatList();
       if (typeof this.renderer.hidePromoBillboard === 'function') this.renderer.hidePromoBillboard();
       if (typeof this.renderer.clearLikeFeedback === 'function') this.renderer.clearLikeFeedback();
+      if (typeof this.renderer.setTitleBackground === 'function') this.renderer.setTitleBackground(this.state.gender);
       this.renderer.showScreen('title');
     }
   }

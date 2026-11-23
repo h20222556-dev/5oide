@@ -5,7 +5,8 @@
     "dim": 0.25
   },
   "backgrounds": {
-    "bg_title": "assets/backgrounds/bg_title.png",
+    "bg_title_f": "assets/backgrounds/bg_title_f.png",
+    "bg_title_m": "assets/backgrounds/bg_title_m.png",
     "bg_train_window": "assets/backgrounds_opt/bg_train_window.jpg",
     "bg_phone_screen": "assets/backgrounds_opt/bg_phone_screen.jpg",
     "bg_brochure": "assets/backgrounds_opt/bg_brochure.jpg",

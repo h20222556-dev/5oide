@@ -33,14 +33,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 로딩 중에는 시작 버튼을 명확히 비활성("불러오는 중…") 처리
   setTitleReady(false);
 
-  // 2. 의존성 주입 및 이벤트 바인딩을 즉시 수행 (로딩 완료 직후 바로 클릭 가능)
+  // 2. 의존성 주입 및 이벤트 바인딩을 즉시 수행
   engine.setRenderer(renderer);
   engine.setUI(ui);
   engine.setSaveManager(save);
   engine.setAudioManager(audio);
   ui.init(engine, renderer, save, audio);
-  renderer.showScreen('title');
   ui.resizeGame();
+
+  // 성별별 타이틀 배경 미리 불러오기
+  renderer.preloadImage('assets/backgrounds/bg_title_f.png');
+  renderer.preloadImage('assets/backgrounds/bg_title_m.png');
+
+  // 첫 진입 시 검은 화면 위에 성별 선택 팝업 즉시 표시 -> 선택 후 해당 성별의 타이틀 배경으로 진입
+  renderer.showScreen(null);
+  renderer.showGenderModal((gender) => {
+    engine.state.gender = gender;
+    renderer.setTitleBackground(gender);
+    renderer.showScreen('title');
+  }, null, { initial: true });
 
   try {
     // 3. 엔진 데이터 병렬 로드 (config, manifest, characters, scenes)
@@ -61,7 +72,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (err) {
     console.error('[Main] 초기화 오류:', err);
     setTitleReady(true);
-    renderer.showScreen('title');
   }
 
   // 6. 개발자 디버그 및 콘솔 접근용 전역 객체

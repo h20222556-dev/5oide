@@ -228,6 +228,7 @@ class UIController {
           if (btnBack) { btnBack.click(); return; }
         }
         if (genderModal && !genderModal.classList.contains('hidden')) {
+          if (genderModal.classList.contains('initial-black-bg')) return;
           const btnBack = document.getElementById('btn-gender-back');
           if (btnBack) { btnBack.click(); return; }
         }

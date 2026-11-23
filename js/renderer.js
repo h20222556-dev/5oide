@@ -90,6 +90,14 @@ class Renderer {
     if (this.screenGame) this.screenGame.classList.toggle('active', screenId === 'game');
   }
 
+  setTitleBackground(gender = 'female') {
+    const titleBg = document.getElementById('title-bg');
+    if (!titleBg) return;
+    const key = gender === 'male' ? 'bg_title_m' : 'bg_title_f';
+    const url = this.assetManifest?.backgrounds?.[key] || `assets/backgrounds/${key}.png`;
+    titleBg.style.backgroundImage = `url('${url}')`;
+  }
+
   preloadImage(url) {
     if (!url || this._preloadedUrls.has(url)) return;
     this._preloadedUrls.add(url);
@@ -902,30 +910,40 @@ class Renderer {
 
   // ─── 성별 / 이름 모달 ──────────────────────────────────────────────────────
 
-  showGenderModal(onSelect, onBack) {
+  showGenderModal(onSelect, onBack, opts = {}) {
     if (!this.genderModal) return;
+    const isInitial = !!opts.initial;
+    this.genderModal.classList.toggle('initial-black-bg', isInitial);
     this.genderModal.classList.remove('hidden');
 
     const btnFemale = document.getElementById('btn-gender-female');
     const btnMale = document.getElementById('btn-gender-male');
     const btnBack = document.getElementById('btn-gender-back');
 
+    if (btnBack) {
+      btnBack.classList.toggle('hidden', isInitial);
+    }
+
     if (btnFemale) {
       btnFemale.onclick = () => {
         this.genderModal.classList.add('hidden');
+        this.genderModal.classList.remove('initial-black-bg');
         if (typeof onSelect === 'function') onSelect('female');
       };
     }
     if (btnMale) {
       btnMale.onclick = () => {
         this.genderModal.classList.add('hidden');
+        this.genderModal.classList.remove('initial-black-bg');
         if (typeof onSelect === 'function') onSelect('male');
       };
     }
     if (btnBack) {
       btnBack.onclick = (e) => {
         e.stopPropagation();
+        if (isInitial) return;
         this.genderModal.classList.add('hidden');
+        this.genderModal.classList.remove('initial-black-bg');
         if (typeof onBack === 'function') onBack();
       };
     }
