@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderer.preloadImage('assets/backgrounds/bg_title_f.png');
   renderer.preloadImage('assets/backgrounds/bg_title_m.png');
 
-  // 첫 진입 시 검은 화면 위에 성별 선택 팝업 즉시 표시 -> 선택 후 해당 성별의 타이틀 배경으로 진입
+  // 첫 진입 시 검은 화면 위에 성별 선택 팝업 즉시 표시 -> 선택 후 1초 페이드 전환으로 타이틀 진입
   renderer.showScreen(null);
   renderer.showGenderModal((gender) => {
     engine.state.gender = gender;
     renderer.setTitleBackground(gender);
-    renderer.showScreen('title');
+    renderer.showTitleWithFade();
   }, null, { initial: true });
 
   try {

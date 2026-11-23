@@ -98,6 +98,17 @@ class Renderer {
     titleBg.style.backgroundImage = `url('${url}')`;
   }
 
+  showTitleWithFade() {
+    this.showScreen('title');
+    if (!this.screenTitle) return;
+    this.screenTitle.classList.remove('title-fade-in');
+    void this.screenTitle.offsetWidth;
+    this.screenTitle.classList.add('title-fade-in');
+    setTimeout(() => {
+      if (this.screenTitle) this.screenTitle.classList.remove('title-fade-in');
+    }, 600);
+  }
+
   preloadImage(url) {
     if (!url || this._preloadedUrls.has(url)) return;
     this._preloadedUrls.add(url);
@@ -913,6 +924,7 @@ class Renderer {
   showGenderModal(onSelect, onBack, opts = {}) {
     if (!this.genderModal) return;
     const isInitial = !!opts.initial;
+    this.genderModal.classList.remove('is-fading-out');
     this.genderModal.classList.toggle('initial-black-bg', isInitial);
     this.genderModal.classList.remove('hidden');
 
@@ -924,26 +936,36 @@ class Renderer {
       btnBack.classList.toggle('hidden', isInitial);
     }
 
-    if (btnFemale) {
-      btnFemale.onclick = () => {
+    let handled = false;
+    const finishSelect = (gender) => {
+      if (handled) return;
+      handled = true;
+      const reducedMotion = typeof window !== 'undefined'
+        && typeof window.matchMedia === 'function'
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (isInitial && !reducedMotion) {
+        this.genderModal.classList.add('is-fading-out');
+        setTimeout(() => {
+          this.genderModal.classList.add('hidden');
+          this.genderModal.classList.remove('initial-black-bg', 'is-fading-out');
+          if (typeof onSelect === 'function') onSelect(gender);
+        }, 450);
+      } else {
         this.genderModal.classList.add('hidden');
-        this.genderModal.classList.remove('initial-black-bg');
-        if (typeof onSelect === 'function') onSelect('female');
-      };
-    }
-    if (btnMale) {
-      btnMale.onclick = () => {
-        this.genderModal.classList.add('hidden');
-        this.genderModal.classList.remove('initial-black-bg');
-        if (typeof onSelect === 'function') onSelect('male');
-      };
-    }
+        this.genderModal.classList.remove('initial-black-bg', 'is-fading-out');
+        if (typeof onSelect === 'function') onSelect(gender);
+      }
+    };
+
+    if (btnFemale) btnFemale.onclick = () => finishSelect('female');
+    if (btnMale) btnMale.onclick = () => finishSelect('male');
     if (btnBack) {
       btnBack.onclick = (e) => {
         e.stopPropagation();
         if (isInitial) return;
         this.genderModal.classList.add('hidden');
-        this.genderModal.classList.remove('initial-black-bg');
+        this.genderModal.classList.remove('initial-black-bg', 'is-fading-out');
         if (typeof onBack === 'function') onBack();
       };
     }

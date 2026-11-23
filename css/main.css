@@ -2508,6 +2508,31 @@ button {
 #modal-gender.modal-overlay.initial-black-bg {
   background: #000000;
   backdrop-filter: none;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+#modal-gender.modal-overlay.is-fading-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes titleFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#screen-title.title-fade-in {
+  animation: titleFadeIn 0.55s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #modal-gender.modal-overlay.initial-black-bg {
+    transition: none;
+  }
+  #screen-title.title-fade-in {
+    animation: none;
+  }
 }
 
 #modal-gender .modal-content,
