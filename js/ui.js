@@ -287,23 +287,34 @@ class UIController {
     if (this.renderer) this.renderer.hideGalleryModal();
   }
 
-  // ─── 반응형 크기 조절 (390x844 고정 비율 세로 스테이지 통째로 스케일링) ────
+  // ─── 반응형 크기 조절 (PC 16:9 가로 유지 / 모바일 세로 100dvh 풀스크린) ────
 
   resizeGame() {
-    const stage = document.getElementById('app-stage');
-    if (!stage) return;
+    const wrapper = document.getElementById('game-wrapper');
+    if (!wrapper) return;
 
-    const stageW = this.engine?.config?.STAGE_WIDTH || 390;
-    const stageH = this.engine?.config?.STAGE_HEIGHT || 844;
-    const maxScale = this.engine?.config?.STAGE_MAX_SCALE || 1.5;
-
-    const winW = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+    const winW = window.innerWidth;
     const winH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    const scale = Math.min(winW / stageW, winH / stageH, maxScale);
+    const isPortrait = winW <= 768 || winW < winH;
 
-    stage.style.width = `${stageW}px`;
-    stage.style.height = `${stageH}px`;
-    stage.style.transform = `scale(${scale})`;
+    if (isPortrait) {
+      wrapper.style.width = '100%';
+      wrapper.style.height = `${winH}px`;
+      wrapper.style.aspectRatio = 'unset';
+    } else {
+      const targetRatio = 16 / 9;
+      let w = winW;
+      let h = winW / targetRatio;
+
+      if (h > winH) {
+        h = winH;
+        w = winH * targetRatio;
+      }
+
+      wrapper.style.width = `${Math.floor(w)}px`;
+      wrapper.style.height = `${Math.floor(h)}px`;
+      wrapper.style.aspectRatio = '16 / 9';
+    }
   }
 }

@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<div id="stage-viewport">
-<div id="app-stage">
 
   <!-- ══════════════════════════════════════
        1. 타이틀 화면
@@ -54,9 +52,13 @@
       <!-- 채팅 목록 오버레이 (코드 제작 메신저 UI — #6, #7, #8) -->
       <div id="chat-list-overlay" class="hidden"></div>
 
-      <!-- 휴대폰 메시지 화면 UI (채팅 말풍선) -->
+      <!-- 휴대폰 메시지 화면 UI (채팅 말풍선 — 9:19.5 스마트폰 비율 고정) -->
       <div id="phone-message-overlay" class="hidden">
         <div class="phone-screen">
+          <div class="phone-status-bar">
+            <span>오후 6:20</span>
+            <span>5G · 87%</span>
+          </div>
           <div class="phone-header">
             <span class="phone-header-title" id="phone-partner-name">메시지</span>
             <button class="phone-close-btn" id="btn-close-phone">✕</button>
@@ -210,11 +212,8 @@
     </div>
   </div>
 
-  <!-- 저장 완료/실패 토스트 팝업 (스테이지 내부, 입력 비차단) -->
+  <!-- 저장 완료/실패 토스트 팝업 (입력 비차단) -->
   <div id="save-toast" class="hidden" role="status" aria-live="polite"></div>
-
-</div><!-- /#app-stage -->
-</div><!-- /#stage-viewport -->
 
   <!-- ══════════════════════════════════════
        8. 개발자 디버그 패널 (D 키로 토글)

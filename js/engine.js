@@ -110,6 +110,10 @@ class GameEngine {
       }
       if (this.config.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
+      if (typeof document !== 'undefined' && document.documentElement) {
+        if (this.config.PHONE_ASPECT_WIDTH) document.documentElement.style.setProperty('--phone-aspect-w', String(this.config.PHONE_ASPECT_WIDTH));
+        if (this.config.PHONE_ASPECT_HEIGHT) document.documentElement.style.setProperty('--phone-aspect-h', String(this.config.PHONE_ASPECT_HEIGHT));
+      }
       if (typeof this.renderer.setHudVisible === 'function') {
         this.renderer.setHudVisible(this.config.SHOW_HUD === true);
       }
@@ -596,10 +600,12 @@ class GameEngine {
       this._stopAutoTimer();
       const partnerData = this.currentCharacters[scene.partner];
       const partnerName = partnerData ? partnerData.name : '연락처';
+      const partnerColor = partnerData?.color || '#FF9ECD';
 
       const resolvedMsgs = (scene.messages || []).map(m => ({
         sender: m.sender,
         senderName: m.sender === 'player' ? this.state.playerName : partnerName,
+        senderColor: m.sender === 'player' ? '#FF9ECD' : partnerColor,
         text: resolveTextVariables(m.text, vars)
       }));
 
@@ -608,7 +614,7 @@ class GameEngine {
           // 말풍선 완료 후 outro VO 대사로 진행
           this.state.dialogueIndex = 3;
           this._renderCurrentDialogue();
-        });
+        }, partnerColor);
       } else {
         this.state.dialogueIndex = 3;
         this._renderCurrentDialogue();
