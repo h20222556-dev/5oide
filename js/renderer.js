@@ -524,13 +524,16 @@ class Renderer {
     this.startPhoneMessageSequence(partnerName, messageList, onClose);
   }
 
-  startPhoneMessageSequence(partnerName, messageList, onClose) {
+  startPhoneMessageSequence(partnerName, messageList, onClose, partnerColor = null) {
     if (!this.phoneOverlay || !this.phoneMessagesList) {
       if (typeof onClose === 'function') onClose();
       return;
     }
 
-    if (this.phonePartnerName) this.phonePartnerName.textContent = partnerName;
+    if (this.phonePartnerName) {
+      this.phonePartnerName.textContent = partnerName;
+      this.phonePartnerName.style.color = partnerColor || '#ffffff';
+    }
     this.phoneMessagesList.innerHTML = '';
     this.phoneOverlay.classList.remove('hidden');
 
