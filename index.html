@@ -14,7 +14,9 @@
   <div id="screen-title" class="screen active">
     <div id="title-bg"></div>
     <div id="title-content">
-      <nav id="title-menu" aria-label="타이틀 메뉴">
+      <div class="title-left-column">
+        <div class="title-logo-slot" aria-hidden="true"></div>
+        <nav id="title-menu" aria-label="타이틀 메뉴">
         <button type="button" class="title-btn title-img-btn" id="btn-new-game" data-menu-key="start" data-ready-label="새로 시작" aria-label="새로 시작" disabled aria-disabled="true">
           <img class="title-btn-img" src="assets/ui/ui_menu_start.png" srcset="assets/ui/ui_menu_start.png 1x, assets/ui/ui_menu_start@2x.png 2x" width="429" height="160" alt="" draggable="false">
           <span class="visually-hidden">새로 시작</span>
@@ -36,6 +38,7 @@
           <span class="title-btn-fallback" aria-hidden="true">설정</span>
         </button>
       </nav>
+      </div>
     </div>
   </div>
 
