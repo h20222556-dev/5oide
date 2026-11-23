@@ -43,6 +43,10 @@ class Renderer {
     this._loadedUrls      = new Set();
     this.transitionMode   = 'cut';
     this.showChoiceImages = false;
+    this.showLikeFeedbackEnabled = true;
+    this.likeGauge = typeof LikeGauge === 'function'
+      ? new LikeGauge(() => this.gameWrapper || document.body)
+      : null;
 
     // 모달들
     this.genderModal      = document.getElementById('modal-gender');
@@ -67,6 +71,16 @@ class Renderer {
 
   setAssetManifest(manifest) {
     this.assetManifest = manifest || null;
+    if (this.likeGauge) this.likeGauge.setAssetManifest(this.assetManifest);
+  }
+
+  setLikeFeedbackEnabled(enabled) {
+    this.showLikeFeedbackEnabled = enabled !== false;
+    if (this.likeGauge) this.likeGauge.setEnabled(this.showLikeFeedbackEnabled);
+  }
+
+  clearLikeFeedback() {
+    if (this.likeGauge) this.likeGauge.clear();
   }
 
   // ─── 화면 전환 ─────────────────────────────────────────────────────────────
@@ -1206,50 +1220,23 @@ class Renderer {
     this.affinityBar.style.display = visible ? 'flex' : 'none';
   }
 
-  showLikeFeedback(charId, charName, delta, prevVal, nextVal, compact = false, labelMode = null) {
-    if (!delta || delta <= 0) return;
-    const wrapper = this.gameWrapper || document.body;
-    let stack = wrapper.querySelector('.like-feedback-stack');
-    if (!stack) {
-      stack = document.createElement('div');
-      stack.className = 'like-feedback-stack';
-      wrapper.appendChild(stack);
-    }
+  showLikeFeedback(charId, charName, delta, prevVal, nextVal, compact = false, labelMode = null, gender = null) {
+    if (!this.showLikeFeedbackEnabled) return;
+    if (!delta || delta === 0) return;
 
-    const isBig = labelMode === 'up' ? false : (delta >= 2);
-    const label = isBig ? '호감도가 크게 상승했다' : '호감도가 상승했다';
-    const tone = isBig ? 'up-big' : 'up';
-
-    const fromPct = Math.max(0, Math.min(100, (prevVal / 10) * 100));
-    const toPct = Math.max(0, Math.min(100, (nextVal / 10) * 100));
-
-    const card = document.createElement('div');
-    card.className = `like-feedback-card ${tone}${compact ? ' compact' : ''}`;
-    card.innerHTML = `
-      <div class="like-feedback-header">
-        <span class="like-feedback-name">${charName}</span>
-        <span class="like-feedback-text">${label}</span>
-      </div>
-      <div class="like-bar-track">
-        <div class="like-bar-fill" style="width: ${fromPct}%"></div>
-      </div>
-    `;
-    stack.appendChild(card);
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const fill = card.querySelector('.like-bar-fill');
-        if (fill) fill.style.width = `${toPct}%`;
+    if (this.likeGauge) {
+      if (this.assetManifest) this.likeGauge.setAssetManifest(this.assetManifest);
+      this.likeGauge.show({
+        charId,
+        charName,
+        delta,
+        prevVal,
+        nextVal,
+        compact,
+        labelMode,
+        gender: gender || this.gender || 'female',
       });
-    });
-
-    const holdMs = compact ? 1000 : (delta >= 2 ? 1800 : 1400);
-    setTimeout(() => {
-      card.classList.add('fade-out');
-      setTimeout(() => {
-        if (card.parentNode) card.remove();
-      }, 450);
-    }, holdMs);
+    }
   }
 
   showCG(cgObj) {

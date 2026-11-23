@@ -15,6 +15,8 @@ class UIController {
     this._saveModalOpen = false;
     this._settingsModalOpen = false;
     this._galleryModalOpen = false;
+    this.confirmPopup = null;
+    this.saveModal = null;
   }
 
   init(engine, renderer, saveManager, audioManager) {
@@ -22,6 +24,50 @@ class UIController {
     this.renderer = renderer;
     this.saveManager = saveManager;
     this.audioManager = audioManager;
+
+    this.confirmPopup = typeof ConfirmPopup === 'function' ? new ConfirmPopup() : null;
+    if (typeof SaveModal === 'function') {
+      this.saveModal = new SaveModal({
+        saveManager: this.saveManager,
+        confirmPopup: this.confirmPopup,
+        getAssetManifest: () => this.engine?.assetManifest || this.renderer?.assetManifest || null,
+        onSaveAction: (slotNum) => {
+          if (!this.engine || !this.saveManager) return false;
+          const state = this.engine.getState();
+          const ok = this.saveManager.save(slotNum, state);
+          if (ok && this.renderer && typeof this.renderer.showToast === 'function') {
+            this.renderer.showToast('저장되었습니다.');
+          }
+          return ok;
+        },
+        onLoadAction: (slotNum) => {
+          if (!this.engine || !this.saveManager) return false;
+          const loaded = this.saveManager.load(slotNum);
+          if (!loaded) return false;
+          if (loaded.storyVersion !== this.saveManager.STORY_VERSION) {
+            if (this.confirmPopup) {
+              this.confirmPopup.show({
+                message: '이전 버전의 저장 데이터입니다. 불러올 수 없습니다.',
+                confirmLabel: '확인',
+                alertOnly: true,
+              });
+            }
+            return false;
+          }
+          this.engine.loadState(loaded);
+          return true;
+        },
+        onDeleteAction: (slotNum) => {
+          if (this.saveManager) this.saveManager.delete(slotNum);
+        },
+        onClose: () => {
+          this._saveModalOpen = false;
+          if (this.engine && typeof this.engine.resumeFromModal === 'function') {
+            this.engine.resumeFromModal();
+          }
+        },
+      });
+    }
 
     this._bindEvents();
     this.resizeGame();
@@ -67,6 +113,7 @@ class UIController {
       }
 
       if (e.code === 'Escape') {
+        if (this.confirmPopup?.isOpen() || this.saveModal?.isOpen()) return;
         e.preventDefault();
         const nameModal = document.getElementById('modal-name');
         const genderModal = document.getElementById('modal-gender');
@@ -85,6 +132,7 @@ class UIController {
       }
 
       if (e.code === 'Space' || e.code === 'Enter') {
+        if (this.confirmPopup?.isOpen() || this._saveModalOpen || this._settingsModalOpen || this._galleryModalOpen) return;
         e.preventDefault();
         this._handleAdvanceDialogue();
       }
@@ -185,8 +233,8 @@ class UIController {
     bindClose('btn-close-settings', () => this.closeSettingsModal());
     bindClose('btn-close-gallery', () => this.closeGalleryModal());
 
-    // 배경 오버레이 클릭 시 닫기
-    ['modal-save', 'modal-settings', 'modal-gallery'].forEach(id => {
+    // 배경 오버레이 클릭 시 닫기 (저장·불러오기 모달은 실수 닫기 방지를 위해 제외)
+    ['modal-settings', 'modal-gallery'].forEach(id => {
       const modal = document.getElementById(id);
       if (modal) {
         modal.addEventListener('click', (e) => {
@@ -205,53 +253,23 @@ class UIController {
   // ─── 모달 제어 ─────────────────────────────────────────────────────────────
 
   openSaveModal(mode) {
-    if (!this.saveManager || !this.renderer) return;
+    if (!this.saveManager) return;
+    if (this.engine && typeof this.engine.pauseForModal === 'function') {
+      this.engine.pauseForModal();
+    }
     this._saveModalOpen = true;
-    const slots = this.saveManager.getAllSlots();
-
-    this.renderer.showSaveModal(
-      mode,
-      slots,
-      (slotNum) => {
-        if (this.engine) {
-          const state = this.engine.getState();
-          const ok = this.saveManager.save(slotNum, state);
-          if (this.renderer && typeof this.renderer.showToast === 'function') {
-            this.renderer.showToast(ok ? '세이브가 저장되었습니다.' : '저장에 실패했습니다.');
-          }
-          // 슬롯 정보 즉시 갱신
-          const updatedSlots = this.saveManager.getAllSlots();
-          const slotEl = document.querySelector(`.slot-action-btn[data-slot="${slotNum - 1}"]`)?.closest('.save-slot');
-          const s = updatedSlots[slotNum - 1];
-          if (slotEl && s) {
-            const thumb = slotEl.querySelector('.slot-empty-text');
-            const player = slotEl.querySelector('.slot-player');
-            const date = slotEl.querySelector('.slot-date');
-            if (thumb) thumb.textContent = s.sceneId;
-            if (player) player.textContent = `${s.playerName} (${s.gender === 'male' ? '남' : '여'})`;
-            if (date) date.textContent = s.date;
-          }
-        }
-        this._saveModalOpen = false;
-      },
-      (slotNum) => {
-        const loaded = this.saveManager.load(slotNum);
-        if (loaded && this.engine) {
-          if (loaded.storyVersion !== this.saveManager.STORY_VERSION) {
-            alert('이전 스토리 버전의 저장 데이터라 불러올 수 없습니다. 새로 시작해 주세요.');
-            this._saveModalOpen = false;
-            return;
-          }
-          this.engine.loadState(loaded);
-        }
-        this._saveModalOpen = false;
-      }
-    );
+    if (this.saveModal) {
+      this.saveModal.open(mode);
+    }
   }
 
   closeSaveModal() {
-    this._saveModalOpen = false;
-    if (this.renderer) this.renderer.hideSaveModal();
+    if (this.saveModal && this.saveModal.isOpen()) {
+      this.saveModal.close();
+    } else {
+      this._saveModalOpen = false;
+      if (this.renderer) this.renderer.hideSaveModal();
+    }
   }
 
   openSettingsModal() {

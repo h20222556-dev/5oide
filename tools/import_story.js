@@ -1119,6 +1119,7 @@ const gameConfig = {
   sfxVolume: 0.7,
   showAffinity: true,
   SHOW_HUD: false,
+  SHOW_LIKE_FEEDBACK: true,
   dayTransition: {
     fadeOutMs: 1500,
     holdMs: 3500,

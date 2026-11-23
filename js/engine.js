@@ -55,6 +55,8 @@ class GameEngine {
     this.audioManager = null;
 
     this._autoTimer = null;
+    this._currentBgKey = null;
+    this._currentSprites = [];
   }
 
   get isAuto() { return this.state.isAuto; }
@@ -79,6 +81,9 @@ class GameEngine {
       if (this.config?.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config?.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
       if (this.config) this.renderer.showChoiceImages = this.config.SHOW_CHOICE_IMAGES === true;
+      if (this.config && typeof this.renderer.setLikeFeedbackEnabled === 'function') {
+        this.renderer.setLikeFeedbackEnabled(this.config.SHOW_LIKE_FEEDBACK !== false);
+      }
       if (this.config && typeof this.renderer.setHudVisible === 'function') {
         this.renderer.setHudVisible(this.config.SHOW_HUD === true);
       }
@@ -112,6 +117,9 @@ class GameEngine {
       if (this.config.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
       this.renderer.showChoiceImages = this.config.SHOW_CHOICE_IMAGES === true;
+      if (typeof this.renderer.setLikeFeedbackEnabled === 'function') {
+        this.renderer.setLikeFeedbackEnabled(this.config.SHOW_LIKE_FEEDBACK !== false);
+      }
       if (typeof document !== 'undefined' && document.documentElement) {
         if (this.config.PHONE_ASPECT_WIDTH) document.documentElement.style.setProperty('--phone-aspect-w', String(this.config.PHONE_ASPECT_WIDTH));
         if (this.config.PHONE_ASPECT_HEIGHT) document.documentElement.style.setProperty('--phone-aspect-h', String(this.config.PHONE_ASPECT_HEIGHT));
@@ -234,6 +242,7 @@ class GameEngine {
       this.renderer.hidePhoneMessages();
       if (typeof this.renderer.hideChatList === 'function') this.renderer.hideChatList();
       if (typeof this.renderer.hidePromoBillboard === 'function') this.renderer.hidePromoBillboard();
+      if (typeof this.renderer.clearLikeFeedback === 'function') this.renderer.clearLikeFeedback();
       this.renderer.showScreen('title');
     }
   }
@@ -242,13 +251,31 @@ class GameEngine {
   // 세이브 / 로드 연동 상태 관리
   // ════════════════════════════════════════════════════════════════════════════
 
+  _resolveBgKey(bgId, overlay = null) {
+    if (!bgId) return null;
+    if (bgId === 'bg_hotel') return overlay === 'night' ? 'bg_hotel_night' : 'bg_hotel_morning';
+    if (bgId === 'bg_promo_video') return 'bg_pier';
+    return bgId;
+  }
+
   getState() {
+    const effectiveSceneId = this.state.sceneId === '__followup__'
+      ? (this._followOrigId || 's01_prologue')
+      : this.state.sceneId;
+    const bgKey = this._currentBgKey || null;
+    const chapterLabel = typeof SaveManager === 'function'
+      ? SaveManager.resolveChapterLabel(effectiveSceneId, bgKey)
+      : '플레이 중';
+
     return {
       storyVersion: this.config?.storyVersion || 'v2_full_spec',
       gender: this.state.gender,
       playerName: this.state.playerName,
       chapter: this.state.chapter,
-      sceneId: this.state.sceneId === '__followup__' ? (this._followOrigId || 's01_prologue') : this.state.sceneId,
+      chapterLabel,
+      bgKey,
+      spriteKeys: Array.isArray(this._currentSprites) ? this._currentSprites.map(s => ({ ...s })) : [],
+      sceneId: effectiveSceneId,
       dialogueIndex: this.state.sceneId === '__followup__' ? 0 : this.state.dialogueIndex,
       affinity: { ...this.state.affinity },
       hiddenRoute: this.state.hiddenRoute,
@@ -347,6 +374,8 @@ class GameEngine {
     this.state.choiceActive = false;
     if (sceneId !== '__followup__') this._inlineChoice = null;
     this._stopAutoTimer();
+    this._currentBgKey = this._resolveBgKey(scene.background, scene.overlay || null);
+    this._currentSprites = [];
 
     if (this.ui) this.ui.setChoicesActive(false);
     if (this.renderer) {
@@ -517,6 +546,13 @@ class GameEngine {
         }
       }
     }
+
+    if (d.background) {
+      this._currentBgKey = this._resolveBgKey(d.background, d.overlay || null);
+    }
+    this._currentSprites = Array.isArray(d.characters)
+      ? d.characters.map(c => ({ id: c.id, expression: c.expression || '기본', position: c.position || 'center' }))
+      : [];
 
     if (this.renderer) {
       if (d.background) {
@@ -894,18 +930,19 @@ class GameEngine {
     scene.dialogues = scene._base.concat(line ? [line] : []);
   }
 
-  // ─── 호감도 반영 (내부 affinity 사용, 화면에는 숫자 대신 문구 + 막대 바만 표시) ───
+  // ─── 호감도 반영 (내부 affinity 사용, 음수 허용, 화면에는 숫자 없이 하트 게이지 연출만 표시) ───
   _applyLikeEffects(effects) {
     const charName = (id) => this.currentCharacters[id]?.name || id;
     const isCompact = !!effects.compact;
     const labelMode = effects.labelMode || null;
+    const showFeedback = this.config?.SHOW_LIKE_FEEDBACK !== false;
     for (const [id, delta] of Object.entries(effects.like || {})) {
-      if (!delta || delta <= 0) continue;
+      if (!delta) continue;
       const prev = this.state.affinity[id] || 0;
-      const next = Math.max(0, Math.min(10, prev + delta));
+      const next = delta < 0 ? (prev + delta) : Math.min(10, prev + delta);
       this.state.affinity[id] = next;
-      if (this.renderer && typeof this.renderer.showLikeFeedback === 'function') {
-        this.renderer.showLikeFeedback(id, charName(id), delta, prev, next, isCompact, labelMode);
+      if (showFeedback && this.renderer && typeof this.renderer.showLikeFeedback === 'function') {
+        this.renderer.showLikeFeedback(id, charName(id), delta, prev, next, isCompact, labelMode, this.state.gender);
       }
     }
     if (this.renderer) {
@@ -1304,6 +1341,19 @@ class GameEngine {
     if (this._autoTimer !== null) {
       clearTimeout(this._autoTimer);
       this._autoTimer = null;
+    }
+  }
+
+  pauseForModal() {
+    this._stopAutoTimer();
+  }
+
+  resumeFromModal() {
+    if (this.state.choiceActive || this.state.isTyping || this.state.isTransitioning) return;
+    if (this.state.isSkip) {
+      this._scheduleNext(this.settings.skipSpeed || 25);
+    } else if (this.state.isAuto) {
+      this._scheduleNext(this.settings.autoSpeed || 2000);
     }
   }
 
