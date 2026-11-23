@@ -727,7 +727,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 28, 0.45) 0%, rgba(10, 12, 28, 0.62) 100%);
+  background: none;
   pointer-events: none;
 }
 
@@ -822,6 +822,7 @@ button {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  filter: brightness(0.95) drop-shadow(0 4px 10px rgba(74, 37, 61, 0.24));
   transition: transform 0.18s ease, filter 0.18s ease;
 }
 
@@ -866,7 +867,7 @@ button {
     background: transparent;
     border-color: transparent;
     transform: translateY(-2px);
-    filter: drop-shadow(0 6px 14px rgba(244, 169, 196, 0.78));
+    filter: brightness(1.02) drop-shadow(0 6px 14px rgba(244, 169, 196, 0.78));
   }
 }
 
