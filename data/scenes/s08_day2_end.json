@@ -1,28 +1,70 @@
 {
   "id": "s08_day2_end",
-  "title": "Day 2 마무리",
+  "title": "#8 Day 2 마무리",
   "type": "normal",
+  "day": 2,
   "background": "bg_hotel",
-  "time": "낮",
+  "overlay": "night",
+  "time": "밤",
   "bgm": "bgm_main",
-  "direction": [
-    "안내책자 이미지(블러)",
-    "남이섬 사진 이미지",
-    "밤하늘 이미지",
-    "페이드"
-  ],
   "dialogues": [
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "오늘은 춘천의 새로운 모습들을 알게 됐지.",
-      "characters": []
+      "text": "오늘 하루도 꽤 알찼다.",
+      "characters": [],
+      "background": "bg_hotel",
+      "overlay": "night"
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "그리고... 그 사람들도.",
+      "text": "춘천에서 만난 사람들도, 처음 가본 장소들도 아직 머릿속에 남아있다.",
       "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "휴대폰 알림음",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "내일 친구들이랑 남이섬 가기로 했는데 혹시...",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "background": "bg_chat_list",
+      "overlay": null
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "내일 남이섬 안 갈래요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "내일 남이섬에 가려고 하는데, 함께 가면 좋을 것 같...",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
@@ -39,20 +81,58 @@
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "정말... 예쁘다.",
+      "text": "그러고 보니...",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "회상",
+      "characters": [],
+      "background": "bg_black",
+      "overlay": null,
+      "fade": "black"
+    },
+    {
+      "speaker": "???",
+      "speakerType": "vo",
+      "text": "우리 나중에 꼭 같이 가자, 남이섬.",
       "characters": []
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "그래, 춘천하면... 남이섬이지. 내일은 남이섬에 가보자!",
+      "text": "좋아, 거기서 재밌게 놀자!",
       "characters": []
     },
     {
-      "speaker": null,
-      "speakerType": "subtitle",
-      "text": "내일은 또 어떤 하루가 될까?",
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그랬었지...",
+      "characters": [],
+      "background": "bg_phone_screen",
+      "overlay": null,
+      "fade": "black"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "...",
       "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "...그래. 춘천까지 왔는데 남이섬을 안 갈 수가 없지! 내일은 남이섬에 가보는 거야!",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "네! 내일 남이섬에서 만나요!",
+      "characters": [],
+      "background": "bg_black",
+      "overlay": null
     }
   ],
   "choices": null,

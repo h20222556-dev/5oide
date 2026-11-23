@@ -1,24 +1,28 @@
 {
   "id": "s03_2_day1_messages",
-  "title": "Day 1 — 남은 장소 선택",
+  "title": "#3-2 Day 1 — 다음 장소로 이동",
   "type": "normal",
-  "background": "bg_black",
+  "day": 1,
+  "background": "bg_brochure",
+  "overlay": "blur",
   "time": "낮",
   "bgm": "bgm_main",
-  "direction": [
-    "안내책자 이미지(블러 처리)"
-  ],
   "dialogues": [
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "좋아, 이제 다음 장소로 이동해 볼까?",
-      "characters": []
+      "characters": [],
+      "background": "bg_brochure",
+      "overlay": "blur"
     }
   ],
-  "choices": {
-    "id": "place_2",
-    "question": "처음 간 곳을 제외한 장소 선택",
-    "options": []
-  }
+  "postChoiceLine": {
+    "speaker": "주인공",
+    "speakerType": "vo",
+    "text": "다음은 여기다!",
+    "characters": []
+  },
+  "choices": null,
+  "next": null
 }

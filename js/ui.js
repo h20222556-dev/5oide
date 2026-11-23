@@ -222,6 +222,11 @@ class UIController {
       (slotNum) => {
         const loaded = this.saveManager.load(slotNum);
         if (loaded && this.engine) {
+          if (loaded.storyVersion !== this.saveManager.STORY_VERSION) {
+            alert('이전 스토리 버전의 저장 데이터라 불러올 수 없습니다. 새로 시작해 주세요.');
+            this._saveModalOpen = false;
+            return;
+          }
           this.engine.loadState(loaded);
         }
         this._saveModalOpen = false;

@@ -1,0 +1,177 @@
+{
+  "id": "ending_bokkeumbap_intro",
+  "title": "볶음밥 엔딩 — 대화",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_ending",
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "...하고 싶은 말이 뭔데.",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "난...",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "나는 아직도 내가 누구인지 잘 모르겠어.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "{닭갈비}, {양념}, {고구마}처럼 나만의 개성이 뭔지도 모르겠고.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "이도 저도 아닌 내가 정말 온전한 나라고 할 수 있을까?",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "...",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "그래서 그때 너와 헤어졌던 거야.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "너를 싫어해서가 아니었어. 나 자신조차 이해하지 못하는데 누군가를 사랑할 수 있을 것 같지 않았어.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "네가 나를 위해 해줬던 말들도, 나를 걱정해줬던 마음도 제대로 받아들이지 못했어.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "오히려 나를 달달 볶는다고 생각하면서.... 너한테 상처만 줬지.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "슬픔"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "... 우리 다시 시작해 볼래?",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "슬픔"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "아직 부족한 나지만, 너와 함께하면서 조금씩 나를 알아가고 싶어.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "슬픔"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "그리고.... 네가 필요해",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "슬픔"
+        }
+      ]
+    }
+  ],
+  "choices": {
+    "id": "bokkeumbap_final",
+    "question": "",
+    "options": [
+      {
+        "key": "A",
+        "text": "나도 너와 다시 시작하고 싶어.",
+        "next": "ending_bokkeumbap_reunion",
+        "effects": null,
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "text": "미안.",
+        "next": "ending_bokkeumbap_normal",
+        "effects": null,
+        "followUp": []
+      }
+    ]
+  },
+  "next": null
+}

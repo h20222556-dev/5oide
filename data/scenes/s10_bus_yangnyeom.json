@@ -1,0 +1,248 @@
+{
+  "id": "s10_bus_yangnyeom",
+  "title": "#10 수상버스 — 양념 좌석",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_nami_boat_interior",
+  "overlay": null,
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{양념}씨 옆에 앉을게요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "...나?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "뭐, 상관없어요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "뭐야, 저도 {player}씨랑 앉고 싶었는데요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "아쉬움"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "저도 조금 아쉽네요. {player}씨와 더 이야기하고 싶었는데.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "아쉬움"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "{양념}씨는 아무렇지 않은 척하지만, 어쩐지 조금 기분이 좋아 보인다.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "남이섬은 걸어서 둘러보는 것도 좋지만, 자전거를 빌려 타는 것도 괜찮아요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "fade": "white"
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "일반 자전거 뿐만 아니라 둘이 함께 탈 수 있는 자전거도 있거든요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "섬 곳곳을 둘러보기에 괜찮겠네요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "응, 그리고 공연이나 문화예술 행사도 열리니까, 자연경관만 구경하는 게 전부는 아니지.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "생각보다 즐길 거리가 다양하네요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "{player}씨는 여행지에서 어떤 걸 즐기는 편이에요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "choice_s10_bus_yangnyeom_1",
+      "question": "",
+      "options": [
+        {
+          "key": "A",
+          "text": "목적지없이 돌아다니고 싶어요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "yangnyeom": 1
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "그것도 나쁘지 않겠네요. 정해진 코스만 따라가는 것보다 재미있을 수도 있죠.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "미소"
+                }
+              ]
+            },
+            {
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "길을 잘못 들면 그것도 나름 추억이 되겠네요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "미소"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        },
+        {
+          "key": "B",
+          "text": "평소 접하기 어려운 전시나 공연을 보고 싶어요",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "yangnyeom": 2
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "그런 쪽에 관심이 있었군요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "미소"
+                }
+              ]
+            },
+            {
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "그럼 전시 일정도 한번 찾아봐요. 저도 새로운 작품 보는 거 좋아해요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "미소"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "평소보다 대화가 한결 편안하게 느껴진다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "오늘은 {양념}씨가 추천해 주는 대로 따라가 볼까 봐요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "...너무 기대하지는 마.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "무심한 말투와 달리, 어쩐지 조금 뿌듯해 보인다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s10_bus_common"
+}

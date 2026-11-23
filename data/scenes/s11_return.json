@@ -1,0 +1,79 @@
+{
+  "id": "s11_return",
+  "title": "#11 Day 3 — 춘천으로",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_nami_entrance",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "남이섬에서의 시간이 끝나고, 해질녘의 선착장에 네 사람이 다시 모였다.",
+      "characters": [],
+      "background": "bg_nami_entrance",
+      "overlay": "sunset"
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "다들 여기 있었네! {player}씨 오늘 재미있었어요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "늦었네요. 길 잃은 줄 알았어요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "많이 걸으셨죠? 피곤하지는 않았어요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "덕분에 정말 즐거웠어요.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "오늘 정말 많은 일이 있었네.",
+      "characters": [],
+      "background": "bg_nami_boat_interior",
+      "overlay": "sunset",
+      "fade": "black"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그 사람이 전혀 생각 안 날 정도로....",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s12_pier_sunset"
+}

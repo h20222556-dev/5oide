@@ -1,0 +1,60 @@
+{
+  "id": "s08_day2_end",
+  "title": "Day 2 마무리",
+  "type": "normal",
+  "background": "bg_hotel",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "안내책자 이미지(블러)",
+    "남이섬 사진 이미지",
+    "밤하늘 이미지",
+    "페이드"
+  ],
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "오늘은 춘천의 새로운 모습들을 알게 됐지.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그리고... 그 사람들도.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "어?",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "남이섬?",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "정말... 예쁘다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그래, 춘천하면... 남이섬이지. 내일은 남이섬에 가보자!",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "subtitle",
+      "text": "내일은 또 어떤 하루가 될까?",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s09_pier"
+}

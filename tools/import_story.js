@@ -1,775 +1,1054 @@
 /**
  * tools/import_story.js
- * '오이데_스토리_정리본.md'를 읽어 게임 JSON 데이터 및 data/_import_report.md를 생성하는 파서 스크립트.
- * Node.js 기본 모듈(fs, path)만 사용.
+ * '미연시_전체스토리_구현명세.md'를 유일한 기준으로 파싱하여
+ * data/scenes/*.json, config/game_config.json, config/characters.json, data/_import_report.md를 생성한다.
+ * 기존 스토리 씬 파일은 전부 삭제한 뒤 새로 생성한다.
  */
+
+'use strict';
 
 const fs = require('fs');
 const path = require('path');
 
-// 프로젝트 루트 경로
 const rootDir = path.resolve(__dirname, '..');
-const downloadsDir = '/Users/kakajae/Downloads/files';
-const storyMdPath = fs.existsSync(path.join(rootDir, '오이데_스토리_정리본.md'))
-  ? path.join(rootDir, '오이데_스토리_정리본.md')
-  : path.join(downloadsDir, '오이데_스토리_정리본.md');
+const specPath = path.join(rootDir, '미연시_전체스토리_구현명세.md');
 
-console.log(`[import_story] 대상 스토리 파일: ${storyMdPath}`);
-if (!fs.existsSync(storyMdPath)) {
-  console.error(`오류: 스토리 파일을 찾을 수 없습니다: ${storyMdPath}`);
+if (!fs.existsSync(specPath)) {
+  console.error(`[import_story] 명세 파일을 찾을 수 없습니다: ${specPath}`);
   process.exit(1);
 }
 
-const mdContent = fs.readFileSync(storyMdPath, 'utf8');
-const lines = mdContent.split(/\r?\n/);
+const rawMd = fs.readFileSync(specPath, 'utf8');
+const lines = rawMd.split(/\r?\n/);
 
-// 대사 전체를 감싸는 바깥 따옴표만 제거 (대사 중간의 인용 따옴표는 유지)
-// 끝에 붙은 작성자 표시 (+) 도 화면에 보이지 않게 제거
-function cleanDialogueText(raw) {
-  let t = (raw || '').trim();
-  t = t.replace(/\s*⚠\s*\([^)]*\)\s*$/, '').trim();
-  t = t.replace(/\s*\(\+\)\s*$/, '').trim();
-  const dq = /^["“”]/;
-  const dqEnd = /["“”]$/;
-  if (dq.test(t)) t = t.slice(1);
-  if (dqEnd.test(t)) t = t.slice(0, -1);
-  t = t.trim();
-  // ' ' 로 전체가 감싸진 경우 (내부에 같은 홑따옴표가 없을 때만)
-  if (t.length > 1 && /^['‘]/.test(t) && /['’]$/.test(t) && !/['‘’]/.test(t.slice(1, -1))) {
-    t = t.slice(1, -1).trim();
-  }
-  return t;
-}
-
-// 호감도 수치 문자열의 음수 부호 정규화 (유니코드 마이너스, 엔대시, 전각 하이픈 -> '-')
-function normalizeMinus(s) {
-  return (s || '').replace(/[−–－﹣‐]/g, '-');
-}
-
-// 리포트 수집용 데이터
-const report = {
-  warningItems: [],
-  choiceCount: 0,
-  sceneCount: 0,
-  variableList: [
-    "{player} (플레이어 입력 이름)",
-    "{닭갈비} (여: 다곡희 / 남: 다고길)",
-    "{양념} (여: 양연미 / 남: 양연우)",
-    "{고구마} (여: 고규미 / 남: 고구민)",
-    "{볶음밥} (여: 박복은 / 남: 박복검)"
-  ],
-  requiredImages: {
-    backgrounds: new Set(),
-    characters: new Set()
-  },
-  scenes: []
+const CHAR_ID_MAP = {
+  '닭고기': 'dakgalbi',
+  '닭갈비': 'dakgalbi',
+  '양념': 'yangnyeom',
+  '고구마': 'goguma',
+  '볶음밥': 'bokkeumbap',
 };
 
-// 1. "3. 확인 필요" 섹션에서 ⚠ 항목 추출
-let inCheckSection = false;
-for (const line of lines) {
-  if (line.includes('## 3. 확인 필요')) {
-    inCheckSection = true;
-    continue;
+const ROLE_NAME = {
+  dakgalbi: '닭갈비',
+  yangnyeom: '양념',
+  goguma: '고구마',
+  bokkeumbap: '볶음밥',
+};
+
+const STORY_VERSION = 'v2_full_spec';
+
+// 텍스트의 대괄호 플레이스홀더([주인공], [닭고기], [양념], [고구마], [볶음밥])를 표준 중괄호로 정규화
+// 단, 원문 문구는 한 글자도 변경하지 않는다.
+function normalizePlaceholders(text) {
+  if (!text) return '';
+  return text
+    .replace(/\[주인공\]/g, '{player}')
+    .replace(/\[닭고기\]/g, '{닭갈비}')
+    .replace(/\[닭갈비\]/g, '{닭갈비}')
+    .replace(/\[양념\]/g, '{양념}')
+    .replace(/\[고구마\]/g, '{고구마}')
+    .replace(/\[볶음밥\]/g, '{볶음밥}');
+}
+
+function stripOuterQuotes(s) {
+  let t = (s || '').trim();
+  if (/^["“”]/.test(t)) t = t.slice(1);
+  if (/["“”]$/.test(t)) t = t.slice(0, -1);
+  return t.trim();
+}
+
+// 배경 지시 라인 판별 및 매핑 (문서 5-3 기준)
+function parseBackgroundDirective(line) {
+  const t = line.trim();
+  if (t === '검정 화면') return { bg: 'bg_black', overlay: null };
+  if (t.startsWith('창밖 풍경')) return { bg: 'bg_train_window', overlay: null };
+  if (t.startsWith('휴대폰 화면')) return { bg: 'bg_phone_screen', overlay: null };
+  if (t.startsWith('춘천역')) return { bg: 'bg_chuncheon_station', overlay: null };
+  if (t.startsWith('안내책자')) return { bg: 'bg_brochure', overlay: t.includes('블러') ? 'blur' : null };
+  if (t.startsWith('레고랜드 입구')) return { bg: 'bg_legoland', overlay: null };
+  if (t.startsWith('소양강 스카이워크')) return { bg: 'bg_skywalk', overlay: null };
+  if (t.startsWith('춘천 명동 닭갈비 골목') || t.startsWith('명동 거리') || t.startsWith('다른 명동 거리')) {
+    return { bg: 'bg_dakgalbi_alley', overlay: null };
   }
-  if (inCheckSection) {
-    if (line.startsWith('## ')) break;
-    const m = line.match(/^\d+\.\s+\*\*(.+?)\*\*\s*(.*)$/);
-    if (m) {
-      report.warningItems.push({ title: m[1], desc: m[2] });
+  if (t.startsWith('춘천 시내')) return { bg: 'bg_street_statue', overlay: null };
+  if (t.startsWith('카페 입구') || t.startsWith('화면 전환 → 카페 입구')) return { bg: 'bg_cafe_entrance', overlay: null };
+  if (t.startsWith('카페 안')) return { bg: 'bg_cafe', overlay: null };
+  if (t.startsWith('숙소 내부 / 밤')) return { bg: 'bg_hotel', overlay: 'night' };
+  if (t.startsWith('숙소 내부 / 아침')) return { bg: 'bg_hotel', overlay: null };
+  if (t.startsWith('채팅 목록')) return { bg: 'bg_chat_list', overlay: null };
+  if (t.startsWith('사람들이 많이 있는 선착장')) return { bg: 'bg_pier', overlay: null };
+  if (t.startsWith('닭고기가 나오는 전광판 홍보 영상')) return { bg: 'bg_promo_video', overlay: null };
+  if (t.startsWith('수상버스 안 / 해질녘')) return { bg: 'bg_nami_boat_interior', overlay: 'sunset' };
+  if (t.startsWith('수상버스 안')) return { bg: 'bg_nami_boat_interior', overlay: null };
+  if (t.startsWith('메타세쿼이아길')) return { bg: 'bg_metasequoia_road', overlay: null };
+  if (t.startsWith('호숫가 산책로')) return { bg: 'bg_nami_riverside_walk', overlay: null };
+  if (t.startsWith('은행나무길')) return { bg: 'bg_ginkgo_road', overlay: null };
+  if (t.startsWith('남이섬 선착장 / 해질녘')) return { bg: 'bg_nami_entrance', overlay: 'sunset' };
+  if (t.startsWith('춘천 선착장 / 해질녘')) return { bg: 'bg_pier', overlay: 'sunset' };
+  return null;
+}
+
+// 페이드/효과음 등 연출 라인 판별
+function isVisualDirective(line) {
+  const t = line.trim();
+  if (/^(페이드|흰색 페이드|긴 흰색 페이드|길게 검정 페이드|천천히 페이드 아웃)/.test(t)) return true;
+  if (/^효과음\s*:/.test(t)) return true;
+  if (/^\((약간의 텀|텀)\)$/.test(t)) return true;
+  return false;
+}
+
+// 대사 한 줄 파싱
+function parseDialogueLine(rawLine, state) {
+  const line = rawLine.trim();
+  if (!line) return null;
+
+  // 배경 지시
+  const bgDir = parseBackgroundDirective(line);
+  if (bgDir) {
+    state.pendingBg = bgDir.bg;
+    state.pendingOverlay = bgDir.overlay;
+    if (!state.initialBg) {
+      state.initialBg = bgDir.bg;
+      state.initialOverlay = bgDir.overlay;
     }
-  }
-}
-
-// 2. config 파일 생성
-const configDir = path.join(rootDir, 'config');
-fs.mkdirSync(configDir, { recursive: true });
-
-// 2-1. score_scale.json
-const scoreScale = {
-  "크게↑": 6,
-  "↑": 4,
-  "소폭↑": 2,
-  "소폭↓": -2,
-  "(+)": 3,
-  "변화 적음": 0
-};
-fs.writeFileSync(path.join(configDir, 'score_scale.json'), JSON.stringify(scoreScale, null, 2), 'utf8');
-
-// 2-2. characters.json
-const charactersData = {
-  "female": {
-    "dakgalbi": { "id": "dakgalbi", "name": "다곡희", "role": "닭갈비", "gender": "female", "color": "#ff6b6b" },
-    "yangnyeom": { "id": "yangnyeom", "name": "양연미", "role": "양념", "gender": "female", "color": "#ee5253" },
-    "goguma": { "id": "goguma", "name": "고규미", "role": "고구마", "gender": "female", "color": "#feca57" },
-    "bokkeumbap": { "id": "bokkeumbap", "name": "박복은", "role": "볶음밥", "gender": "female", "color": "#ff9f43", "isHidden": true }
-  },
-  "male": {
-    "dakgalbi": { "id": "dakgalbi", "name": "다고길", "role": "닭갈비", "gender": "male", "color": "#ff6b6b" },
-    "yangnyeom": { "id": "yangnyeom", "name": "양연우", "role": "양념", "gender": "male", "color": "#ee5253" },
-    "goguma": { "id": "goguma", "name": "고구민", "role": "고구마", "gender": "male", "color": "#feca57" },
-    "bokkeumbap": { "id": "bokkeumbap", "name": "박복검", "role": "볶음밥", "gender": "male", "color": "#ff9f43", "isHidden": true }
-  }
-};
-fs.writeFileSync(path.join(configDir, 'characters.json'), JSON.stringify(charactersData, null, 2), 'utf8');
-
-// 2-3. game_config.json
-const gameConfig = {
-  "title": "오이데 (춘천에서 5명의 이상한 데이트)",
-  "version": "1.0.0",
-  "textSpeed": 40,
-  "autoSpeed": 2000,
-  "skipSpeed": 25,
-  "bgmVolume": 0.5,
-  "sfxVolume": 0.7,
-  "showAffinity": true,
-  "SHOW_HUD": false,
-  "dayTransition": {
-    "fadeOutMs": 1500,
-    "holdMs": 3500,
-    "fadeInMs": 1500
-  },
-  "genderSelection": {
-    "prompt": "당신의 성별(또는 상대 캐릭터들의 성별)을 선택하세요.",
-    "options": [
-      { "id": "female", "label": "여성 등장인물과 데이트 (다곡희, 양연미, 고규미, 박복은)" },
-      { "id": "male", "label": "남성 등장인물과 데이트 (다고길, 양연우, 고구민, 박복검)" }
-    ]
-  },
-  "hidden_unlock": {
-    "mode": "all_three", // "all_three" (기본: 세 명 모두 기준치 이상) 또는 "reunion_temp"
-    "description": "all_three: 닭갈비/양념/고구마 호감도가 모두 기준치 이상일 때 볶음밥 등장 | reunion_temp: 히든 재회온도 기준치 이상"
-  },
-  "endingThresholds": {
-    "dakgalbi": 7,
-    "yangnyeom": 7,
-    "goguma": 7,
-    "hidden_all_three_each": 7,
-    "reunion_temp": 10
-  },
-  "flags": {
-    "day1_repeat": {
-      "messages_each_visit": true
-    },
-    "day2": {
-      "meet_all_three": true
+    // 전광판 홍보 영상은 자막 연출도 함께 기록
+    if (bgDir.bg === 'bg_promo_video') {
+      const subM = line.match(/자막:\s*([^)]+)/);
+      if (subM) {
+        return {
+          speaker: null,
+          speakerType: 'narration',
+          text: `[전광판 홍보 영상] ${subM[1].trim()}`,
+          characters: [],
+          background: bgDir.bg,
+          overlay: bgDir.overlay,
+        };
+      }
     }
-  },
-  "saveSlots": 3,
-  "debugKey": "KeyD"
-};
-
-fs.writeFileSync(path.join(configDir, 'game_config.json'), JSON.stringify(gameConfig, null, 2), 'utf8');
-// 하위 호환을 위해 data/config 에도 복사
-const dataConfigDir = path.join(rootDir, 'data', 'config');
-fs.mkdirSync(dataConfigDir, { recursive: true });
-fs.writeFileSync(path.join(dataConfigDir, 'game_config.json'), JSON.stringify(gameConfig, null, 2), 'utf8');
-fs.writeFileSync(path.join(dataConfigDir, 'characters.json'), JSON.stringify(charactersData, null, 2), 'utf8');
-fs.writeFileSync(path.join(dataConfigDir, 'score_scale.json'), JSON.stringify(scoreScale, null, 2), 'utf8');
-
-// 3. 장면 파싱
-const scenesDir = path.join(rootDir, 'data', 'scenes');
-fs.mkdirSync(scenesDir, { recursive: true });
-
-// 배경 및 캐릭터 이미지 매핑용 사전
-const bgMapping = {
-  "검정": "bg_black",
-  "창밖": "bg_train_window",
-  "휴대폰": "bg_phone_screen",
-  "춘천역": "bg_chuncheon_station",
-  "안내책자": "bg_brochure",
-  "레고랜드": "bg_legoland",
-  "스카이워크": "bg_skywalk",
-  "명동": "bg_myeongdong",
-  "숙소": "bg_hotel",
-  "시내": "bg_chuncheon_city",
-  "카페": "bg_cafe",
-  "선착장": "bg_pier",
-  "수상버스": "bg_boat",
-  "갑판": "bg_boat_deck",
-  "선내": "bg_boat_inside",
-  "선미": "bg_boat_stern",
-  "메타세쿼이아": "bg_namiseom_meta",
-  "산책로": "bg_namiseom_trail",
-  "은행나무": "bg_namiseom_ginkgo",
-  "남이섬": "bg_namiseom",
-  "노을": "bg_sunset_pier",
-  "해질녘": "bg_sunset_pier"
-};
-
-function resolveBgId(text) {
-  if (!text) return "bg_black";
-  for (const [k, v] of Object.entries(bgMapping)) {
-    if (text.includes(k)) return v;
-  }
-  return "bg_" + text.replace(/[^a-zA-Z0-9가-힣]/g, '_').toLowerCase();
-}
-
-// 텍스트에서 이미지 추출하여 리포트에 기록
-function recordBg(bgId) {
-  if (bgId) report.requiredImages.backgrounds.add(bgId);
-}
-function recordChar(charId, expr) {
-  if (charId && expr) report.requiredImages.characters.add(`${charId}/${expr}`);
-}
-
-// 마크다운 파싱 상태 머신
-let currentScene = null;
-const allScenes = [];
-
-function finalizeScene() {
-  if (currentScene && currentScene.id) {
-    allScenes.push(currentScene);
-    report.scenes.push({ id: currentScene.id, title: currentScene.title, dialogues: currentScene.dialogues.length });
-  }
-  currentScene = null;
-}
-
-let i = 0;
-while (i < lines.length) {
-  const line = lines[i];
-
-  // 장면 헤더 감지: ### [sXX...] 제목 또는 #### [sXX...] 제목
-  const headerMatch = line.match(/^#{3,4}\s+\[([a-zA-Z0-9_]+)\]\s*(.*)$/);
-  if (headerMatch) {
-    finalizeScene();
-    const id = headerMatch[1];
-    const title = headerMatch[2].trim();
-    currentScene = {
-      id,
-      title,
-      type: id.startsWith('ending_') ? 'ending' : (id === 's15_final_choice' || id === 's14_pier_sunset' ? 'choice_ending' : 'normal'),
-      background: "bg_black",
-      time: "낮",
-      bgm: "bgm_main",
-      direction: [],
-      dialogues: [],
-      choices: null
-    };
-    report.sceneCount++;
-    i++;
-    continue;
+    return null;
   }
 
-  // 아직 장면이 시작되지 않았으면 스킵
-  if (!currentScene) {
-    i++;
-    continue;
+  // 페이드/효과음 연출
+  if (isVisualDirective(line)) {
+    if (line.includes('검정 화면')) {
+      state.pendingBg = 'bg_black';
+      state.pendingOverlay = null;
+    } else if (line.includes('→ 창밖 풍경')) {
+      state.pendingBg = 'bg_train_window';
+      state.pendingOverlay = null;
+    } else if (line.includes('→ 휴대폰 화면')) {
+      state.pendingBg = 'bg_phone_screen';
+      state.pendingOverlay = null;
+    }
+    if (/^효과음\s*:/.test(line)) {
+      const sfxName = line.replace(/^효과음\s*:/, '').trim();
+      state.pendingSfx = sfxName;
+    }
+    if (/페이드/.test(line)) {
+      state.pendingFade = line.includes('흰') ? 'white' : 'black';
+    }
+    return null;
   }
 
-  // 3. 확인 필요 섹션에 도달하면 장면 파싱 종료
-  if (line.startsWith('## 3. 확인 필요')) {
-    finalizeScene();
-    break;
-  }
+  const attachPending = (obj) => {
+    if (state.pendingBg) {
+      obj.background = state.pendingBg;
+      obj.overlay = state.pendingOverlay ?? null;
+      state.pendingBg = null;
+      state.pendingOverlay = null;
+    }
+    if (state.pendingSfx) {
+      obj.sfx = state.pendingSfx;
+      state.pendingSfx = null;
+    }
+    if (state.pendingFade) {
+      obj.fade = state.pendingFade;
+      state.pendingFade = null;
+    }
+    return obj;
+  };
 
-  // 배경 감지
-  if (line.startsWith('배경:')) {
-    const rawBg = line.replace('배경:', '').trim();
-    const bgId = resolveBgId(rawBg);
-    currentScene.background = bgId;
-    recordBg(bgId);
-    i++;
-    continue;
-  }
-
-  // 연출 감지
-  if (line.startsWith('연출:')) {
-    const dir = line.replace('연출:', '').trim();
-    currentScene.direction.push(dir);
-    if (dir.includes('창밖')) recordBg('bg_train_window');
-    if (dir.includes('휴대폰') || dir.includes('채팅')) recordBg('bg_phone_screen');
-    if (dir.includes('안내책자')) recordBg('bg_brochure');
-    if (dir.includes('남이섬')) recordBg('bg_namiseom');
-    if (dir.includes('밤하늘')) recordBg('bg_night_sky');
-    i++;
-    continue;
-  }
-
-  // 자막 / 나레이션 감지 (나레이션, 내레이션, 자막)
-  if (line.match(/^[-*]?\s*(나레이션|내레이션|영상 내레이션|영상 나레이션|자막):\s*/)) {
-    const isSub = line.includes('자막:');
-    const text = line.replace(/^[-*]?\s*(나레이션|내레이션|영상 내레이션|영상 나레이션|자막):\s*/, '').replace(/^"|"$/g, '').trim();
-    currentScene.dialogues.push({
+  // *( ... )* 지문 / 나레이션
+  const stageM = line.match(/^\*\((.*)\)\*$/);
+  if (stageM) {
+    const inner = normalizePlaceholders(stageM[1].trim());
+    // "사라진다" 지문이면 캐릭터 퇴장 처리
+    return attachPending({
       speaker: null,
-      speakerType: isSub ? 'subtitle' : 'narration',
-      text: text,
-      characters: []
+      speakerType: 'narration',
+      text: inner,
+      characters: [],
     });
-    i++;
-    continue;
   }
 
-  // 휴대폰 메시지 블록 감지: 메시지 A (레고랜드 → 닭갈비):
-  const msgHeaderMatch = line.match(/^메시지\s+([A-C])\s*\(([^→]+)→\s*([^)]+)\):/);
-  if (msgHeaderMatch) {
-    const rawTarget = msgHeaderMatch[3].trim();
-    let partnerId = "dakgalbi";
-    if (rawTarget.includes("닭갈비")) partnerId = "dakgalbi";
-    else if (rawTarget.includes("고구마")) partnerId = "goguma";
-    else if (rawTarget.includes("양념")) partnerId = "yangnyeom";
-
-    // 직전 대사 2개가 intro_vo ("생각보다...", "그리고 예상하지 못한...")라면 추출
-    const introVo = [];
-    while (currentScene.dialogues.length > 0 && currentScene.dialogues[currentScene.dialogues.length - 1].speakerType === "vo") {
-      const lastVo = currentScene.dialogues.pop();
-      introVo.unshift(lastVo.text);
-      if (introVo.length >= 2) break;
-    }
-    if (introVo.length === 0) {
-      introVo.push("생각보다 정말 재미있는 곳이었어.", "그리고 예상하지 못한 만남까지...");
-    }
-
-    const messages = [];
-    let outroVo = "";
-    i++;
-    while (i < lines.length) {
-      const msgLine = lines[i].trim();
-      if (!msgLine || msgLine.startsWith("#") || msgLine.startsWith("CHOICE") || msgLine.startsWith("연출:")) {
-        break;
-      }
-      const mMatch = msgLine.match(/^-\s*([^:]+):\s*"?(.*?)"?$/);
-      if (mMatch) {
-        const senderRaw = mMatch[1].trim();
-        const text = mMatch[2].replace(/^"|"$/g, "").trim();
-        if (senderRaw.includes("V.O.") || senderRaw.includes("속마음")) {
-          outroVo = text;
-          i++;
-          break;
-        } else if (senderRaw.includes("주인공")) {
-          messages.push({ sender: "player", text: text });
-        } else {
-          messages.push({ sender: partnerId, text: text });
-        }
-      }
-      i++;
-    }
-
-    const phoneSceneId = `${currentScene.id}_phone`;
-    const phoneScene = {
-      id: phoneSceneId,
-      title: `${currentScene.title} — 메시지`,
-      type: "phone_message",
-      background: "bg_black",
-      time: "낮",
-      bgm: "bgm_main",
-      partner: partnerId,
-      intro_vo: introVo,
-      messages: messages,
-      outro_vo: outroVo,
-      next: "s03_2_day1_messages"
-    };
-
-    currentScene.next = phoneSceneId;
-    currentScene.phone_message = {
-      partner: partnerId,
-      intro_vo: introVo,
-      messages: messages,
-      outro_vo: outroVo
-    };
-
-    allScenes.push(phoneScene);
-    report.scenes.push({ id: phoneScene.id, title: phoneScene.title, dialogues: 0 });
-    report.sceneCount++;
-    continue;
-  }
-
-  // 대사 감지: - 화자[표정]: "대사" 또는 - 화자: "대사" 또는 - > 주인공: "대사"
-  // 단, '- ⚠' 검토 메모 줄은 대사로 파싱하지 않음
-  if (/^-\s*⚠/.test(line)) {
-    i++;
-    continue;
-  }
-  // 단일 선택지 대사 감지: - > 주인공: "대사" (버튼 1개 -> 주인공(O.S.) 대사 1회 -> 바로 아래 응답 순차 진행)
-  const singleChoiceMatch = line.match(/^-\s*>\s*([^:\[]+)(?:\[([^\]]+)\])?:\s*"?(.*?)"?$/);
-  if (singleChoiceMatch) {
-    const text = cleanDialogueText(singleChoiceMatch[3]);
-    const seqNum = currentScene.dialogues.filter(d => d.type === 'choice' && d.single).length + 1;
-    report.choiceCount++;
-    currentScene.dialogues.push({
-      type: 'choice',
-      id: `single_${currentScene.id}_${seqNum}`,
-      question: '',
-      single: true,
-      options: [
-        {
-          key: 'A',
-          text: text,
-          next: null,
-          effectDesc: '',
-          effects: { score: 0, scale: null, troubleState: null, targetChar: null, characters: null },
-          followUp: []
-        }
-      ]
+  // 동시 발화: 고구마(놀람), 양념(놀람): ...[주인공]씨?
+  const dualM = line.match(/^(닭고기|양념|고구마|볶음밥)\(([^)]+)\),\s*(닭고기|양념|고구마|볶음밥)\(([^)]+)\):\s*(.*)$/);
+  if (dualM) {
+    const id1 = CHAR_ID_MAP[dualM[1]];
+    const expr1 = dualM[2].trim();
+    const id2 = CHAR_ID_MAP[dualM[3]];
+    const expr2 = dualM[4].trim();
+    const text = normalizePlaceholders(dualM[5].trim());
+    return attachPending({
+      speaker: `{${ROLE_NAME[id1]}}, {${ROLE_NAME[id2]}}`,
+      speakerType: 'normal',
+      text,
+      characters: [
+        { id: id1, position: 'left', expression: expr1 },
+        { id: id2, position: 'right', expression: expr2 },
+      ],
     });
-    currentScene.dialogues.push({
+  }
+
+  // 일반 대사: 화자(태그1)(태그2)...: 대사
+  const m = line.match(/^([^:]+?):\s*(.*)$/);
+  if (!m) return null;
+
+  let rawSpeaker = m[1].trim();
+  const text = normalizePlaceholders(m[2].trim());
+  let speakerType = 'normal';
+  let textLarge = false;
+
+  if (rawSpeaker.includes('(텍스트 크게)')) {
+    textLarge = true;
+    rawSpeaker = rawSpeaker.replace('(텍스트 크게)', '').trim();
+  }
+
+  // (영상)닭고기
+  if (rawSpeaker.startsWith('(영상)')) {
+    const who = rawSpeaker.replace('(영상)', '').trim();
+    const cid = CHAR_ID_MAP[who];
+    return attachPending({
+      speaker: cid ? `영상 속 ${ROLE_NAME[cid]}` : rawSpeaker,
+      speakerType: 'normal',
+      text,
+      characters: cid ? [{ id: cid, position: 'center', expression: '웃음' }] : [],
+    });
+  }
+
+  // ???(캐릭터)(표정/O.S.) 또는 ???(V.O.) 또는 ???(O.S.)
+  if (rawSpeaker.startsWith('???')) {
+    const tags = [...rawSpeaker.matchAll(/\(([^)]+)\)/g)].map(x => x[1].trim());
+    let cid = null;
+    let expr = '기본';
+    for (const tag of tags) {
+      if (tag === 'V.O.') speakerType = 'vo';
+      else if (tag === 'O.S.') speakerType = 'os';
+      else if (CHAR_ID_MAP[tag]) cid = CHAR_ID_MAP[tag];
+      else expr = tag;
+    }
+    const obj = {
+      speaker: '???',
+      speakerType,
+      text,
+      characters: (cid && speakerType !== 'os' && speakerType !== 'vo')
+        ? [{ id: cid, position: 'center', expression: expr }]
+        : [],
+    };
+    if (cid) obj.speakerId = cid;
+    if (textLarge) obj.textLarge = true;
+    return attachPending(obj);
+  }
+
+  // 주인공(V.O.) / 주인공(O.S.) / 주인공
+  if (rawSpeaker.startsWith('주인공')) {
+    if (rawSpeaker.includes('(V.O.)')) speakerType = 'vo';
+    else if (rawSpeaker.includes('(O.S.)')) speakerType = 'os';
+    const obj = {
       speaker: '주인공',
-      speakerType: 'os',
-      text: text,
-      characters: []
-    });
-    i++;
-    continue;
+      speakerType,
+      text,
+      characters: [],
+    };
+    if (textLarge) obj.textLarge = true;
+    return attachPending(obj);
   }
-  const dialMatch = line.match(/^-\s*(?:>\s*)?([^:\[]+)(?:\[([^\]]+)\])?:\s*"?(.*?)"?$/);
-  if (dialMatch && !line.startsWith('- A:') && !line.startsWith('- B:') && !line.startsWith('- C:') && !line.startsWith('- D:')) {
-    let speakerRaw = dialMatch[1].trim();
-    const exprRaw = dialMatch[2] ? dialMatch[2].trim() : "기본";
-    let text = cleanDialogueText(dialMatch[3]);
 
-    // 나레이션 / 내레이션인 경우 화자 이름 제거
-    if (speakerRaw.includes('나레이션') || speakerRaw.includes('내레이션')) {
-      currentScene.dialogues.push({
-        speaker: null,
-        speakerType: 'narration',
-        text: text,
-        characters: []
+  // 영상 내레이션 / 안내방송 / 승선 안내 방송
+  if (rawSpeaker === '영상 내레이션') {
+    return attachPending({ speaker: null, speakerType: 'narration', text, characters: [] });
+  }
+  if (rawSpeaker.startsWith('안내방송') || rawSpeaker.startsWith('승선 안내 방송')) {
+    return attachPending({
+      speaker: '안내방송',
+      speakerType: 'os',
+      text,
+      characters: [],
+    });
+  }
+
+  // 캐릭터(표정) 또는 캐릭터
+  const charM = rawSpeaker.match(/^(닭고기|닭갈비|양념|고구마|볶음밥)(?:\(([^)]+)\))?$/);
+  if (charM) {
+    const cid = CHAR_ID_MAP[charM[1]];
+    const expr = charM[2] ? charM[2].trim() : '기본';
+    const obj = {
+      speaker: ROLE_NAME[cid],
+      speakerType: 'normal',
+      text,
+      characters: [{ id: cid, position: 'center', expression: expr }],
+    };
+    if (textLarge) obj.textLarge = true;
+    return attachPending(obj);
+  }
+
+  return attachPending({
+    speaker: rawSpeaker,
+    speakerType,
+    text,
+    characters: [],
+  });
+}
+
+// 마크다운 블록(라인 배열)을 대사 + 인라인 단일버튼 + 인라인 선택화면으로 파싱
+function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonGivesLike = false } = {}) {
+  const dialogues = [];
+  const state = { initialBg: null, initialOverlay: null, pendingBg: null, pendingOverlay: null, pendingSfx: null, pendingFade: null };
+  let singleCount = 0;
+  let choiceCount = 0;
+  let endingTitle = null;
+
+  let i = 0;
+  while (i < secLines.length) {
+    const raw = secLines[i];
+    const trimmed = raw.trim();
+
+    // 구현 메모 무시 (화면 표시 금지)
+    if (trimmed.startsWith('>')) { i++; continue; }
+
+    // 엔딩 제목: **엔딩: ...**
+    const endTitleM = trimmed.match(/^\*\*엔딩:\s*(.+?)\*\*(.*)$/);
+    if (endTitleM) {
+      endingTitle = endTitleM[1].trim();
+      i++;
+      continue;
+    }
+
+    // [버튼] 문구 (+1) 또는 [버튼] 문구
+    const btnM = trimmed.match(/^\[버튼\]\s*(.+?)(?:\s*\(\+(\d+)\))?$/);
+    if (btnM) {
+      singleCount++;
+      const btnText = normalizePlaceholders(stripOuterQuotes(btnM[1]));
+      const pts = btnM[2] ? parseInt(btnM[2], 10) : 0;
+      const effects = (pts > 0 && charId)
+        ? { like: { [charId]: pts }, compact: buttonGivesLike }
+        : null;
+      dialogues.push({
+        type: 'choice',
+        id: `single_${sceneId}_${singleCount}`,
+        question: '',
+        single: true,
+        options: [
+          {
+            key: 'A',
+            text: btnText,
+            next: null,
+            effectDesc: '',
+            effects,
+            followUp: [],
+          },
+        ],
+      });
+      dialogues.push({
+        speaker: '주인공',
+        speakerType: 'os',
+        text: btnText,
+        characters: [],
       });
       i++;
       continue;
     }
 
-    let speakerType = 'normal';
-    if (speakerRaw.includes('(V.O.)') || speakerRaw.includes('(속마음)')) {
-      speakerType = 'vo';
-      speakerRaw = speakerRaw.replace(/\(V\.O\.\)|\(속마음\)/g, '').trim();
-    } else if (speakerRaw.includes('(O.S.)') || speakerRaw.includes('(화면 밖)') || speakerRaw.includes('[화면 밖]')) {
-      speakerType = 'os';
-      speakerRaw = speakerRaw.replace(/\(O\.S\.\)|\(화면 밖\)|\[화면 밖\]/g, '').trim();
-    }
-
-
-    // 캐릭터 및 표정 분석
-    let charId = null;
-    let isBlush = false;
-    let expr = exprRaw;
-    if (expr.includes('+홍조')) {
-      isBlush = true;
-      expr = expr.replace('+홍조', '').trim();
-    }
-
-    if (speakerRaw.includes('닭갈비')) charId = 'dakgalbi';
-    else if (speakerRaw.includes('고구마')) charId = 'goguma';
-    else if (speakerRaw.includes('양념')) charId = 'yangnyeom';
-    else if (speakerRaw.includes('볶음밥')) charId = 'bokkeumbap';
-
-    // ???[닭갈비|기본] 형태 파싱
-    if (speakerRaw === '???' && expr.includes('|')) {
-      const parts = expr.split('|');
-      const cName = parts[0].trim();
-      expr = parts[1] ? parts[1].trim() : '기본';
-      if (cName.includes('닭갈비')) charId = 'dakgalbi';
-      else if (cName.includes('고구마')) charId = 'goguma';
-      else if (cName.includes('양념')) charId = 'yangnyeom';
-      else if (cName.includes('볶음밥')) charId = 'bokkeumbap';
-    }
-
-    const charList = [];
-    if (charId) {
-      charList.push({
-        id: charId,
-        position: 'center',
-        expression: expr,
-        blush: isBlush
-      });
-      recordChar(charId, expr);
-      if (isBlush) recordChar(charId, 'blush');
-    }
-
-    currentScene.dialogues.push({
-      speaker: speakerRaw,
-      speakerType: speakerType,
-      text: text,
-      characters: charList
-    });
-    i++;
-    continue;
-  }
-
-  // CHOICE 블록 감지 (뒤에 ⚠ 기호 등이 붙은 경우도 허용)
-  const choiceHeader = line.match(/^CHOICE\s+([a-zA-Z0-9_]+)[^\w—\n]*(?:—\s*(.*))?$/);
-  if (choiceHeader) {
-    report.choiceCount++;
-    const choiceId = choiceHeader[1];
-    const question = choiceHeader[2] ? choiceHeader[2].trim() : "선택하세요";
-    const options = [];
-
-    i++;
-    // 보기 시작점(- A:)까지 중간 메모/안내 라인 건너뛰기
-    while (i < lines.length && !lines[i].match(/^-\s*[A-D]:/) && !lines[i].startsWith('###') && !lines[i].startsWith('CHOICE')) {
+    // **[선택 화면]** (둘 중 하나)
+    if (/^\*\*\[선택 화면\]\*\*/.test(trimmed)) {
+      choiceCount++;
+      const options = [];
       i++;
+      while (i < secLines.length) {
+        const cur = secLines[i].trim();
+        if (!cur) { i++; continue; }
+        if (cur.startsWith('공통') || cur.startsWith('>') || cur.startsWith('###') || cur.startsWith('####')) break;
+        const optM = cur.match(/^-\s*(.+?)(?:\s*\((?:\+(\d+)|0)\))?$/);
+        if (optM) {
+          let rawOptText = optM[1].trim();
+          let pts = 0;
+          const scoreInCur = cur.match(/\(\+(\d+)\)\s*$/);
+          if (scoreInCur) pts = parseInt(scoreInCur[1], 10);
+          rawOptText = rawOptText.replace(/\s*\((?:\+\d+|0)\)\s*$/, '').trim();
+          const optText = normalizePlaceholders(stripOuterQuotes(rawOptText));
+
+          // 이 옵션 아래의 ```script ... ``` 블록 수집
+          const followUp = [];
+          let optEndingTitle = null;
+          i++;
+          while (i < secLines.length) {
+            const sub = secLines[i].trim();
+            if (!sub) { i++; continue; }
+            if (sub.startsWith('```')) {
+              i++;
+              const fState = { initialBg: null, initialOverlay: null, pendingBg: null, pendingOverlay: null, pendingSfx: null, pendingFade: null };
+              while (i < secLines.length && !secLines[i].trim().startsWith('```')) {
+                const d = parseDialogueLine(secLines[i], fState);
+                if (d) followUp.push(d);
+                i++;
+              }
+              if (i < secLines.length && secLines[i].trim().startsWith('```')) i++;
+              continue;
+            }
+            const subEnd = sub.match(/^\*\*엔딩:\s*(.+?)\*\*(.*)$/);
+            if (subEnd) {
+              optEndingTitle = subEnd[1].trim();
+              i++;
+              continue;
+            }
+            break;
+          }
+
+          options.push({
+            key: String.fromCharCode(65 + options.length),
+            text: optText,
+            next: null,
+            effectDesc: '',
+            effects: (pts > 0 && charId) ? { like: { [charId]: pts } } : null,
+            followUp,
+            endingTitle: optEndingTitle,
+          });
+          continue;
+        }
+        break;
+      }
+
+      if (options.length > 0) {
+        dialogues.push({
+          type: 'choice',
+          id: `choice_${sceneId}_${choiceCount}`,
+          question: '',
+          options,
+        });
+      }
+      continue;
     }
 
-    while (i < lines.length && lines[i].match(/^-\s*[A-D]:/)) {
-      const optLine = lines[i];
-      const optMatch = optLine.match(/^-\s*([A-D]):\s*(.*)$/);
-      if (optMatch) {
-        const key = optMatch[1];
-        let optText = optMatch[2].trim();
-        let nextScene = null;
-        if (optText.includes('→')) {
-          const parts = optText.split('→');
-          optText = parts[0].trim();
-          nextScene = parts[1].trim();
-        }
-
-        // 보기 아래의 효과 / 이어지는 대사 탐색
-        let effectText = "";
-        let followUpDialogues = [];
-        let j = i + 1;
-        while (j < lines.length && !lines[j].match(/^-\s*[A-D]:/) && !lines[j].startsWith('CHOICE') && !lines[j].startsWith('###') && !lines[j].startsWith('(공통') && !lines[j].startsWith('나레이션:') && lines[j].trim() !== '') {
-          const subLine = lines[j].trim();
-          if (subLine.startsWith('효과:')) {
-            effectText = subLine.replace('효과:', '').trim();
-          } else if (subLine.startsWith('이어지는 대사:') && subLine.replace('이어지는 대사:', '').trim().includes(':')) {
-            // 한 줄 형식 이어지는 대사: 고구마[웃음]: "대사"
-            const rest = subLine.replace('이어지는 대사:', '').trim();
-            const m = rest.match(/^([^:]+):\s*"?(.*?)"?$/);
-            if (m) {
-              followUpDialogues.push({ speaker: m[1].trim(), text: cleanDialogueText(m[2]) });
-            }
-          } else if (subLine.startsWith('- ') && subLine.includes(':')) {
-            // 이어지는 대사
-            const m = subLine.match(/^-\s*([^:]+):\s*"?(.*?)"?$/);
-            if (m) {
-              followUpDialogues.push({ speaker: m[1].trim(), text: cleanDialogueText(m[2]) });
-            }
-          }
-          j++;
-        }
-
-        // 선택지 문구 자체에 '— 효과:' 또는 '(효과:)'가 포함되어 있는 경우 분리 및 제거
-        if (optText.includes('— 효과:') || optText.includes('—효과:') || optText.includes('— 효과 :')) {
-          const parts = optText.split(/—\s*효과\s*:/);
-          optText = parts[0].trim();
-          if (!effectText) effectText = parts[1].trim();
-        } else if (optText.includes('(효과:')) {
-          const m = optText.match(/\(효과:\s*(.*?)\)/);
-          if (m) {
-            if (!effectText) effectText = m[1].trim();
-            optText = optText.replace(/\(효과:.*?\)/, '').trim();
-          }
-        }
-        optText = optText.replace(/\s*—\s*효과:.*$/, '').trim();
-
-        // 효과 파싱 (크게↑, ↑, 소폭↑, 소폭↓, (+), 고민 상태, 특정 캐릭터)
-        const parsedEffects = { score: 0, scale: null, troubleState: null, targetChar: null, characters: null };
-        let baseScore = 0;
-        let scale = null;
-        const numMatch = normalizeMinus(effectText).match(/호감\s*([+-]\d+)/);
-        if (numMatch) { baseScore = parseInt(numMatch[1], 10); scale = numMatch[1]; }
-        else if (effectText.includes('크게↑')) { baseScore = 6; scale = '크게↑'; }
-        else if (effectText.includes('소폭↑')) { baseScore = 2; scale = '소폭↑'; }
-        else if (effectText.includes('소폭↓')) { baseScore = -2; scale = '소폭↓'; }
-        else if (effectText.includes('↑')) { baseScore = 4; scale = '↑'; }
-        else if (effectText.includes('(+)')) { baseScore = 3; scale = '(+)'; }
-
-        parsedEffects.score = baseScore;
-        parsedEffects.scale = scale;
-
-        // 타깃 인물 추출 (닭갈비, 양념, 고구마, 볶음밥)
-        const targetChars = [];
-        if (effectText.includes('닭갈비') || effectText.includes('닭고기')) targetChars.push('dakgalbi');
-        if (effectText.includes('양념')) targetChars.push('yangnyeom');
-        if (effectText.includes('고구마')) targetChars.push('goguma');
-        if (effectText.includes('볶음밥')) targetChars.push('bokkeumbap');
-
-        if (targetChars.length === 1) {
-          parsedEffects.targetChar = targetChars[0];
-        } else if (targetChars.length > 1) {
-          parsedEffects.characters = {};
-          for (const tc of targetChars) {
-            parsedEffects.characters[tc] = baseScore;
-          }
-        }
-
-        if (effectText.includes('고민이 풀리기 시작')) parsedEffects.troubleState = '고민이 풀리기 시작';
-        else if (effectText.includes('고민은 그대로')) parsedEffects.troubleState = '고민은 그대로';
-        else if (effectText.includes('고민은 오히려 깊어짐')) parsedEffects.troubleState = '고민은 오히려 깊어짐';
-        else if (effectText.includes('대화가 이어짐')) parsedEffects.troubleState = '대화가 이어짐';
-        else if (effectText.includes('고민 자극')) parsedEffects.troubleState = '고민 자극';
-
-        options.push({
-          key,
-          text: optText,
-          next: nextScene,
-          effectDesc: effectText,
-          effects: parsedEffects,
-          followUp: followUpDialogues
-        });
-        // ★ FIX: j 루프가 하위 블록을 모두 건너뛴 위치로 점프 (기존 i++ → i = j)
-        i = j;
-      } else {
+    // ```script ... ``` 블록
+    if (trimmed.startsWith('```')) {
+      i++;
+      while (i < secLines.length && !secLines[i].trim().startsWith('```')) {
+        const d = parseDialogueLine(secLines[i], state);
+        if (d) dialogues.push(d);
         i++;
       }
+      if (i < secLines.length && secLines[i].trim().startsWith('```')) i++;
+      continue;
     }
 
-    // Day 1 첫 만남 / Day 2 개별 만남의 CHOICE는 대사 흐름 정확한 위치에 인라인 선택지로 삽입
-    // (선택지 -> 고른 응답만 재생 -> 합류/공통 대사 순서 보장)
-    const inlineScenes = ['s03_lego', 's03_skywalk', 's03_myeongdong', 's07_dakgalbi', 's07_goguma', 's07_yangnyeom'];
-    if (inlineScenes.includes(currentScene.id)) {
-      currentScene.dialogues.push({
-        type: 'choice',
-        id: choiceId,
-        question: question,
-        options: options
-      });
-    } else if (!currentScene.choices) {
-      currentScene.choices = {
-        id: choiceId,
-        question: question,
-        options: options
-      };
-    } else {
-      // 이전 선택지를 중간 선택지(midChoices)로 보존하고, 새 것을 메인으로 등록
-      if (!currentScene.midChoices) currentScene.midChoices = [];
-      currentScene.midChoices.push(currentScene.choices);
-      currentScene.choices = {
-        id: choiceId,
-        question: question,
-        options: options
-      };
-    }
-    continue;
+    i++;
   }
 
-
-  i++;
-}
-finalizeScene();
-
-// 4. 특별 씬 및 엔딩 5종 추가
-const endingScenes = [
-  { id: "ending_dakgalbi", title: "닭갈비 엔딩", char: "dakgalbi" },
-  { id: "ending_yangnyeom", title: "양념 엔딩", char: "yangnyeom" },
-  { id: "ending_goguma", title: "고구마 엔딩", char: "goguma" },
-  { id: "ending_bokkeumbap", title: "볶음밥 히든 엔딩", char: "bokkeumbap" },
-  { id: "ending_alone", title: "혼자 돌아가는 엔딩", char: null }
-];
-
-for (const ed of endingScenes) {
-  const sceneData = {
-    id: ed.id,
-    title: ed.title,
-    type: "ending",
-    background: "bg_sunset_pier",
-    time: "황혼",
-    bgm: "bgm_ending",
-    dialogues: [
-      {
-        speaker: null,
-        speakerType: "narration",
-        text: "[누락] 엔딩 원고 필요 (원문에 없는 대사로, 원고 수급 후 data 파일에 입력)",
-        characters: ed.char ? [{ id: ed.char, position: "center", expression: "웃음" }] : []
-      }
-    ],
-    choices: null
+  return {
+    dialogues,
+    background: state.initialBg || 'bg_black',
+    overlay: state.initialOverlay || null,
+    endingTitle,
   };
-  allScenes.push(sceneData);
-  report.scenes.push({ id: ed.id, title: ed.title, dialogues: 1 });
-  report.sceneCount++;
 }
 
-// 5. 각 씬을 data/scenes/{id}.json 파일로 저장
-const defaultNextMap = {
-  "s01_prologue": "s02_place_select",
-  "s03_lego": "s03_lego_phone",
-  "s03_lego_phone": "s03_2_day1_messages",
-  "s03_skywalk": "s03_skywalk_phone",
-  "s03_skywalk_phone": "s03_2_day1_messages",
-  "s03_myeongdong": "s03_myeongdong_phone",
-  "s03_myeongdong_phone": "s03_2_day1_messages",
-  "s06_day1_end": "s07_day2",
-  "s07_dakgalbi": "s08_day2_end",
-  "s07_yangnyeom": "s08_day2_end",
-  "s07_goguma": "s08_day2_end",
-  "s08_day2_end": "s09_pier",
-  "s09_pier": "s10_seat",
-  "s11_dakgalbi": "s12_dakgalbi",
-  "s11_yangnyeom": "s12_yangnyeom",
-  "s11_goguma": "s12_goguma",
-  "s12_dakgalbi": "s14_pier_sunset",
-  "s12_yangnyeom": "s14_pier_sunset",
-  "s12_goguma": "s14_pier_sunset",
-  "s14_pier_sunset_a": "s15_final_choice",
-  "s14_pier_sunset_b": "s15_final_choice"
+// 명세서 6번(씬 본문)을 헤더별로 분할
+function extractSections(mdLines) {
+  const sections = {};
+  let currentKey = null;
+  let inCode = false;
+  let inChapter6 = false;
+
+  for (const line of mdLines) {
+    if (line.startsWith('## 6. 씬 본문')) { inChapter6 = true; continue; }
+    if (inChapter6 && line.startsWith('## 7.')) break;
+    if (!inChapter6) continue;
+
+    if (line.trim().startsWith('```')) inCode = !inCode;
+    if (!inCode && /^#{3,4}\s+/.test(line)) {
+      currentKey = line.trim();
+      sections[currentKey] = [];
+      continue;
+    }
+    if (currentKey) {
+      sections[currentKey].push(line);
+    }
+  }
+  return sections;
+}
+
+const S = extractSections(lines);
+const getSec = (prefix) => {
+  const k = Object.keys(S).find(key => key.startsWith(prefix));
+  if (!k) throw new Error(`[import_story] 섹션을 찾을 수 없습니다: ${prefix}`);
+  return S[k];
 };
 
-// ★ Day 3(남이섬 파트)는 '남이섬_Day3_스토리.md' 기준으로 교체 (기존 s09~s15, ending_* 장면은 대체됨)
-const { generateDay3 } = require('./import_day3.js');
-for (let k = allScenes.length - 1; k >= 0; k--) {
-  if (/^(s09|s10|s11|s12|s13|s14|s15|ending)_/.test(allScenes[k].id)) allScenes.splice(k, 1);
-}
-allScenes.push(...generateDay3({ rootDir, report }));
+const allScenes = [];
+const pushScene = (scene) => { allScenes.push(scene); };
 
-const sceneFileList = [];
-for (const scene of allScenes) {
-  if (!scene.next && defaultNextMap[scene.id]) {
-    scene.next = defaultNextMap[scene.id];
-  }
-  // 선택지 옵션이 개별 next를 가지고 있지 않은 경우, 씬의 default next를 상속 (갈림길 선택지 제외)
-  if (scene.choices && scene.choices.options) {
-    for (const opt of scene.choices.options) {
-      if (!opt.next && scene.next && !['s07_day2', 's10_seat', 's02_place_select', 's15_final_choice'].includes(scene.id)) {
-        opt.next = scene.next;
-      }
+// ── #1 프롤로그 ──
+{
+  const p = parseSectionLines(getSec('### #1 프롤로그'), { sceneId: 's01_prologue' });
+  pushScene({
+    id: 's01_prologue',
+    title: '#1 프롤로그',
+    type: 'normal',
+    day: 1,
+    background: p.background,
+    overlay: p.overlay,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: 's02_place_select',
+  });
+}
+
+// ── #2 장소 선택 ──
+{
+  const sec = getSec('### #2 장소 선택');
+  // 선택 화면 앞/뒤 대사 분리
+  const choiceIdx = sec.findIndex(l => l.trim().startsWith('**[선택 화면]'));
+  const before = parseSectionLines(sec.slice(0, choiceIdx), { sceneId: 's02_place_select' });
+  const after = parseSectionLines(sec.slice(choiceIdx + 1), { sceneId: 's02_place_select_after' });
+  // after 대사("그래. 첫날은 여기부터 가는거야.")는 선택 직후 followUp으로 재생
+  const postLine = after.dialogues;
+  pushScene({
+    id: 's02_place_select',
+    title: '#2 장소 선택',
+    type: 'normal',
+    day: 1,
+    background: before.background,
+    overlay: before.overlay,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: before.dialogues,
+    choices: {
+      id: 'place_1',
+      question: '장소 선택',
+      options: [
+        { key: 'A', placeKey: 'lego', text: '레고랜드 — 다양한 놀이기구와 볼거리가 있는 테마파크', next: 's03_lego', followUp: postLine },
+        { key: 'B', placeKey: 'skywalk', text: '스카이워크 — 탁 트인 강 풍경을 감상할 수 있는 명소', next: 's03_skywalk', followUp: postLine },
+        { key: 'C', placeKey: 'myeongdong', text: '명동 닭갈비 골목 — 춘천의 대표 먹거리를 즐길 수 있는 거리', next: 's03_myeongdong', followUp: postLine },
+      ],
+    },
+    next: null,
+  });
+}
+
+// ── #3-1 Day 1 첫 만남 (3개 루트) ──
+const day1Routes = [
+  { key: '#### 레고랜드 선택 시', id: 's03_lego', title: '#3-1 Day 1 — 레고랜드 (닭고기)', charId: 'dakgalbi', phoneId: 's03_lego_phone' },
+  { key: '#### 소양강 스카이워크 선택 시', id: 's03_skywalk', title: '#3-1 Day 1 — 스카이워크 (고구마)', charId: 'goguma', phoneId: 's03_skywalk_phone' },
+  { key: '#### 춘천 명동 닭갈비 골목 선택 시', id: 's03_myeongdong', title: '#3-1 Day 1 — 명동 닭갈비 골목 (양념)', charId: 'yangnyeom', phoneId: 's03_myeongdong_phone' },
+];
+for (const r of day1Routes) {
+  const p = parseSectionLines(getSec(r.key), { charId: r.charId, sceneId: r.id, buttonGivesLike: true });
+  // 실제 이름 첫 공개 지점에 reveal 플래그 설정
+  for (const d of p.dialogues) {
+    if (d.speaker === ROLE_NAME[r.charId] && !d.speakerId) {
+      d.reveal = r.charId;
+      break;
     }
   }
-  const fileName = `${scene.id}.json`;
-  fs.writeFileSync(path.join(scenesDir, fileName), JSON.stringify(scene, null, 2), 'utf8');
-  sceneFileList.push(fileName);
+  pushScene({
+    id: r.id,
+    title: r.title,
+    type: 'normal',
+    day: 1,
+    background: p.background,
+    overlay: p.overlay,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: r.phoneId,
+  });
 }
 
+// ── #3-2 Day 1 휴대폰 메시지 (3개) + 다음 장소 선택 씬 ──
+{
+  const sec = getSec('### #3-2 Day 1');
+  const extractScriptAfter = (marker) => {
+    const idx = marker ? sec.findIndex(l => l.includes(marker)) : 0;
+    const start = sec.findIndex((l, k) => k >= idx && l.trim().startsWith('```'));
+    const end = sec.findIndex((l, k) => k > start && l.trim().startsWith('```'));
+    return sec.slice(start + 1, end);
+  };
+  const introLines = extractScriptAfter(null).map(l => normalizePlaceholders(l.replace(/^주인공\(V\.O\.\):\s*/, '').trim()));
 
-// game_config.json에 sceneFiles 목록 갱신
-gameConfig.sceneFiles = sceneFileList;
-fs.writeFileSync(path.join(configDir, 'game_config.json'), JSON.stringify(gameConfig, null, 2), 'utf8');
-fs.writeFileSync(path.join(dataConfigDir, 'game_config.json'), JSON.stringify(gameConfig, null, 2), 'utf8');
+  const phoneConfigs = [
+    { marker: '**레고랜드 → 닭고기**', id: 's03_lego_phone', partner: 'dakgalbi', title: '#3-2 메시지 — 닭고기' },
+    { marker: '**스카이워크 → 고구마**', id: 's03_skywalk_phone', partner: 'goguma', title: '#3-2 메시지 — 고구마' },
+    { marker: '**명동 닭갈비 골목 → 양념**', id: 's03_myeongdong_phone', partner: 'yangnyeom', title: '#3-2 메시지 — 양념' },
+  ];
 
-// 6. data/_import_report.md 작성
-const reportMd = `# 오이데 스토리 데이터 변환 리포트 (Import Report)
+  for (const pc of phoneConfigs) {
+    const rawLines = extractScriptAfter(pc.marker);
+    const messages = [];
+    let outroVo = '';
+    for (const rl of rawLines) {
+      const m = rl.trim().match(/^([^:]+):\s*(.*)$/);
+      if (!m) continue;
+      const who = m[1].trim();
+      const txt = normalizePlaceholders(m[2].trim());
+      if (who.includes('V.O.')) outroVo = txt;
+      else if (who.startsWith('주인공')) messages.push({ sender: 'player', text: txt });
+      else messages.push({ sender: pc.partner, text: txt });
+    }
+    pushScene({
+      id: pc.id,
+      title: pc.title,
+      type: 'phone_message',
+      day: 1,
+      background: 'bg_black',
+      overlay: null,
+      time: '낮',
+      bgm: 'bgm_main',
+      partner: pc.partner,
+      intro_vo: introLines,
+      messages,
+      outro_vo: outroVo,
+      next: 's03_2_day1_messages',
+    });
+  }
 
-이 파일은 \`오이데_스토리_정리본.md\`를 파싱하여 생성된 데이터 현황 및 원문의 확인 필요(⚠) 사항을 정리한 보고서입니다.
-원문 대사는 지어내지 않고 충실히 보존하였으며, 확인이 필요한 사항은 임의로 메우지 않고 옵션/플래그 및 리포트로 분리했습니다.
+  // 다음 장소 이동 씬 (안 간 장소가 남아 있을 때만 진입)
+  pushScene({
+    id: 's03_2_day1_messages',
+    title: '#3-2 Day 1 — 다음 장소로 이동',
+    type: 'normal',
+    day: 1,
+    background: 'bg_brochure',
+    overlay: 'blur',
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: [
+      { speaker: '주인공', speakerType: 'vo', text: '좋아, 이제 다음 장소로 이동해 볼까?', characters: [], background: 'bg_brochure', overlay: 'blur' },
+    ],
+    postChoiceLine: { speaker: '주인공', speakerType: 'vo', text: '다음은 여기다!', characters: [] },
+    choices: null,
+    next: null,
+  });
+}
 
----
+// ── #6 Day 1 마무리 ──
+{
+  const p = parseSectionLines(getSec('### #6 Day 1 마무리'), { sceneId: 's06_day1_end' });
+  pushScene({
+    id: 's06_day1_end',
+    title: '#6 Day 1 마무리',
+    type: 'normal',
+    day: 1,
+    background: p.background,
+    overlay: p.overlay,
+    time: '밤',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: 's07_day2',
+  });
+}
 
-## 1. 변환 요약 통계
-- **총 장면 수**: ${report.sceneCount}개 (프롤로그, 장소 선택, 만남, 뱃길, 남이섬, 선착장 분기, 최종 선택 및 엔딩 5종 포함)
-- **총 선택지 수**: ${report.choiceCount}개 (CHOICE 블록 기준)
-- **지원 변수**: 
-${report.variableList.map(v => `  - ${v}`).join('\n')}
+// ── #7 Day 2 시작 + 3명 개별 루트 ──
+{
+  const p = parseSectionLines(getSec('### #7 Day 2'), { sceneId: 's07_day2' });
+  pushScene({
+    id: 's07_day2',
+    title: '#7 Day 2 — 가까워지는 시간',
+    type: 'normal',
+    day: 2,
+    background: p.background,
+    overlay: p.overlay,
+    time: '아침',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: null,
+  });
+}
 
----
+const day2Routes = [
+  { key: '#### 닭고기를 선택할 시', id: 's07_dakgalbi', title: '#7 Day 2 — 닭고기 (춘천 시내)', charId: 'dakgalbi' },
+  { key: '#### 고구마를 선택할 시', id: 's07_goguma', title: '#7 Day 2 — 고구마 (카페)', charId: 'goguma' },
+  { key: '#### 양념을 선택할 시', id: 's07_yangnyeom', title: '#7 Day 2 — 양념 (명동 거리)', charId: 'yangnyeom' },
+];
+for (const r of day2Routes) {
+  const p = parseSectionLines(getSec(r.key), { charId: r.charId, sceneId: r.id, buttonGivesLike: true });
+  pushScene({
+    id: r.id,
+    title: r.title,
+    type: 'normal',
+    day: 2,
+    background: p.background,
+    overlay: p.overlay,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: null,
+  });
+}
 
-## 2. 원문 확인 필요(⚠) 및 임시 처리 목록
+// ── #8 Day 2 마무리 ──
+{
+  const p = parseSectionLines(getSec('### #8 Day 2 마무리'), { sceneId: 's08_day2_end' });
+  pushScene({
+    id: 's08_day2_end',
+    title: '#8 Day 2 마무리',
+    type: 'normal',
+    day: 2,
+    background: p.background,
+    overlay: p.overlay,
+    time: '밤',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: 's09_pier',
+  });
+}
 
-| 번호 | 항목 | 원문 상황 및 처리 방식 |
-|---|---|---|
-${report.warningItems.map((item, idx) => `| ${idx + 1} | **${item.title}** | ${item.desc} |`).join('\n')}
+// ── #9 Day 3 춘천 선착장 ──
+{
+  const p = parseSectionLines(getSec('### #9 Day 3'), { sceneId: 's09_pier' });
+  pushScene({
+    id: 's09_pier',
+    title: '#9 Day 3 — 춘천 선착장',
+    type: 'normal',
+    day: 3,
+    background: p.background,
+    overlay: p.overlay,
+    time: '아침',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: 's10_bus',
+  });
+}
 
----
+// ── #10 Day 3 수상버스 ──
+{
+  const p = parseSectionLines(getSec('### #10 Day 3'), { sceneId: 's10_bus' });
+  pushScene({
+    id: 's10_bus',
+    title: '#10 Day 3 — 수상버스',
+    type: 'normal',
+    day: 3,
+    background: p.background,
+    overlay: p.overlay,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: {
+      id: 'bus_seat',
+      question: '좌석 선택',
+      options: [
+        { key: 'A', charId: 'dakgalbi', text: '{닭갈비} 옆에 앉는다.', next: 's10_bus_dakgalbi', followUp: [] },
+        { key: 'B', charId: 'goguma', text: '{고구마} 옆에 앉는다.', next: 's10_bus_goguma', followUp: [] },
+        { key: 'C', charId: 'yangnyeom', text: '{양념} 옆에 앉는다.', next: 's10_bus_yangnyeom', followUp: [] },
+      ],
+    },
+    next: null,
+  });
 
-## 3. 필요한 이미지 리소스 목록
+  const seatRoutes = [
+    { key: '#### 닭고기 선택시', id: 's10_bus_dakgalbi', charId: 'dakgalbi', title: '#10 수상버스 — 닭고기 좌석' },
+    { key: '#### 양념 선택시', id: 's10_bus_yangnyeom', charId: 'yangnyeom', title: '#10 수상버스 — 양념 좌석' },
+    { key: '#### 고구마 선택시', id: 's10_bus_goguma', charId: 'goguma', title: '#10 수상버스 — 고구마 좌석' },
+  ];
+  for (const sr of seatRoutes) {
+    const sp = parseSectionLines(getSec(sr.key), { charId: sr.charId, sceneId: sr.id });
+    pushScene({
+      id: sr.id,
+      title: sr.title,
+      type: 'normal',
+      day: 3,
+      background: 'bg_nami_boat_interior',
+      overlay: null,
+      time: '낮',
+      bgm: 'bgm_main',
+      dialogues: sp.dialogues,
+      choices: null,
+      next: 's10_bus_common',
+    });
+  }
 
-### 1) 배경 이미지 (\`assets/backgrounds/{배경id}.png\`)
-| 배경 ID | 대응 원문 배경 및 설명 |
-|---|---|
-${Array.from(report.requiredImages.backgrounds).sort().map(bg => `| \`${bg}.png\` | ${bg} (춘천역, 레고랜드, 스카이워크, 명동, 숙소, 선착장 등) |`).join('\n')}
+  const cp = parseSectionLines(getSec('#### 공통 (세 좌석 모두)'), { sceneId: 's10_bus_common' });
+  pushScene({
+    id: 's10_bus_common',
+    title: '#10 수상버스 — 남이섬 도착',
+    type: 'bus_to_island',
+    day: 3,
+    background: 'bg_nami_boat_interior',
+    overlay: null,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: cp.dialogues,
+    choices: null,
+    next: null,
+  });
+}
 
-### 2) 캐릭터 표정 및 오버레이 (\`assets/characters/{id}/{female|male}/{표정}.png\`)
-| 캐릭터 | 필요 표정 목록 및 오버레이 |
-|---|---|
-| **닭갈비 (dakgalbi)** | 기본(\`normal\`), 웃음(\`happy\`), 쓸쓸(\`sad\`), 당황(\`panic\`), 홍조 오버레이(\`blush.png\`) |
-| **양념 (yangnyeom)** | 기본(\`normal\`), 웃음(\`happy\`), 멋쩍음(\`awkward\`), 쓸쓸(\`sad\`), 짜증(\`angry\`), 홍조 오버레이(\`blush.png\`) |
-| **고구마 (goguma)** | 기본(\`normal\`), 웃음(\`happy\`), 쓸쓸(\`sad\`), 당황(\`panic\`), 홍조 오버레이(\`blush.png\`) |
-| **볶음밥 (bokkeumbap)** | 기본(\`normal\`), 슬픔/아련(\`sad\`), 홍조 오버레이(\`blush.png\`) |
+// ── #11 Day 3 남이섬 (bus_choice 장소 1개만 진행) + 춘천으로 ──
+const islandRoutes = [
+  { key: '#### 닭고기 선택시 — 메타세쿼이아길', id: 's11_dakgalbi', charId: 'dakgalbi', title: '#11 남이섬 — 메타세쿼이아길 (닭고기)' },
+  { key: '#### 양념 선택시 — 호숫가 산책로', id: 's11_yangnyeom', charId: 'yangnyeom', title: '#11 남이섬 — 호숫가 산책로 (양념)' },
+  { key: '#### 고구마 선택시 — 은행나무길', id: 's11_goguma', charId: 'goguma', title: '#11 남이섬 — 은행나무길 (고구마)' },
+];
+for (const ir of islandRoutes) {
+  const ip = parseSectionLines(getSec(ir.key), { charId: ir.charId, sceneId: ir.id });
+  pushScene({
+    id: ir.id,
+    title: ir.title,
+    type: 'normal',
+    day: 3,
+    background: ip.background,
+    overlay: ip.overlay,
+    time: '낮',
+    bgm: 'bgm_main',
+    dialogues: ip.dialogues,
+    choices: null,
+    next: 's11_return',
+  });
+}
 
----
+{
+  const rp = parseSectionLines(getSec('### #11 Day 3 — 춘천으로'), { sceneId: 's11_return' });
+  pushScene({
+    id: 's11_return',
+    title: '#11 Day 3 — 춘천으로',
+    type: 'normal',
+    day: 3,
+    background: rp.background,
+    overlay: rp.overlay,
+    time: '황혼',
+    bgm: 'bgm_main',
+    dialogues: rp.dialogues,
+    choices: null,
+    next: 's12_pier_sunset',
+  });
+}
 
-## 4. 파싱된 전체 장면 목록
-${allScenes.map(s => `- \`${s.id}\`: ${s.title} (대사 ${s.dialogues ? s.dialogues.length : 0}개)`).join('\n')}
+// ── #12 Day 3 선택 (도착 + 판정 -> 히든 등장 장면 -> 최종 선택 화면) ──
+{
+  const p = parseSectionLines(getSec('### #12 Day 3'), { sceneId: 's12_pier_sunset' });
+  pushScene({
+    id: 's12_pier_sunset',
+    title: '#12 Day 3 — 춘천 선착장 (해질녘)',
+    type: 'judge',
+    day: 3,
+    background: p.background,
+    overlay: p.overlay,
+    time: '황혼',
+    bgm: 'bgm_main',
+    dialogues: p.dialogues,
+    choices: null,
+    next: null,
+  });
+
+  const hp = parseSectionLines(getSec('#### 히든 등장 장면'), { sceneId: 's12_hidden_bokkeumbap' });
+  // 볶음밥 첫 실명 발화에 reveal 추가
+  for (const d of hp.dialogues) {
+    if (d.speaker === '볶음밥' && !d.speakerId) {
+      d.reveal = 'bokkeumbap';
+      break;
+    }
+  }
+  pushScene({
+    id: 's12_hidden_bokkeumbap',
+    title: '#12 히든 — 볶음밥 등장',
+    type: 'normal',
+    day: 3,
+    background: 'bg_pier',
+    overlay: 'sunset',
+    time: '황혼',
+    bgm: 'bgm_main',
+    dialogues: hp.dialogues,
+    choices: null,
+    next: 's12_final_choice',
+  });
+
+  pushScene({
+    id: 's12_final_choice',
+    title: '#12 최종 선택 화면',
+    type: 'final',
+    day: 3,
+    background: 'bg_pier',
+    overlay: 'sunset',
+    time: '황혼',
+    bgm: 'bgm_main',
+    dialogues: [],
+    choices: null,
+    next: null,
+  });
+}
+
+// ── 엔딩 6종 ──
+const singleEndings = [
+  { key: '#### 닭고기 엔딩', id: 'ending_dakgalbi', title: '닭고기 엔딩', charId: 'dakgalbi', bg: 'bg_pier', overlay: 'sunset' },
+  { key: '#### 양념 엔딩', id: 'ending_yangnyeom', title: '양념 엔딩', charId: 'yangnyeom', bg: 'bg_pier', overlay: 'sunset' },
+  { key: '#### 고구마 엔딩', id: 'ending_goguma', title: '고구마 엔딩', charId: 'goguma', bg: 'bg_pier', overlay: 'sunset' },
+  { key: '#### 혼자 돌아가기 엔딩', id: 'ending_alone', title: '혼자 돌아가기 엔딩', charId: null, bg: 'bg_chuncheon_station', overlay: null },
+];
+for (const ed of singleEndings) {
+  const ep = parseSectionLines(getSec(ed.key), { charId: ed.charId, sceneId: ed.id });
+  pushScene({
+    id: ed.id,
+    title: ed.title,
+    endingTitle: ep.endingTitle || ed.title,
+    type: 'ending',
+    day: 3,
+    background: ep.background !== 'bg_black' ? ep.background : ed.bg,
+    overlay: ep.overlay !== null ? ep.overlay : ed.overlay,
+    time: ed.id === 'ending_alone' ? '낮' : '황혼',
+    bgm: 'bgm_ending',
+    dialogues: ep.dialogues,
+    choices: null,
+    next: null,
+  });
+}
+
+// 볶음밥 엔딩 (인트로 + 2지선다 -> 재회 엔딩 / 노멀 엔딩 분리)
+{
+  const bp = parseSectionLines(getSec('#### 볶음밥 엔딩'), { charId: 'bokkeumbap', sceneId: 'ending_bokkeumbap_intro' });
+  const choiceIdx = bp.dialogues.findIndex(d => d.type === 'choice');
+  const introDialogues = bp.dialogues.slice(0, choiceIdx);
+  const choiceBlock = bp.dialogues[choiceIdx];
+  const optReunion = choiceBlock.options[0];
+  const optNormal = choiceBlock.options[1];
+
+  pushScene({
+    id: 'ending_bokkeumbap_intro',
+    title: '볶음밥 엔딩 — 대화',
+    type: 'normal',
+    day: 3,
+    background: 'bg_pier',
+    overlay: 'sunset',
+    time: '황혼',
+    bgm: 'bgm_ending',
+    dialogues: introDialogues,
+    choices: {
+      id: 'bokkeumbap_final',
+      question: '',
+      options: [
+        { key: 'A', text: optReunion.text, next: 'ending_bokkeumbap_reunion', effects: null, followUp: [] },
+        { key: 'B', text: optNormal.text, next: 'ending_bokkeumbap_normal', effects: null, followUp: [] },
+      ],
+    },
+    next: null,
+  });
+
+  pushScene({
+    id: 'ending_bokkeumbap_reunion',
+    title: '볶음밥 재회 엔딩',
+    endingTitle: optReunion.endingTitle || '다시, 우리라는 이름으로.',
+    type: 'ending',
+    day: 3,
+    background: 'bg_pier',
+    overlay: 'sunset',
+    time: '황혼',
+    bgm: 'bgm_ending',
+    dialogues: optReunion.followUp,
+    choices: null,
+    next: null,
+  });
+
+  pushScene({
+    id: 'ending_bokkeumbap_normal',
+    title: '볶음밥 노멀 엔딩',
+    endingTitle: optNormal.endingTitle || '각자의 속도로',
+    type: 'ending',
+    day: 3,
+    background: 'bg_pier',
+    overlay: 'sunset',
+    time: '황혼',
+    bgm: 'bgm_ending',
+    dialogues: optNormal.followUp,
+    choices: null,
+    next: null,
+  });
+}
+
+// ── 기존 data/scenes/*.json 전부 삭제 후 새 씬 저장 ──
+const scenesDir = path.join(rootDir, 'data', 'scenes');
+fs.mkdirSync(scenesDir, { recursive: true });
+for (const f of fs.readdirSync(scenesDir)) {
+  if (f.endsWith('.json')) fs.unlinkSync(path.join(scenesDir, f));
+}
+
+const sceneFiles = [];
+for (const sc of allScenes) {
+  const fname = `${sc.id}.json`;
+  fs.writeFileSync(path.join(scenesDir, fname), JSON.stringify(sc, null, 2), 'utf8');
+  sceneFiles.push(fname);
+}
+
+// ── config 파일 생성 ──
+const configDir = path.join(rootDir, 'config');
+const dataConfigDir = path.join(rootDir, 'data', 'config');
+fs.mkdirSync(configDir, { recursive: true });
+fs.mkdirSync(dataConfigDir, { recursive: true });
+
+const charactersData = {
+  female: {
+    dakgalbi: { id: 'dakgalbi', name: '다곡희', role: '닭갈비', gender: 'female', color: '#ff6b6b' },
+    yangnyeom: { id: 'yangnyeom', name: '양연미', role: '양념', gender: 'female', color: '#ee5253' },
+    goguma: { id: 'goguma', name: '고규미', role: '고구마', gender: 'female', color: '#feca57' },
+    bokkeumbap: { id: 'bokkeumbap', name: '박복은', role: '볶음밥', gender: 'female', color: '#ff9f43', isHidden: true },
+  },
+  male: {
+    dakgalbi: { id: 'dakgalbi', name: '다고길', role: '닭갈비', gender: 'male', color: '#ff6b6b' },
+    yangnyeom: { id: 'yangnyeom', name: '양연우', role: '양념', gender: 'male', color: '#ee5253' },
+    goguma: { id: 'goguma', name: '고구민', role: '고구마', gender: 'male', color: '#feca57' },
+    bokkeumbap: { id: 'bokkeumbap', name: '박복검', role: '볶음밥', gender: 'male', color: '#ff9f43', isHidden: true },
+  },
+};
+
+const scoreScale = { '+2': 2, '+1': 1, '0': 0 };
+
+const gameConfig = {
+  title: '오이데 (춘천에서 5명의 이상한 데이트)',
+  version: '2.0.0',
+  storyVersion: STORY_VERSION,
+  textSpeed: 40,
+  autoSpeed: 2000,
+  skipSpeed: 25,
+  bgmVolume: 0.5,
+  sfxVolume: 0.7,
+  showAffinity: true,
+  SHOW_HUD: false,
+  dayTransition: {
+    fadeOutMs: 1500,
+    holdMs: 3500,
+    fadeInMs: 1500,
+  },
+  endingThresholds: {
+    dakgalbi: 8,
+    yangnyeom: 8,
+    goguma: 8,
+  },
+  saveSlots: 3,
+  debugKey: 'KeyD',
+  sceneFiles,
+};
+
+for (const dir of [configDir, dataConfigDir]) {
+  fs.writeFileSync(path.join(dir, 'characters.json'), JSON.stringify(charactersData, null, 2), 'utf8');
+  fs.writeFileSync(path.join(dir, 'score_scale.json'), JSON.stringify(scoreScale, null, 2), 'utf8');
+  fs.writeFileSync(path.join(dir, 'game_config.json'), JSON.stringify(gameConfig, null, 2), 'utf8');
+}
+
+// ── 리포트 생성 ──
+const reportMd = `# 오이데 새 스토리 변환 리포트 (${STORY_VERSION})
+
+기준 문서: \`미연시_전체스토리_구현명세.md\`
+생성된 총 장면 수: ${allScenes.length}개
+
+## 생성된 장면 목록
+${allScenes.map(s => `- \`${s.id}\`: ${s.title} (type=${s.type}, 대사/선택 ${s.dialogues ? s.dialogues.length : 0}개)`).join('\n')}
 `;
-
 fs.writeFileSync(path.join(rootDir, 'data', '_import_report.md'), reportMd, 'utf8');
-console.log(`[import_story] 변환 완료! 총 ${report.sceneCount}개 장면 생성, data/_import_report.md 작성됨.`);
+
+console.log(`[import_story] 새 스토리 변환 완료! 총 ${allScenes.length}개 장면 생성 (${STORY_VERSION}).`);

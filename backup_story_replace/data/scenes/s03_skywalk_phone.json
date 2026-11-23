@@ -1,0 +1,29 @@
+{
+  "id": "s03_skywalk_phone",
+  "title": "Day 1 — 첫 만남 (소양강 스카이워크 선택 시, 만나는 인물: 고구마) — 메시지",
+  "type": "phone_message",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "partner": "goguma",
+  "intro_vo": [
+    "생각보다 정말 재미있는 곳이었어.",
+    "그리고 예상하지 못한 만남까지..."
+  ],
+  "messages": [
+    {
+      "sender": "player",
+      "text": "좋은 풍경 소개해 주셔서 감사했어요. 언젠가 카페도 놀러갈게요."
+    },
+    {
+      "sender": "goguma",
+      "text": "먼저 연락해 주셨네요, {player} 씨."
+    },
+    {
+      "sender": "goguma",
+      "text": "언제든 환영이에요. {player} 씨를 위해 따뜻한 음료를 준비해 둬야겠어요~"
+    }
+  ],
+  "outro_vo": "답장에서도 다정함이 느껴지는 것 같아.",
+  "next": "s03_2_day1_messages"
+}

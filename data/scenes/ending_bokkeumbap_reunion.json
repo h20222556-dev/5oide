@@ -1,0 +1,57 @@
+{
+  "id": "ending_bokkeumbap_reunion",
+  "title": "볶음밥 재회 엔딩",
+  "endingTitle": "다시, 우리라는 이름으로.",
+  "type": "ending",
+  "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_ending",
+  "dialogues": [
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "...정말?",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "놀람"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "고마워. 이번에는 네 마음을 당연하게 여기지 않을게.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "그러니까 이제는.. 나를 마음껏 달달 볶아줘.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "어쩌면 사랑은 서로를 완벽하게 이해한 뒤에 시작하는 것이 아닐지도 모른다. 서로를 알아가려는 마음이 있다면, 우리는 다시 시작할 수 있을 것이다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": null
+}

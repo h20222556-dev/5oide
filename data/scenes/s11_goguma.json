@@ -1,0 +1,149 @@
+{
+  "id": "s11_goguma",
+  "title": "#11 남이섬 — 은행나무길 (고구마)",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_ginkgo_road",
+  "overlay": null,
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "길 양 옆으로 늘어선 은행나무들이 노란 잎을 드리우고 있다. 바닥에도 노란 은행잎이 가득 쌓여 있다.",
+      "characters": [],
+      "background": "bg_ginkgo_road",
+      "overlay": null
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "정말 예쁘네요. 사진으로 남겨두고 싶어요.",
+      "characters": []
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그럼 제가 찍어드릴게요! 다른 사람들의 예쁜 순간을 담아주는 걸 좋아하거든요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "고구마가 주인공의 사진을 몇 장 찍어준다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "그런데 {고구마}씨는 사진은 별로 못 본 것 같아요.",
+      "characters": []
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "사실 저도 제 사진을 찍고 싶은데... 먼저 부탁하는 건 조금 어색하더라고요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "아쉬움/미안"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{고구마}씨도 누군가에게 챙김받아도 되는 사람이에요.",
+      "characters": []
+    },
+    {
+      "type": "choice",
+      "id": "choice_s11_goguma_1",
+      "question": "",
+      "options": [
+        {
+          "key": "A",
+          "text": "오늘만큼은 제가 챙겨드릴게요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": null,
+          "followUp": [
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "후후, 그럼 오늘은 {player}씨에게 조금 기대볼까요?",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        },
+        {
+          "key": "B",
+          "text": "저한테 마음껏 기대도 돼요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "goguma": 2
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "...정말 든든한 말이네요. 왠지 마음이 따뜻해져요.",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "웃음+홍조"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그럼... 저랑 같이 사진 찍어주실래요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "그럼요. 다음에도 이렇게 {고구마}씨가 원하는 걸 해요.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "오늘 {고구마}씨는 다른 사람 뿐만 아니라 자신도 행복해질 수 있다는 걸 조금씩 알아가는 것 같다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s11_return"
+}

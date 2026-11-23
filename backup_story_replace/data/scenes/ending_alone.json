@@ -1,0 +1,26 @@
+{
+  "id": "ending_alone",
+  "title": "#16-혼자 혼자 돌아가기",
+  "type": "ending",
+  "background": "bg_pier_night",
+  "time": "밤",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "{볶음밥}은 아무 말 없이 서 있고, 주인공이 가볍게 목례하고 지나간다.",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "남이섬. 가평을 거치지 않고도, 하루 만에 다녀올 수 있는 거리였다.",
+      "characters": []
+    }
+  ],
+  "choices": null
+}

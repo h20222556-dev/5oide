@@ -1,0 +1,28 @@
+{
+  "id": "s12_pier_sunset",
+  "title": "#12 Day 3 — 춘천 선착장 (해질녘)",
+  "type": "judge",
+  "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "남이섬의 시간이 끝나고, 배는 해질녘의 춘천 선착장에 닿았다.",
+      "characters": [],
+      "background": "bg_pier",
+      "overlay": "sunset"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "오늘 함께한 시간은 즐거웠어. 하지만 내 마음은 누구에게 향하고 있는 걸까?",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": null
+}

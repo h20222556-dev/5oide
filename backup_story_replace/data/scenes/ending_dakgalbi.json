@@ -1,0 +1,39 @@
+{
+  "id": "ending_dakgalbi",
+  "title": "#16-개별 닭갈비 엔딩",
+  "type": "ending",
+  "background": "bg_metasequoia",
+  "time": "노을",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "쓸쓸",
+      "text": "…그래. 잘 지내.",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "{볶음밥}이 천천히 돌아서고, 주인공은 붙잡지 않는다",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "홍보 영상에는 없던 웃음이었다.",
+      "characters": [],
+      "cg": {
+        "id": "cg_ending_dakgalbi",
+        "caption": "메타세쿼이아길에서 홍보용이 아닌 진짜 웃음으로 주인공 쪽을 돌아보는 모습"
+      }
+    }
+  ],
+  "choices": null
+}

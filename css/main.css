@@ -1598,3 +1598,74 @@ button {
   line-height: 1.7;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
 }
+
+/* ─── 배경 색감 오버레이 (노을 / 밤 / 블러) ─── */
+#game-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: background 0.4s ease;
+}
+
+#game-background.overlay-sunset::after {
+  background: linear-gradient(180deg, rgba(255, 115, 50, 0.28) 0%, rgba(190, 65, 90, 0.36) 100%);
+}
+
+#game-background.overlay-night::after {
+  background: rgba(8, 14, 38, 0.62);
+}
+
+#game-background.overlay-blur {
+  filter: blur(4px);
+}
+
+/* ─── 강조 대사 (텍스트 크게) ─── */
+.dialogue-large {
+  font-size: 1.25em !important;
+  font-weight: 700;
+}
+
+/* ─── Day 1~2 [버튼] 컴팩트 호감도 피드백 ─── */
+.like-feedback-card.compact {
+  padding: 6px 10px;
+  font-size: 0.84rem;
+}
+
+.like-feedback-card.compact .like-feedback-header {
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+}
+
+.like-feedback-card.compact .like-bar-track {
+  height: 6px;
+}
+
+/* ─── 여성 캐릭터 등 스프라이트 미보유 시 임시 이름 박스 ─── */
+.char-placeholder-box {
+  width: min(170px, 85%);
+  min-height: 180px;
+  margin-bottom: 14px;
+  background: rgba(18, 22, 38, 0.86);
+  border: 2px solid #a4b0be;
+  border-radius: 14px;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.char-placeholder-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.char-placeholder-expr {
+  font-size: 0.85rem;
+  color: #dfe4ea;
+  opacity: 0.85;
+}

@@ -1,0 +1,24 @@
+{
+  "id": "s03_2_day1_messages",
+  "title": "Day 1 — 남은 장소 선택",
+  "type": "normal",
+  "background": "bg_black",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "안내책자 이미지(블러 처리)"
+  ],
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "좋아, 이제 다음 장소로 이동해 볼까?",
+      "characters": []
+    }
+  ],
+  "choices": {
+    "id": "place_2",
+    "question": "처음 간 곳을 제외한 장소 선택",
+    "options": []
+  }
+}
