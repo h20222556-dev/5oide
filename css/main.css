@@ -2495,6 +2495,274 @@ button {
   font-weight: 700;
 }
 
+/* ──────────────────────────────────────────
+   성별 선택 / 기록실 / 설정 모달 — UI 디자인 가이드 파스텔 톤 통일
+────────────────────────────────────────── */
+#modal-gender.modal-overlay,
+#modal-gallery.modal-overlay,
+#modal-settings.modal-overlay {
+  background: rgba(24, 14, 28, 0.58);
+  backdrop-filter: blur(4px);
+}
+
+#modal-gender .modal-content,
+#modal-gallery .modal-content,
+#modal-settings .modal-content {
+  background: linear-gradient(180deg, var(--ivory) 0%, #FAF5FD 100%);
+  border: var(--ui-border-width) solid var(--pink-main);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow);
+  color: var(--plum);
+  padding: 24px 26px;
+}
+
+#modal-gender .modal-header,
+#modal-gallery .modal-header,
+#modal-settings .modal-header {
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(244, 169, 196, 0.55);
+}
+
+#modal-gender .modal-header h2,
+#modal-gallery .modal-header h2,
+#modal-settings .modal-header h2 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--plum);
+  letter-spacing: 0.04em;
+}
+
+#modal-gender .modal-close,
+#modal-gallery .modal-close,
+#modal-settings .modal-close {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--lavender-soft);
+  color: var(--plum);
+  border: var(--ui-border-width) solid rgba(185, 168, 226, 0.6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+#modal-gender .modal-close:hover,
+#modal-gallery .modal-close:hover,
+#modal-settings .modal-close:hover {
+  background: var(--pink-soft);
+  border-color: var(--pink-main);
+  color: var(--plum);
+}
+
+#modal-gender .modal-desc {
+  color: var(--gray-violet-text);
+  font-size: 0.94rem;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+#modal-gender .modal-btn,
+#modal-settings .modal-btn {
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--pink-main);
+  color: var(--plum-dark);
+  border: var(--ui-border-width) solid #E288AA;
+  font-size: 0.94rem;
+  font-weight: 700;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#modal-gender .modal-btn:hover,
+#modal-settings .modal-btn:hover {
+  opacity: 1;
+  background: #F096B8;
+}
+
+#modal-gender .modal-btn.secondary,
+#modal-settings .modal-btn.secondary {
+  background: var(--lavender-soft);
+  color: var(--plum);
+  border: var(--ui-border-width) solid var(--lavender);
+}
+
+#modal-gender .modal-btn.secondary:hover,
+#modal-settings .modal-btn.secondary:hover {
+  background: #E2D9F6;
+}
+
+/* 성별 선택 버튼 (핑크 / 라벤더 파스텔 카드) */
+#modal-gender .choice-btn-large {
+  width: 100%;
+  padding: 18px 22px;
+  border-radius: var(--ui-radius-md);
+  color: var(--plum);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+  box-shadow: 0 3px 12px rgba(112, 67, 95, 0.08);
+}
+
+#modal-gender #btn-gender-female {
+  background: linear-gradient(180deg, #FFF7FA 0%, var(--pink-soft) 100%);
+  border: var(--ui-border-width) solid var(--pink-main);
+}
+
+#modal-gender #btn-gender-male {
+  background: linear-gradient(180deg, #FAF8FE 0%, var(--lavender-soft) 100%);
+  border: var(--ui-border-width) solid var(--lavender);
+}
+
+#modal-gender .choice-btn-large:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ui-shadow-pink);
+}
+
+#modal-gender #btn-gender-female:hover {
+  background: linear-gradient(180deg, #FFF0F6 0%, #F8D5E3 100%);
+  border-color: #E288AA;
+}
+
+#modal-gender #btn-gender-male:hover {
+  background: linear-gradient(180deg, #F3EEFD 0%, #E0D6F6 100%);
+  border-color: #9F8AD8;
+}
+
+#modal-gender .choice-btn-large .sub-desc {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-violet-text);
+}
+
+#modal-gender .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 기록실 모달 카드 (해금: 아이보리→연핑크, 미해금: 연라벤더 점선) */
+#modal-gallery .modal-gallery-content {
+  max-width: 680px;
+}
+
+#modal-gallery .gallery-card {
+  border-radius: var(--ui-radius-md);
+  padding: 15px 16px;
+  min-height: 102px;
+  gap: 7px;
+}
+
+#modal-gallery .gallery-card.achieved {
+  background: linear-gradient(180deg, var(--ivory) 0%, var(--pink-soft) 100%);
+  border: var(--ui-border-width) solid var(--pink-main);
+  box-shadow: 0 4px 14px rgba(244, 169, 196, 0.28);
+}
+
+#modal-gallery .gallery-card.locked {
+  background: var(--lavender-soft);
+  border: 1.5px dashed var(--gray-violet);
+}
+
+#modal-gallery .gallery-card-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+#modal-gallery .gallery-card.achieved .gallery-card-badge {
+  background: var(--pink-tag-bg);
+  color: var(--plum);
+  border: 1px solid var(--pink-main);
+}
+
+#modal-gallery .gallery-card.locked .gallery-card-badge {
+  background: var(--ivory);
+  color: var(--gray-violet-text);
+  border: 1px dashed var(--gray-violet);
+}
+
+#modal-gallery .gallery-card.achieved .gallery-card-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--plum);
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+#modal-gallery .gallery-card.locked .gallery-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gray-violet-text);
+}
+
+#modal-gallery .gallery-card-desc {
+  font-size: 0.82rem;
+  color: var(--gray-violet-text);
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+/* 설정 모달 행 및 컨트롤 */
+#modal-settings .settings-body {
+  gap: 12px;
+}
+
+#modal-settings .settings-row {
+  padding: 11px 14px;
+  background: rgba(255, 253, 251, 0.88);
+  border: 1px solid rgba(185, 168, 226, 0.45);
+  border-radius: var(--ui-radius-sm);
+}
+
+#modal-settings .settings-row label {
+  min-width: 112px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--plum);
+}
+
+#modal-settings .settings-row input[type="range"],
+#modal-settings .settings-row input[type="checkbox"] {
+  accent-color: #DF7EA4;
+}
+
+#modal-settings .settings-row span {
+  min-width: 44px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--gray-violet-text);
+}
+
+#modal-settings .settings-actions {
+  margin-top: 10px;
+}
+
+@media (max-width: 768px), (orientation: portrait) {
+  #modal-gender .modal-content,
+  #modal-gallery .modal-content,
+  #modal-settings .modal-content {
+    padding: 20px 18px;
+  }
+
+  #modal-settings .settings-row label {
+    min-width: 96px;
+    font-size: 0.86rem;
+  }
+}
+
 .char-placeholder-expr {
   font-size: 0.85rem;
   color: #dfe4ea;
