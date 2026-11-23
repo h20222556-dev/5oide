@@ -474,6 +474,15 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
     assert(fs.statSync(p2).size <= 150 * 1024, `툴바 버튼 2x 용량 <= 150KB: ui_btn_${key}@2x.png (${(fs.statSync(p2).size / 1024).toFixed(1)}KB)`);
   }
 
+  // 15) 타이틀 메뉴 버튼 4개 개별 이미지(1x/2x) 존재 및 용량(<=250KB) 검증
+  for (const key of ['start', 'load', 'records', 'settings']) {
+    const p1 = path.join(rootDir, 'assets', 'ui', `ui_menu_${key}.png`);
+    const p2 = path.join(rootDir, 'assets', 'ui', `ui_menu_${key}@2x.png`);
+    assert(fs.existsSync(p1), `타이틀 메뉴 1x 이미지 존재: ui_menu_${key}.png`);
+    assert(fs.existsSync(p2), `타이틀 메뉴 2x 이미지 존재: ui_menu_${key}@2x.png`);
+    assert(fs.statSync(p2).size <= 250 * 1024, `타이틀 메뉴 2x 용량 <= 250KB: ui_menu_${key}@2x.png (${(fs.statSync(p2).size / 1024).toFixed(1)}KB)`);
+  }
+
   console.log('\n====================================================');
   console.log(` 검증 결과: ${passed} / ${total} 테스트 통과 (${Math.round((passed / total) * 100)}%)`);
   console.log('====================================================');

@@ -16,6 +16,20 @@ class UIController {
     ];
   }
 
+  static get TITLE_MENU_BUTTONS() {
+    return [
+      { key: 'start',    id: 'btn-new-game',       label: '새로 시작', imageBase: 'assets/ui/ui_menu_start' },
+      { key: 'load',     id: 'btn-title-load',     label: '불러오기',  imageBase: 'assets/ui/ui_menu_load' },
+      { key: 'records',  id: 'btn-title-gallery',  label: '기록실',    imageBase: 'assets/ui/ui_menu_records' },
+      { key: 'settings', id: 'btn-title-settings', label: '설정',      imageBase: 'assets/ui/ui_menu_settings' },
+    ];
+  }
+
+  // 기록실 동작 모드: 'gallery' (기존 엔딩 기록실 연결) | 'coming_soon' ("준비 중입니다." 팝업) | 'hidden' (버튼 숨김)
+  static get RECORD_ROOM_MODE() {
+    return 'gallery';
+  }
+
   constructor() {
     this.engine = null;
     this.renderer = null;
@@ -81,8 +95,49 @@ class UIController {
     }
 
     this._initToolbarButtons();
+    this._initTitleMenuButtons();
     this._bindEvents();
     this.resizeGame();
+  }
+
+  _initTitleMenuButtons() {
+    const dpr = (typeof window !== 'undefined' && window.devicePixelRatio > 1.25) ? 2 : 1;
+    const recordMode = this.recordRoomMode || UIController.RECORD_ROOM_MODE;
+
+    UIController.TITLE_MENU_BUTTONS.forEach(cfg => {
+      // 첫 화면에서 4개 타이틀 버튼 이미지 프리로드 (클릭 차단 없음)
+      const pre1 = new Image();
+      pre1.src = `${cfg.imageBase}.png`;
+      if (dpr >= 2) {
+        const pre2 = new Image();
+        pre2.src = `${cfg.imageBase}@2x.png`;
+      }
+
+      const btn = document.getElementById(cfg.id);
+      if (!btn) return;
+      btn.setAttribute('aria-label', cfg.label);
+
+      if (cfg.key === 'records' && recordMode === 'hidden') {
+        btn.classList.add('hidden');
+      }
+
+      const img = btn.querySelector('.title-btn-img');
+      if (img) {
+        img.src = `${cfg.imageBase}.png`;
+        img.srcset = `${cfg.imageBase}.png 1x, ${cfg.imageBase}@2x.png 2x`;
+        img.alt = '';
+        img.draggable = false;
+        img.addEventListener('error', () => {
+          btn.classList.add('is-fallback');
+        });
+        img.addEventListener('load', () => {
+          btn.classList.remove('is-fallback');
+        });
+        if (img.complete && img.naturalWidth === 0) {
+          btn.classList.add('is-fallback');
+        }
+      }
+    });
   }
 
   _initToolbarButtons() {
@@ -266,7 +321,18 @@ class UIController {
       if (this.engine) this.engine.startNewGameFlow();
     });
     bindBtn('btn-title-load', () => this.openSaveModal('load'));
-    bindBtn('btn-title-gallery', () => this.openGalleryModal());
+    bindBtn('btn-title-gallery', () => {
+      const mode = this.recordRoomMode || UIController.RECORD_ROOM_MODE;
+      if (mode === 'coming_soon' && this.confirmPopup) {
+        this.confirmPopup.show({
+          message: '준비 중입니다.',
+          confirmLabel: '확인',
+          alertOnly: true,
+        });
+        return;
+      }
+      this.openGalleryModal();
+    });
     bindBtn('btn-title-settings', () => this.openSettingsModal());
   }
 
