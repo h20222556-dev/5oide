@@ -33,6 +33,9 @@ class Renderer {
     this.phoneMessagesList= document.getElementById('phone-messages-list');
     this.btnClosePhone    = document.getElementById('btn-close-phone');
     this.chatListOverlay  = document.getElementById('chat-list-overlay');
+    this.promoBillboard   = document.getElementById('promo-billboard-overlay');
+    this._billboardActive = false;
+    this._preloadedUrls   = new Set();
 
     // 모달들
     this.genderModal      = document.getElementById('modal-gender');
@@ -66,26 +69,81 @@ class Renderer {
     if (this.screenGame) this.screenGame.classList.toggle('active', screenId === 'game');
   }
 
+  preloadImage(url) {
+    if (!url || this._preloadedUrls.has(url)) return;
+    this._preloadedUrls.add(url);
+    const img = new Image();
+    img.src = url;
+  }
+
+  preloadBackground(bgId, overlay = null, gender = 'female') {
+    if (!bgId || bgId === 'bg_black') return;
+    let resolvedId = bgId;
+    if (bgId === 'bg_hotel') resolvedId = overlay === 'night' ? 'bg_hotel_night' : 'bg_hotel_morning';
+    else if (bgId === 'bg_promo_video') resolvedId = gender === 'male' ? 'bg_promo_video_m' : 'bg_promo_video_f';
+    const p = this.assetManifest?.backgrounds?.[resolvedId];
+    if (p) this.preloadImage(p);
+  }
+
+  preloadCharacterSprites(gender = 'female') {
+    const table = this.assetManifest?.characters?.[gender];
+    if (!table) return;
+    for (const exprs of Object.values(table)) {
+      for (const url of Object.values(exprs || {})) {
+        this.preloadImage(url);
+      }
+    }
+  }
+
   // ─── 배경 렌더링 ───────────────────────────────────────────────────────────
 
   setBackground(bgId, overlay = null, gender = 'female') {
     if (!this.bgLayer) return;
 
+    // #9 전광판 홍보 영상: bg_pier 배경 위에 전광판 컴포넌트를 겹쳐서 표시
+    if (bgId === 'bg_promo_video') {
+      this._renderBackgroundImage('bg_pier', null);
+      this.showPromoBillboard(gender);
+      return;
+    }
+
+    this.hidePromoBillboard();
+
+    // 숙소 내부: 아침/밤 전용 이미지 사용 (밤 이미지에 이중 어두움 오버레이 미적용)
+    let resolvedId = bgId;
+    let effectiveOverlay = overlay;
+    if (bgId === 'bg_hotel') {
+      if (overlay === 'night') {
+        resolvedId = 'bg_hotel_night';
+        effectiveOverlay = null;
+      } else {
+        resolvedId = 'bg_hotel_morning';
+        effectiveOverlay = null;
+      }
+    }
+
+    this._renderBackgroundImage(resolvedId, effectiveOverlay);
+  }
+
+  _renderBackgroundImage(resolvedId, overlay = null) {
+    if (!this.bgLayer) return;
+
     this.bgLayer.classList.remove('overlay-sunset', 'overlay-night', 'overlay-blur');
     if (overlay === 'sunset') this.bgLayer.classList.add('overlay-sunset');
     else if (overlay === 'night') this.bgLayer.classList.add('overlay-night');
-    else if (overlay === 'blur') this.bgLayer.classList.add('overlay-blur');
+    else if (overlay === 'blur') {
+      const cfg = this.assetManifest?.brochureEffect || { blurPx: 8, dim: 0.25 };
+      this.bgLayer.style.setProperty('--brochure-blur', `${cfg.blurPx ?? 8}px`);
+      this.bgLayer.style.setProperty('--brochure-dim', `${cfg.dim ?? 0.25}`);
+      this.bgLayer.classList.add('overlay-blur');
+    }
 
-    if (!bgId || bgId === 'bg_black') {
+    if (!resolvedId || resolvedId === 'bg_black') {
       this.bgLayer.style.backgroundImage = '';
       this.bgLayer.style.backgroundColor = '#000';
       if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
       return;
     }
-
-    const resolvedId = bgId === 'bg_promo_video'
-      ? (gender === 'male' ? 'bg_promo_video_m' : 'bg_promo_video_f')
-      : bgId;
 
     const manifestPath = this.assetManifest?.backgrounds?.[resolvedId];
     const label = this.assetManifest?.backgroundLabels?.[resolvedId] || resolvedId;
@@ -104,14 +162,92 @@ class Renderer {
       return;
     }
 
+    if (this.bgLayer.dataset.bgUrl === manifestPath && this.bgLayer.style.backgroundImage) {
+      if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
+      return;
+    }
+
     const img = new Image();
     img.onload = () => {
+      this.bgLayer.dataset.bgUrl = manifestPath;
       this.bgLayer.style.backgroundImage = `url('${manifestPath}')`;
       this.bgLayer.style.backgroundColor = '';
       if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
     };
     img.onerror = showPlaceholder;
     img.src = manifestPath;
+  }
+
+  showPromoBillboard(gender = 'female') {
+    if (!this.promoBillboard) return;
+    this._billboardActive = true;
+    // 전광판이 보이는 동안에는 다른 캐릭터 스프라이트를 표시하지 않음
+    this._clearAllCharacterSlots();
+
+    const key = gender === 'male' ? 'bg_promo_video_m' : 'bg_promo_video_f';
+    const imgPath = this.assetManifest?.backgrounds?.[key] || null;
+    const dakName = typeof getDisplayName === 'function' ? getDisplayName('dakgalbi', gender) : '닭고기';
+
+    const screenContent = imgPath
+      ? `<img src="${imgPath}" alt="${dakName} 홍보 영상">`
+      : `<div class="billboard-placeholder">
+           <div class="billboard-placeholder-name">${dakName} 홍보 영상</div>
+           <div class="billboard-placeholder-sub">여성 버전 이미지 준비 중</div>
+         </div>`;
+
+    this.promoBillboard.innerHTML = `
+      <div class="billboard-structure">
+        <div class="billboard-frame">
+          <div class="billboard-screen">
+            ${screenContent}
+            <div class="billboard-subtitle">춘천 → 남이섬 직행 수상버스 약 40분</div>
+          </div>
+        </div>
+        <div class="billboard-poles">
+          <div class="billboard-pole"></div>
+          <div class="billboard-pole"></div>
+        </div>
+      </div>
+    `;
+
+    const imgEl = this.promoBillboard.querySelector('.billboard-screen img');
+    if (imgEl) {
+      imgEl.onerror = () => {
+        const screen = this.promoBillboard.querySelector('.billboard-screen');
+        if (screen) {
+          screen.innerHTML = `
+            <div class="billboard-placeholder">
+              <div class="billboard-placeholder-name">${dakName} 홍보 영상</div>
+              <div class="billboard-placeholder-sub">${gender === 'female' ? '여성 버전 이미지 준비 중' : '이미지 준비 중'}</div>
+            </div>
+            <div class="billboard-subtitle">춘천 → 남이섬 직행 수상버스 약 40분</div>
+          `;
+        }
+      };
+    }
+
+    this.promoBillboard.classList.remove('hidden');
+  }
+
+  hidePromoBillboard() {
+    this._billboardActive = false;
+    if (this.promoBillboard) {
+      this.promoBillboard.classList.add('hidden');
+      this.promoBillboard.innerHTML = '';
+    }
+  }
+
+  _clearAllCharacterSlots() {
+    ['char-slot-left', 'char-slot-center', 'char-slot-right'].forEach(id => {
+      const s = document.getElementById(id);
+      if (s) {
+        s.innerHTML = '';
+        delete s.dataset.charKey;
+        delete s.dataset.charId;
+        delete s.dataset.charExpr;
+        s.classList.remove('visible');
+      }
+    });
   }
 
   setTime(timeStr) {
@@ -124,9 +260,15 @@ class Renderer {
     this.timeLabel.style.display = timeStr ? 'block' : 'none';
   }
 
-  // ─── 캐릭터 렌더링 (에셋 매니페스트 + 깜빡임 방지 + 여성 임시 이름 박스) ───
+  // ─── 캐릭터 렌더링 (밝기 일정 + 표정 전환 깜빡임 방지 + 여성 임시 박스) ──
 
   setCharacters(characterList, speakingId, gender = 'female', charactersMap = null) {
+    // 전광판 홍보 영상이 표시 중이면 별도 캐릭터 스프라이트를 올리지 않음
+    if (this._billboardActive) {
+      this._clearAllCharacterSlots();
+      return;
+    }
+
     const slots = {
       left: document.getElementById('char-slot-left'),
       center: document.getElementById('char-slot-center'),
@@ -141,6 +283,8 @@ class Renderer {
       if (s && !usedPositions.has(pos)) {
         s.innerHTML = '';
         delete s.dataset.charKey;
+        delete s.dataset.charId;
+        delete s.dataset.charExpr;
         s.classList.remove('visible');
       }
     }
@@ -162,24 +306,29 @@ class Renderer {
       const genderTable = this.assetManifest?.characters?.[gender]?.[c.id] || {};
       const imgPath = genderTable[mappedKey] || genderTable['default'] || null;
 
-      const isSpeaking = !speakingId || speakingId === '주인공'
-        || speakingId === c.id
-        || (typeof speakingId === 'string' && (speakingId.includes(c.id) || speakingId.includes(displayName) || speakingId.includes(charactersMap?.[c.id]?.role || '__none__')));
-
       const charKey = `${c.id}|${imgPath || 'placeholder'}|${rawExpr}|${displayName}`;
-      if (slot.dataset.charKey === charKey) {
-        const existingWrap = slot.querySelector('.char-wrapper');
-        if (existingWrap) {
-          existingWrap.className = `char-wrapper ${isSpeaking ? 'speaking' : 'silent'}`;
+      // 같은 캐릭터·같은 표정이면 아무것도 다시 그리지 않음
+      if (slot.dataset.charKey === charKey) return;
+
+      // 같은 캐릭터의 표정만 바뀌는 경우: 기존 <img>의 src만 즉시 교체하여 깜빡임 방지
+      if (slot.dataset.charId === c.id && imgPath) {
+        const existingImg = slot.querySelector('.char-wrapper img');
+        if (existingImg) {
+          existingImg.alt = `${displayName} (${rawExpr})`;
+          existingImg.src = imgPath;
+          slot.dataset.charKey = charKey;
+          slot.dataset.charExpr = rawExpr;
+          return;
         }
-        return;
       }
 
       slot.innerHTML = '';
       slot.dataset.charKey = charKey;
+      slot.dataset.charId = c.id;
+      slot.dataset.charExpr = rawExpr;
 
       const wrap = document.createElement('div');
-      wrap.className = `char-wrapper ${isSpeaking ? 'speaking' : 'silent'}`;
+      wrap.className = 'char-wrapper';
       wrap.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;';
 
       if (!imgPath) {
@@ -190,7 +339,7 @@ class Renderer {
 
       const img = document.createElement('img');
       img.alt = `${displayName} (${rawExpr})`;
-      img.style.cssText = 'max-height:90%;max-width:100%;object-fit:contain;transition:filter 0.2s, transform 0.2s;';
+      img.style.cssText = 'max-height:90%;max-width:100%;object-fit:contain;';
 
       img.onerror = () => {
         wrap.innerHTML = this._makePlaceholderBox(c.id, displayName, rawExpr);

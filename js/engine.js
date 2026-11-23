@@ -136,6 +136,11 @@ class GameEngine {
     this.settings.bgmVolume = this.config.bgmVolume ?? 0.5;
     this.settings.sfxVolume = this.config.sfxVolume ?? 0.7;
     this.settings.showAffinity = this.config.showAffinity !== false;
+
+    // 4. 프롤로그 첫 장면 배경(bg_train_window) 백그라운드 프리로드 (시작 버튼 비차단)
+    if (this.renderer && typeof this.renderer.preloadBackground === 'function') {
+      this.renderer.preloadBackground('bg_train_window', null, this.state.gender);
+    }
   }
 
   // ════════════════════════════════════════════════════════════════════════════
@@ -218,6 +223,7 @@ class GameEngine {
       this.renderer.hideChoices();
       this.renderer.hidePhoneMessages();
       if (typeof this.renderer.hideChatList === 'function') this.renderer.hideChatList();
+      if (typeof this.renderer.hidePromoBillboard === 'function') this.renderer.hidePromoBillboard();
       this.renderer.showScreen('title');
     }
   }
@@ -337,12 +343,28 @@ class GameEngine {
       this.renderer.hideChoices();
       this.renderer.hidePhoneMessages();
       if (typeof this.renderer.hideChatList === 'function') this.renderer.hideChatList();
+      if (typeof this.renderer.hidePromoBillboard === 'function') this.renderer.hidePromoBillboard();
       this.renderer.setBackground(scene.background, scene.overlay || null, this.state.gender);
       this.renderer.setTime(scene.time);
       this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
       if (typeof this.renderer.showCG === 'function') this.renderer.showCG(null);
       if (typeof this.renderer.setAffinityVisible === 'function') {
         this.renderer.setAffinityVisible(this.config?.SHOW_HUD === true && this.settings.showAffinity !== false);
+      }
+      // 현재 씬 및 다음 씬의 배경·캐릭터 스프라이트 프리로드 (전환/표정 교체 깜빡임 방지)
+      if (typeof this.renderer.preloadCharacterSprites === 'function') {
+        this.renderer.preloadCharacterSprites(this.state.gender);
+      }
+      if (typeof this.renderer.preloadBackground === 'function') {
+        const preloadSceneBgs = (sc) => {
+          if (!sc) return;
+          this.renderer.preloadBackground(sc.background, sc.overlay || null, this.state.gender);
+          (sc.dialogues || []).forEach(d => {
+            if (d && d.background) this.renderer.preloadBackground(d.background, d.overlay || null, this.state.gender);
+          });
+        };
+        preloadSceneBgs(scene);
+        if (scene.next) preloadSceneBgs(this.scenes.get(scene.next));
       }
     }
 

@@ -1,7 +1,17 @@
 {
   "version": "v2_full_spec",
+  "brochureEffect": {
+    "blurPx": 8,
+    "dim": 0.25
+  },
   "backgrounds": {
     "bg_title": "assets/backgrounds/bg_title.png",
+    "bg_train_window": "assets/backgrounds_opt/bg_train_window.jpg",
+    "bg_phone_screen": "assets/backgrounds_opt/bg_phone_screen.jpg",
+    "bg_brochure": "assets/backgrounds_opt/bg_brochure.jpg",
+    "bg_hotel_morning": "assets/backgrounds_opt/bg_hotel_morning.jpg",
+    "bg_hotel_night": "assets/backgrounds_opt/bg_hotel_night.jpg",
+    "bg_promo_video_m": "assets/backgrounds_opt/bg_promo_video_m.jpg",
     "bg_legoland": "assets/backgrounds/bg_legoland.jpg",
     "bg_skywalk": "assets/backgrounds/bg_skywalk.jpg",
     "bg_dakgalbi_alley": "assets/backgrounds/bg_dakgalbi_alley.jpg",

@@ -1,0 +1,119 @@
+{
+  "version": "v2_full_spec",
+  "backgrounds": {
+    "bg_title": "assets/backgrounds/bg_title.png",
+    "bg_legoland": "assets/backgrounds/bg_legoland.jpg",
+    "bg_skywalk": "assets/backgrounds/bg_skywalk.jpg",
+    "bg_dakgalbi_alley": "assets/backgrounds/bg_dakgalbi_alley.jpg",
+    "bg_street_statue": "assets/backgrounds/bg_street_statue.jpg",
+    "bg_cafe": "assets/backgrounds/bg_cafe.jpg",
+    "bg_pier": "assets/backgrounds/bg_pier.jpg",
+    "bg_nami_boat_interior": "assets/backgrounds/bg_nami_boat_interior.jpg",
+    "bg_nami_entrance": "assets/backgrounds/bg_nami_entrance.jpg",
+    "bg_metasequoia_road": "assets/backgrounds/bg_metasequoia_road.jpg",
+    "bg_nami_riverside_walk": "assets/backgrounds/bg_nami_riverside_walk.jpg",
+    "bg_ginkgo_road": "assets/backgrounds/bg_ginkgo_road.jpg"
+  },
+  "backgroundLabels": {
+    "bg_black": "검정 화면",
+    "bg_train_window": "창밖 풍경",
+    "bg_phone_screen": "휴대폰 화면 — 춘천 남이섬 공동 관광 캠페인 홍보 영상",
+    "bg_chuncheon_station": "춘천역",
+    "bg_brochure": "춘천 관광 안내책자",
+    "bg_hotel": "숙소 내부",
+    "bg_promo_video_m": "전광판 홍보 영상 (남성 버전) — 춘천 → 남이섬 직행 수상버스 약 40분",
+    "bg_promo_video_f": "전광판 홍보 영상 (여성 버전) — 춘천 → 남이섬 직행 수상버스 약 40분",
+    "bg_legoland": "레고랜드",
+    "bg_skywalk": "소양강 스카이워크",
+    "bg_dakgalbi_alley": "춘천 명동 닭갈비 골목",
+    "bg_street_statue": "춘천 시내",
+    "bg_cafe": "카페 안",
+    "bg_pier": "춘천 선착장",
+    "bg_nami_boat_interior": "수상버스 안",
+    "bg_nami_entrance": "남이섬 선착장",
+    "bg_metasequoia_road": "메타세쿼이아길",
+    "bg_nami_riverside_walk": "호숫가 산책로",
+    "bg_ginkgo_road": "은행나무길"
+  },
+  "characters": {
+    "male": {
+      "dakgalbi": {
+        "default": "assets/characters/male/ch_dakgogi_m_default.png",
+        "surprised": "assets/characters/male/ch_dakgogi_m_surprised.png",
+        "blush": "assets/characters/male/ch_dakgogi_m_blush.png",
+        "neutral": "assets/characters/male/ch_dakgogi_m_neutral.png",
+        "laugh": "assets/characters/male/ch_dakgogi_m_laugh.png"
+      },
+      "yangnyeom": {
+        "default": "assets/characters/male/ch_yangnyeom_m_default.png",
+        "blush": "assets/characters/male/ch_yangnyeom_m_blush.png",
+        "smile": "assets/characters/male/ch_yangnyeom_m_smile.png",
+        "blush_smile_away": "assets/characters/male/ch_yangnyeom_m_blush_smile_away.png"
+      },
+      "goguma": {
+        "default": "assets/characters/male/ch_goguma_m_default.png",
+        "surprised": "assets/characters/male/ch_goguma_m_surprised.png",
+        "smile": "assets/characters/male/ch_goguma_m_smile.png",
+        "blush": "assets/characters/male/ch_goguma_m_blush.png",
+        "neutral": "assets/characters/male/ch_goguma_m_neutral.png"
+      },
+      "bokkeumbap": {
+        "default": "assets/characters/male/ch_bokkeumbap_m_default.png"
+      }
+    },
+    "female": {
+      "dakgalbi": {},
+      "yangnyeom": {},
+      "goguma": {},
+      "bokkeumbap": {}
+    }
+  },
+  "expressionMap": {
+    "dakgalbi": {
+      "기본": "default",
+      "웃음": "laugh",
+      "쓸쓸": "neutral",
+      "아쉬움": "neutral",
+      "아쉬움/미안": "neutral",
+      "당황": "surprised",
+      "놀람": "surprised",
+      "기본+홍조": "blush",
+      "웃음+홍조": "blush"
+    },
+    "yangnyeom": {
+      "기본": "default",
+      "웃음": "smile",
+      "미소": "smile",
+      "쓸쓸": "default",
+      "아쉬움": "default",
+      "아쉬움/미안": "default",
+      "당황": "default",
+      "놀람": "default",
+      "시큰둥": "default",
+      "짜증": "default",
+      "멋쩍음": "default",
+      "기본+홍조": "blush",
+      "웃음+홍조": "blush",
+      "당황+홍조": "blush",
+      "미소+홍조": "blush_smile_away",
+      "멋쩍음+홍조": "blush_smile_away"
+    },
+    "goguma": {
+      "기본": "default",
+      "웃음": "smile",
+      "쓸쓸": "neutral",
+      "아쉬움": "neutral",
+      "아쉬움/미안": "neutral",
+      "당황": "surprised",
+      "놀람": "surprised",
+      "기본+홍조": "blush",
+      "웃음+홍조": "blush"
+    },
+    "bokkeumbap": {
+      "기본": "default",
+      "웃음": "default",
+      "놀람": "default",
+      "슬픔": "default"
+    }
+  }
+}
