@@ -482,27 +482,159 @@ button {
 }
 
 /* ──────────────────────────────────────────
-   상단 게임 메뉴바
+   상단 게임 메뉴바 (개별 이미지 버튼 6종 — PC 한 줄 6개 / 모바일 세로 3x2)
 ────────────────────────────────────────── */
 #game-menu-bar {
   position: absolute;
-  top: 0; left: 0; right: 0;
-  width: 100%;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  left: max(10px, env(safe-area-inset-left, 0px));
+  right: auto;
+  width: auto;
+  max-width: calc(100% - 20px);
   min-height: 44px;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(3px);
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
   z-index: 40;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  overflow-x: auto;
-  scrollbar-width: none;
+  border-bottom: none;
+  overflow: visible;
 }
 
-#game-menu-bar::-webkit-scrollbar { display: none; }
+.toolbar-img-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.16s ease, filter 0.16s ease;
+  flex: 0 0 auto;
+}
+
+.toolbar-btn-img {
+  display: block;
+  height: 42px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.toolbar-btn-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--plum);
+  border: var(--ui-border-width) solid var(--ivory);
+  box-shadow: 0 2px 8px rgba(112, 67, 95, 0.22);
+  white-space: nowrap;
+}
+
+.toolbar-img-btn.theme-pink .toolbar-btn-fallback {
+  background: var(--pink-main);
+}
+
+.toolbar-img-btn.theme-lavender .toolbar-btn-fallback {
+  background: var(--lavender);
+}
+
+.toolbar-img-btn.is-fallback .toolbar-btn-img {
+  display: none;
+}
+
+.toolbar-img-btn.is-fallback .toolbar-btn-fallback {
+  display: inline-flex;
+}
+
+@media (hover: hover) {
+  .toolbar-img-btn:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: translateY(-1px);
+    filter: drop-shadow(0 4px 8px rgba(112, 67, 95, 0.30));
+  }
+}
+
+.toolbar-img-btn:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.96);
+}
+
+.toolbar-img-btn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(244, 169, 196, 0.55);
+}
+
+.toolbar-img-btn:disabled,
+.toolbar-img-btn[aria-disabled="true"] {
+  filter: saturate(0.5);
+  cursor: not-allowed;
+  opacity: 1;
+  transform: none;
+}
+
+/* 자동 / 스킵 켜짐 상태: 부드러운 빛 번짐 + 우상단 ON 배지 */
+.toolbar-img-btn.active.theme-pink {
+  filter: drop-shadow(0 0 7px rgba(244, 169, 196, 0.98)) drop-shadow(0 2px 6px rgba(112, 67, 95, 0.28));
+}
+
+.toolbar-img-btn.active.theme-lavender {
+  filter: drop-shadow(0 0 7px rgba(185, 168, 226, 0.98)) drop-shadow(0 2px 6px rgba(112, 67, 95, 0.28));
+}
+
+.toolbar-on-badge {
+  position: absolute;
+  top: -3px;
+  right: 2px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--ivory);
+  color: var(--plum);
+  border: 1.5px solid var(--pink-main);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 5px rgba(112, 67, 95, 0.22);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.toolbar-img-btn.active .toolbar-on-badge {
+  display: inline-flex;
+}
+
+@media (max-width: 1023px) and (min-width: 769px) and (orientation: landscape) {
+  .toolbar-btn-img {
+    height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolbar-img-btn {
+    transition: none !important;
+    transform: none !important;
+  }
+}
 
 .menu-btn {
   flex: 0 0 auto;
@@ -1052,42 +1184,45 @@ button {
     font-size: 13px;
   }
 
-  /* 상단 메뉴바 — 한 줄 고정, 좁으면 가로 스크롤 */
+  /* 상단 메뉴바 — 모바일 세로: 좌측 상단 3개씩 2줄, 터치 영역 44px 이상 */
   #game-menu-bar {
     position: absolute;
-    top: env(safe-area-inset-top, 0px);
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
+    top: max(6px, env(safe-area-inset-top, 0px));
+    left: max(8px, env(safe-area-inset-left, 0px));
+    right: max(8px, env(safe-area-inset-right, 0px));
+    width: auto;
+    max-width: none;
     height: auto;
-    min-height: 44px;
+    min-height: 0;
     z-index: 40;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 4px;
-    padding: 4px max(8px, env(safe-area-inset-right, 0px)) 4px max(8px, env(safe-area-inset-left, 0px));
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 4px;
+    column-gap: 6px;
+    padding: 0;
+    overflow: visible;
+    background: transparent;
   }
 
-  #game-menu-bar::-webkit-scrollbar {
-    display: none;
+  .toolbar-img-btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 2px 0;
   }
 
-  .menu-btn {
-    flex: 0 0 auto;
-    white-space: nowrap;
+  .toolbar-btn-img {
+    height: auto;
+    max-height: 38px;
+    width: 100%;
+    max-width: 118px;
+    object-fit: contain;
+  }
+
+  .toolbar-btn-fallback {
+    width: 100%;
+    min-height: 44px;
     padding: 6px 8px;
-    font-size: clamp(11px, 3vw, 13px);
-    min-height: 40px;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 13px;
   }
 
   /* 시간대 라벨 — 메뉴바 아래 왼쪽 별도 줄 */
@@ -1133,10 +1268,10 @@ button {
     min-width: auto;
   }
 
-  /* 선택지 컨테이너 — 상단 메뉴 아래 ~ 대사창(이름표 포함) 위 장면 영역 정중앙, 좌우 여백 16px, 간격 12px */
+  /* 선택지 컨테이너 — 상단 2줄 메뉴 아래 ~ 대사창(이름표 포함) 위 장면 영역 정중앙 */
   #choices-container {
     position: absolute;
-    top: calc(env(safe-area-inset-top, 0px) + 52px);
+    top: calc(env(safe-area-inset-top, 0px) + 102px);
     left: 0;
     right: 0;
     bottom: calc(36% + 34px + env(safe-area-inset-bottom, 0px));
@@ -1756,7 +1891,7 @@ button {
 
 @media (max-width: 768px), (orientation: portrait) {
   #chat-list-overlay {
-    top: calc(env(safe-area-inset-top, 0px) + 52px);
+    top: calc(env(safe-area-inset-top, 0px) + 102px);
     bottom: calc(38% + 8px);
     padding: 4px 10px;
   }
@@ -2185,7 +2320,7 @@ button {
 
 @media (max-width: 768px), (orientation: portrait) {
   #promo-billboard-overlay {
-    top: calc(env(safe-area-inset-top, 0px) + 54px);
+    top: calc(env(safe-area-inset-top, 0px) + 102px);
     bottom: calc(38% + 12px);
     padding: 6px 10px;
   }
@@ -2849,7 +2984,7 @@ button {
    ============================================================ */
 @media (max-width: 768px), (orientation: portrait) {
   .like-gauge-host {
-    top: calc(env(safe-area-inset-top, 0px) + 54px);
+    top: calc(env(safe-area-inset-top, 0px) + 104px);
     width: min(80%, 310px);
   }
 
@@ -2911,6 +3046,28 @@ button {
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
+  #game-menu-bar {
+    top: max(6px, env(safe-area-inset-top, 0px));
+    left: max(8px, env(safe-area-inset-left, 0px));
+    right: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .toolbar-img-btn {
+    width: auto;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .toolbar-btn-img {
+    height: 36px;
+    max-height: 36px;
+    width: auto;
+    max-width: none;
+  }
+
   #dialogue-box {
     bottom: 8px;
     width: min(94%, 960px);

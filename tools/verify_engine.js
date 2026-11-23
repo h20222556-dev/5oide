@@ -465,6 +465,15 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   assert(contrastRatio('#6B6178', '#EEE9FA') >= 4.5, '팔레트 대비: --gray-violet-text on --lavender-soft >= 4.5:1');
   assert(contrastRatio('#4A253D', '#F4A9C4') >= 4.5, '팔레트 대비: --plum-dark on --pink-main >= 4.5:1');
 
+  // 14) 상단 시스템 버튼 6개 개별 이미지(1x/2x) 존재 및 용량(<=150KB) 검증
+  for (const key of ['save', 'load', 'settings', 'title', 'auto', 'skip']) {
+    const p1 = path.join(rootDir, 'assets', 'ui', `ui_btn_${key}.png`);
+    const p2 = path.join(rootDir, 'assets', 'ui', `ui_btn_${key}@2x.png`);
+    assert(fs.existsSync(p1), `툴바 버튼 1x 이미지 존재: ui_btn_${key}.png`);
+    assert(fs.existsSync(p2), `툴바 버튼 2x 이미지 존재: ui_btn_${key}@2x.png`);
+    assert(fs.statSync(p2).size <= 150 * 1024, `툴바 버튼 2x 용량 <= 150KB: ui_btn_${key}@2x.png (${(fs.statSync(p2).size / 1024).toFixed(1)}KB)`);
+  }
+
   console.log('\n====================================================');
   console.log(` 검증 결과: ${passed} / ${total} 테스트 통과 (${Math.round((passed / total) * 100)}%)`);
   console.log('====================================================');
