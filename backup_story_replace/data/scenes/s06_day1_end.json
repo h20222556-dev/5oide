@@ -1,0 +1,40 @@
+{
+  "id": "s06_day1_end",
+  "title": "Day 1 마무리",
+  "type": "normal",
+  "background": "bg_hotel",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "채팅 목록 이미지",
+    "휴대폰을 내려놓고 천천히 잠에 빠져든다. 천천히 페이드 아웃(검정)"
+  ],
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "후우... 드디어 숙소에 도착했다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "오늘은 정말 많은 일이 있었네.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "처음 만난 사람들이었는데, 다들 참 인상적이었어.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "내일은 또 어떤 하루가 기다리고 있을까?",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s07_day2"
+}

@@ -1,0 +1,104 @@
+{
+  "id": "s09_pier",
+  "title": "#9 선착장 집합",
+  "type": "normal",
+  "background": "bg_pier_morning",
+  "time": "아침",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "선착장에 도착했다. 그런데 낯익은 얼굴이 한둘이 아니다.",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "어? {player}씨?! 여기서 뵙네요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "…뭐야, 당신이 왜 여기 있어요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "어머, 다들 {player}씨를 아세요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "어, 어제 만난 분들이 다 아는 사이였어요?",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "저희 오래된 친구예요! 오늘 남이섬 같이 가기로 했거든요. 원래 한 명이 더 오기로 했었는데…",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "…연락 안 되니까 그만 얘기해요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "괜찮으시면 같이 가요. 자리는 충분하니까요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    }
+  ],
+  "choices": null,
+  "next": "s10_1_video"
+}

@@ -51,6 +51,11 @@ class Renderer {
     this._typingText     = '';
     this._typingIdx      = 0;
     this._typingCallback = null;
+    this.assetManifest   = null;
+  }
+
+  setAssetManifest(manifest) {
+    this.assetManifest = manifest || null;
   }
 
   // ─── 화면 전환 ─────────────────────────────────────────────────────────────
@@ -62,8 +67,13 @@ class Renderer {
 
   // ─── 배경 렌더링 ───────────────────────────────────────────────────────────
 
-  setBackground(bgId) {
+  setBackground(bgId, overlay = null, gender = 'female') {
     if (!this.bgLayer) return;
+
+    this.bgLayer.classList.remove('overlay-sunset', 'overlay-night', 'overlay-blur');
+    if (overlay === 'sunset') this.bgLayer.classList.add('overlay-sunset');
+    else if (overlay === 'night') this.bgLayer.classList.add('overlay-night');
+    else if (overlay === 'blur') this.bgLayer.classList.add('overlay-blur');
 
     if (!bgId || bgId === 'bg_black') {
       this.bgLayer.style.backgroundImage = '';
@@ -72,23 +82,35 @@ class Renderer {
       return;
     }
 
-    const imgPath = `assets/backgrounds/${bgId}.png`;
-    const img = new Image();
-    img.onload = () => {
-      this.bgLayer.style.backgroundImage = `url('${imgPath}')`;
-      this.bgLayer.style.backgroundColor = '';
-      if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
-    };
-    img.onerror = () => {
-      // 이미지 파일 없을 때 단색 배경 + 이름 라벨 fallback
+    const resolvedId = bgId === 'bg_promo_video'
+      ? (gender === 'male' ? 'bg_promo_video_m' : 'bg_promo_video_f')
+      : bgId;
+
+    const manifestPath = this.assetManifest?.backgrounds?.[resolvedId];
+    const label = this.assetManifest?.backgroundLabels?.[resolvedId] || resolvedId;
+
+    const showPlaceholder = () => {
       this.bgLayer.style.backgroundImage = '';
       this.bgLayer.style.backgroundColor = '#1e2438';
       if (this.bgPlaceholder) {
-        this.bgPlaceholder.textContent = `[배경 이미지: ${bgId}.png]`;
+        this.bgPlaceholder.textContent = `[배경 임시 이미지: ${label}]`;
         this.bgPlaceholder.style.display = 'block';
       }
     };
-    img.src = imgPath;
+
+    if (!manifestPath) {
+      showPlaceholder();
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      this.bgLayer.style.backgroundImage = `url('${manifestPath}')`;
+      this.bgLayer.style.backgroundColor = '';
+      if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
+    };
+    img.onerror = showPlaceholder;
+    img.src = manifestPath;
   }
 
   setTime(timeStr) {
@@ -101,9 +123,9 @@ class Renderer {
     this.timeLabel.style.display = timeStr ? 'block' : 'none';
   }
 
-  // ─── 캐릭터 렌더링 (홍조 오버레이 지원) ────────────────────────────────────
+  // ─── 캐릭터 렌더링 (에셋 매니페스트 + 여성 임시 이름 박스 지원) ────────────
 
-  setCharacters(characterList, speakingId, gender = 'female') {
+  setCharacters(characterList, speakingId, gender = 'female', charactersMap = null) {
     const slots = {
       left: document.getElementById('char-slot-left'),
       center: document.getElementById('char-slot-center'),
@@ -111,7 +133,10 @@ class Renderer {
     };
 
     Object.values(slots).forEach(s => {
-      if (s) s.innerHTML = '';
+      if (s) {
+        s.innerHTML = '';
+        s.classList.remove('visible');
+      }
     });
 
     if (!characterList || characterList.length === 0) return;
@@ -119,64 +144,55 @@ class Renderer {
     characterList.forEach(c => {
       const slot = slots[c.position || 'center'];
       if (!slot) return;
+      slot.classList.add('visible');
 
-      const isSpeaking = speakingId && c.id === speakingId;
+      const isSpeaking = speakingId && (c.id === speakingId || speakingId.includes(c.id));
       const wrap = document.createElement('div');
       wrap.className = `char-wrapper ${isSpeaking ? 'speaking' : 'silent'}`;
       wrap.style.cssText = 'position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;';
 
-      const expr = c.expression || 'normal';
-      // 파일 규칙: assets/characters/{id}/{gender}/{expression}.png
-      const imgPath = `assets/characters/${c.id}/${gender}/${expr}.png`;
+      const rawExpr = c.expression || '기본';
+      const displayName = (charactersMap && charactersMap[c.id]?.name)
+        || (typeof getDisplayName === 'function' ? getDisplayName(c.id, gender) : c.id);
+
+      // 볶음밥은 모든 표정 태그에서 default 한 장만 사용
+      const exprMap = this.assetManifest?.expressionMap?.[c.id] || {};
+      const mappedKey = c.id === 'bokkeumbap' ? 'default' : (exprMap[rawExpr] || 'default');
+      const genderTable = this.assetManifest?.characters?.[gender]?.[c.id] || {};
+      const imgPath = genderTable[mappedKey] || genderTable['default'] || null;
+
+      if (!imgPath) {
+        // 여성 버전 등 스프라이트 미보유 시 이름이 적힌 임시 박스 표시
+        wrap.innerHTML = this._makePlaceholderBox(c.id, displayName, rawExpr);
+        slot.appendChild(wrap);
+        return;
+      }
+
       const img = document.createElement('img');
-      img.alt = `${c.id} (${expr})`;
+      img.alt = `${displayName} (${rawExpr})`;
       img.style.cssText = 'max-height:90%;max-width:100%;object-fit:contain;transition:filter 0.2s, transform 0.2s;';
 
       img.onerror = () => {
-        // 일러스트 없을 때 SVG 실루엣 대체
-        wrap.innerHTML = this._makeSilhouetteSVG(c.id, expr, c.blush);
+        wrap.innerHTML = this._makePlaceholderBox(c.id, displayName, rawExpr);
       };
       img.src = imgPath;
       wrap.appendChild(img);
-
-      // 홍조 오버레이 처리: assets/characters/{id}/{gender}/blush.png
-      if (c.blush) {
-        const blushImg = document.createElement('img');
-        blushImg.className = 'blush-overlay';
-        blushImg.style.cssText = 'position:absolute;top:20%;left:50%;transform:translateX(-50%);width:40%;pointer-events:none;opacity:0.85;animation:blushPulse 1.5s infinite alternate;';
-        blushImg.src = `assets/characters/${c.id}/${gender}/blush.png`;
-        blushImg.onerror = () => {
-          // 홍조 이미지 없을 때 CSS 오버레이
-          const cssBlush = document.createElement('div');
-          cssBlush.className = 'blush-fallback';
-          cssBlush.style.cssText = 'position:absolute;top:22%;left:50%;transform:translateX(-50%);width:70px;height:24px;background:rgba(255,107,129,0.45);border-radius:50%;filter:blur(8px);pointer-events:none;';
-          wrap.appendChild(cssBlush);
-        };
-        wrap.appendChild(blushImg);
-      }
-
       slot.appendChild(wrap);
     });
   }
 
-  _makeSilhouetteSVG(charId, expression, hasBlush) {
+  _makePlaceholderBox(charId, displayName, expression) {
     const colorMap = {
       dakgalbi: '#ff6b6b',
       yangnyeom: '#ee5253',
       goguma: '#feca57',
       bokkeumbap: '#ff9f43',
     };
-    const fill = colorMap[charId] || '#7f8c8d';
-
+    const accent = colorMap[charId] || '#a4b0be';
     return `
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:85%;position:relative;">
-        <svg viewBox="0 0 100 200" width="130" height="260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="35" r="25" fill="${fill}" opacity="0.85"/>
-          ${hasBlush ? `<ellipse cx="50" cy="42" rx="18" ry="6" fill="#ff4757" opacity="0.6"/>` : ''}
-          <path d="M 20 200 L 20 80 Q 20 65 50 65 Q 80 65 80 80 L 80 200 Z" fill="${fill}" opacity="0.85"/>
-          <text x="50" y="125" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">${charId}</text>
-          <text x="50" y="145" text-anchor="middle" fill="#f1f2f6" font-size="11">(${expression})</text>
-        </svg>
+      <div class="char-placeholder-box" style="border-color:${accent};">
+        <div class="char-placeholder-name" style="color:${accent};">${displayName}</div>
+        <div class="char-placeholder-expr">(${expression})</div>
       </div>
     `;
   }
@@ -209,16 +225,19 @@ class Renderer {
   }
 
 
-  setDialogueStyle(speakerType = 'normal') {
+  setDialogueStyle(speakerType = 'normal', textLarge = false) {
     if (!this.dialogueText) return;
 
-    this.dialogueText.classList.remove('dialogue-vo', 'dialogue-os', 'dialogue-narration');
+    this.dialogueText.classList.remove('dialogue-vo', 'dialogue-os', 'dialogue-narration', 'dialogue-large');
     if (speakerType === 'vo') {
       this.dialogueText.classList.add('dialogue-vo');
     } else if (speakerType === 'os') {
       this.dialogueText.classList.add('dialogue-os');
     } else if (speakerType === 'narration') {
       this.dialogueText.classList.add('dialogue-narration');
+    }
+    if (textLarge) {
+      this.dialogueText.classList.add('dialogue-large');
     }
   }
 
@@ -512,9 +531,8 @@ class Renderer {
         <div>- 닭갈비: <b>${state.affinity?.dakgalbi ?? 0}</b></div>
         <div>- 양념: <b>${state.affinity?.yangnyeom ?? 0}</b></div>
         <div>- 고구마: <b>${state.affinity?.goguma ?? 0}</b></div>
-        <div style="color:#ff7675;font-weight:bold;margin-top:4px;">★ 재회온도(히든): ${state.reunion_temp ?? 0}</div>
-        <div>히든 해금 상태: <b>${state.hiddenUnlocked ? '해금됨(A)' : '미해금(B)'}</b></div>
-        <div style="font-size:0.8em;color:#888;margin-top:2px;">고민 상태: ${JSON.stringify(state.troubleStates || {})}</div>
+        <div style="color:#ff7675;font-weight:bold;margin-top:4px;">좌석 선택(bus_choice): ${state.busChoice || '-'}</div>
+        <div>히든 루트(세 명 모두 &lt; 8): <b>${state.hiddenRoute ? '활성(볶음밥 등장)' : '비활성'}</b></div>
       `;
     }
 
@@ -844,7 +862,8 @@ class Renderer {
     this.affinityBar.style.display = visible ? 'flex' : 'none';
   }
 
-  showLikeFeedback(charId, charName, delta, prevVal, nextVal, isVisualOnly = false) {
+  showLikeFeedback(charId, charName, delta, prevVal, nextVal, compact = false) {
+    if (!delta || delta <= 0) return;
     const wrapper = this.gameWrapper || document.body;
     let stack = wrapper.querySelector('.like-feedback-stack');
     if (!stack) {
@@ -853,21 +872,14 @@ class Renderer {
       wrapper.appendChild(stack);
     }
 
-    let label = '호감도가 상승했다';
-    let tone = 'up';
-    if (delta >= 3) {
-      label = '호감도가 크게 상승했다';
-      tone = 'up-big';
-    } else if (delta < 0) {
-      label = '호감도가 감소했다';
-      tone = 'down';
-    }
+    const label = delta >= 2 ? '호감도가 크게 상승했다' : '호감도가 상승했다';
+    const tone = delta >= 2 ? 'up-big' : 'up';
 
     const fromPct = Math.max(0, Math.min(100, (prevVal / 10) * 100));
     const toPct = Math.max(0, Math.min(100, (nextVal / 10) * 100));
 
     const card = document.createElement('div');
-    card.className = `like-feedback-card ${tone}`;
+    card.className = `like-feedback-card ${tone}${compact ? ' compact' : ''}`;
     card.innerHTML = `
       <div class="like-feedback-header">
         <span class="like-feedback-name">${charName}</span>
@@ -879,7 +891,6 @@ class Renderer {
     `;
     stack.appendChild(card);
 
-    // 한 번 움직였다가 사라짐
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const fill = card.querySelector('.like-bar-fill');
@@ -887,12 +898,13 @@ class Renderer {
       });
     });
 
+    const holdMs = compact ? 1000 : (delta >= 2 ? 1800 : 1400);
     setTimeout(() => {
       card.classList.add('fade-out');
       setTimeout(() => {
         if (card.parentNode) card.remove();
       }, 450);
-    }, 1800);
+    }, holdMs);
   }
 
   showCG(cgObj) {

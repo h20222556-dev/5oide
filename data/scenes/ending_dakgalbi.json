@@ -1,39 +1,139 @@
 {
   "id": "ending_dakgalbi",
-  "title": "#16-개별 닭갈비 엔딩",
+  "title": "닭고기 엔딩",
+  "endingTitle": "너와 함께하는 춘천",
   "type": "ending",
-  "background": "bg_metasequoia",
-  "time": "노을",
-  "bgm": "bgm_main",
-  "direction": [],
   "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_ending",
   "dialogues": [
     {
-      "speaker": "볶음밥",
+      "speaker": "닭갈비",
       "speakerType": "normal",
-      "speakerId": "bokkeumbap",
-      "expression": "쓸쓸",
-      "text": "…그래. 잘 지내.",
-      "characters": [],
-      "onlyIf": "hidden"
+      "text": "저 사실 오늘 하루동안 생각해봤어요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "{볶음밥}이 천천히 돌아서고, 주인공은 붙잡지 않는다",
-      "characters": [],
-      "onlyIf": "hidden"
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "사람들이 좋아하는 제 모습도 좋지만... 아무것도 하지 않는 제 모습도 괜찮다는 거요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "홍보 영상에는 없던 웃음이었다.",
-      "characters": [],
-      "cg": {
-        "id": "cg_ending_dakgalbi",
-        "caption": "메타세쿼이아길에서 홍보용이 아닌 진짜 웃음으로 주인공 쪽을 돌아보는 모습"
-      }
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "{player}씨와 있으면 굳이 재미있는 말을 하지 않아도 되고, 춘천을 소개하지 않아도 되더라고요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그래서 말인데...",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "저 {player}씨 좋아해요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "앞으로는 춘천을 소개하는 것도, 아무것도 하지 않고 쉬는 것도 {player}씨와 함께하고 싶어요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_ending_dakgalbi_1",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "저도요",
+          "next": null,
+          "effectDesc": "",
+          "effects": null,
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "저도요",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "정말요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "좋아요! 이제부터는 우리 둘만의 여행을 시작하는거야!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "이제 {닭갈비}씨는 누군가를 즐겁게 해주기 위해서가 아니라, 자신이 행복해지기 위해 여행을 떠날 수 있을 것이다.",
+      "characters": []
     }
   ],
-  "choices": null
+  "choices": null,
+  "next": null
 }

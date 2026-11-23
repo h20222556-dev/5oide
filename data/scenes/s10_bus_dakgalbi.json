@@ -1,0 +1,242 @@
+{
+  "id": "s10_bus_dakgalbi",
+  "title": "#10 수상버스 — 닭고기 좌석",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_nami_boat_interior",
+  "overlay": null,
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{닭갈비}씨 옆에 앉을게요.",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "정말요? 저도 {player}씨와 앉고 싶었어요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "좋겠네. 아주 신났어.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "시큰둥"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "후후, 아쉽지만 저는 {양념}과 같이 앉아야겠네요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "아쉬움"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "{닭갈비}씨는 무척 기뻐 보인다. 평소보다 한층 더 들뜬 것 같다.",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "{player}씨, 남이섬에 가면 꼭 가봐야 할 곳이 있어요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "fade": "white"
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "바로 메타세쿼이아길이에요. 길게 늘어선 나무들이 정말 멋지거든요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그리고 은행나무길도 유명해요. 계절마다 풍경이 달라서 언제 가도 예쁘답니다.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "사진 찍기에도 정말 좋겠네요.",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그렇죠? 기념품 가게도 꼭 들러보세요. 귀여운 물건이 많아서 구경하는 재미가 있거든요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그런데 {player}씨는 남이섬에서 가장 해보고 싶은 게 뭐예요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "choice_s10_bus_dakgalbi_1",
+      "question": "",
+      "options": [
+        {
+          "key": "A",
+          "text": "{닭갈비}씨가 좋아하는 장소를 가보고 싶어요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "dakgalbi": 2
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "어? 제 추천 장소요?",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "놀람"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "그럼 오늘은 제가 정말 아끼는 곳을 알려드릴게요! 사실 꼭 같이 가보고 싶었던 곳이 있거든요!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "주인공",
+              "speakerType": "vo",
+              "text": "좋아하는 장소를 나에게 보여줄 생각에 무척 신난 것 같다.",
+              "characters": []
+            }
+          ],
+          "endingTitle": null
+        },
+        {
+          "key": "B",
+          "text": "인생 사진을 남겨보고 싶어요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "dakgalbi": 1
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "오! 그거 좋은 생각인데요?",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "그럼 제가 사진 명소를 제대로 안내해 드릴게요!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "주인공",
+              "speakerType": "vo",
+              "text": "{닭갈비}씨는 벌써 사진을 찍을 생각에 들떠 있다. 평소보다 특별한 추억을 만들고 싶은 걸까?",
+              "characters": []
+            }
+          ],
+          "endingTitle": null
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "좋아요! 남이섬에 도착하면 제가 앞장설게요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "{닭갈비}씨와 함께라면 평소와는 다른 여행이 될 것 같다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s10_bus_common"
+}

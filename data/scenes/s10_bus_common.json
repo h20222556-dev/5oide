@@ -1,0 +1,62 @@
+{
+  "id": "s10_bus_common",
+  "title": "#10 수상버스 — 남이섬 도착",
+  "type": "bus_to_island",
+  "day": 3,
+  "background": "bg_nami_boat_interior",
+  "overlay": null,
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "안내방송",
+      "speakerType": "os",
+      "text": "잠시 후 남이섬 선착장에 도착합니다. 승객 여러분께서는 하선 준비를 해주시기 바랍니다.",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "우와! 벌써 도착할 시간이네!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "이야기하다 보니 시간이 정말 빠르게 지나갔네요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "좋아! 오늘 하루 제대로 즐겨보자.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "춘천에서 출발해 약 40분. 호수 위를 달리는 동안 남이섬에 대한 기대도 한층 커졌다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": null
+}

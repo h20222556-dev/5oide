@@ -1,39 +1,127 @@
 {
   "id": "ending_goguma",
-  "title": "#16-개별 고구마 엔딩",
+  "title": "고구마 엔딩",
+  "endingTitle": "나를 위한 선택",
   "type": "ending",
-  "background": "bg_ginkgo_road",
-  "time": "노을",
-  "bgm": "bgm_main",
-  "direction": [],
   "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_ending",
   "dialogues": [
     {
-      "speaker": "볶음밥",
+      "speaker": "고구마",
       "speakerType": "normal",
-      "speakerId": "bokkeumbap",
-      "expression": "쓸쓸",
-      "text": "…그래. 잘 지내.",
-      "characters": [],
-      "onlyIf": "hidden"
+      "text": "사실 저는 항상 다른 사람을 먼저 생각했어요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "{볶음밥}이 천천히 돌아서고, 주인공은 붙잡지 않는다",
-      "characters": [],
-      "onlyIf": "hidden"
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그런데 오늘은 제가 하고 싶은 걸 먼저 선택해 봤어요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "늘 챙기던 손이, 처음으로 받는 손이 되었다.",
-      "characters": [],
-      "cg": {
-        "id": "cg_ending_goguma",
-        "caption": "은행나무길에서 말없이 손을 잡고 있고, 다른 손에는 은행잎 책갈피가 있는 모습"
-      }
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그리고 제가 오늘 선택한 것 중 가장 좋았던 건...",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "당신과 함께한 시간이었어요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그러니까 이번에도...",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "{player}씨를 좋아해요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_ending_goguma_1",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "저도 좋아해요",
+          "next": null,
+          "effectDesc": "",
+          "effects": null,
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "저도 좋아해요",
+      "characters": []
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "저와 같은 선택을 하셨네요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "늘 다른 사람의 행복을 먼저 생각하던 {고구마}씨. 이제는 서로의 바람을 하나씩 나누며, 함께 행복해지는 방법을 찾아가고 싶다.",
+      "characters": []
     }
   ],
-  "choices": null
+  "choices": null,
+  "next": null
 }

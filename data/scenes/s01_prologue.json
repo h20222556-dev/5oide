@@ -1,35 +1,48 @@
 {
   "id": "s01_prologue",
-  "title": "프롤로그",
+  "title": "#1 프롤로그",
   "type": "normal",
+  "day": 1,
   "background": "bg_black",
+  "overlay": null,
   "time": "낮",
   "bgm": "bgm_main",
-  "direction": [
-    "페이드(검정→흰), 창밖 풍경 이미지",
-    "휴대폰 화면 이미지 — \"춘천 남이섬 공동 관광 캠페인 홍보 영상\"",
-    "페이드(휴대폰→창밖 풍경)",
-    "페이드 → 검정 화면",
-    "페이드 → 창밖 풍경"
-  ],
   "dialogues": [
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "오랜만에 떠나는 여행이다. 목적지는 춘천. 특별한 이유가 있는 건 아니었다. 그저 며칠 정도는 익숙한 일상에서 벗어나고 싶었다.",
-      "characters": []
+      "characters": [],
+      "background": "bg_train_window",
+      "overlay": null,
+      "sfx": "열차 소리",
+      "fade": "white"
     },
     {
       "speaker": null,
       "speakerType": "narration",
       "text": "2035년, 새로운 여행의 시작! 춘천과 남이섬을 연결하는 새로운 직행 수상버스가 개통됩니다! 이제 춘천에서 남이섬까지 더욱 편리하게! 두 지역이 함께 준비한 특별한 관광 캠페인을 만나보세요!",
-      "characters": []
+      "characters": [],
+      "background": "bg_phone_screen",
+      "overlay": null
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "그러고 보니 남이섬은 예전에 그 사람과 가기로 했던 곳이었지...",
-      "characters": []
+      "text": "그러고 보니 남이섬은 예전에 *그 사람*과 가기로 했던 곳이었지...",
+      "characters": [],
+      "background": "bg_train_window",
+      "overlay": null,
+      "fade": "black"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "회상",
+      "characters": [],
+      "background": "bg_black",
+      "overlay": null,
+      "fade": "black"
     },
     {
       "speaker": "???",
@@ -46,13 +59,16 @@
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "그랬었지... 하지만 이것도 이제 다 지난 일이니까...",
-      "characters": []
+      "text": "...그랬었지. 하지만 이것도 이제 다 지난 일이니까...",
+      "characters": [],
+      "background": "bg_train_window",
+      "overlay": null,
+      "fade": "black"
     },
     {
       "speaker": "안내방송",
       "speakerType": "os",
-      "text": "잠시 후 춘천역에 도착하겠습니다.",
+      "text": "잠시 후, 춘천역에 도착하겠습니다",
       "characters": []
     },
     {

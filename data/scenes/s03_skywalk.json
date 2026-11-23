@@ -1,21 +1,21 @@
 {
   "id": "s03_skywalk",
-  "title": "Day 1 — 첫 만남 (소양강 스카이워크 선택 시, 만나는 인물: 고구마)",
+  "title": "#3-1 Day 1 — 스카이워크 (고구마)",
   "type": "normal",
+  "day": 1,
   "background": "bg_skywalk",
+  "overlay": null,
   "time": "낮",
   "bgm": "bgm_main",
-  "direction": [
-    "페이드",
-    "고구마가 지갑에서 명함을 꺼내 건넨다.",
-    "고구마가 사라진다"
-  ],
   "dialogues": [
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "와... 생각보다 훨씬 멋지잖아?",
-      "characters": []
+      "characters": [],
+      "background": "bg_skywalk",
+      "overlay": null,
+      "fade": "black"
     },
     {
       "speaker": null,
@@ -33,12 +33,13 @@
       "speaker": "???",
       "speakerType": "os",
       "text": "사진도 좋지만, 직접 바라보는 풍경은 더 멋지지 않나요?",
-      "characters": []
+      "characters": [],
+      "speakerId": "goguma"
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "네? 아, 맞아요... 실제로 보니까 훨씬 예쁘네요.",
+      "text": "네? 아.. 맞아요. 실제로 보니까 훨씬 예쁘네요.",
       "characters": []
     },
     {
@@ -49,10 +50,10 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "goguma"
     },
     {
       "type": "choice",
@@ -66,11 +67,10 @@
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "goguma": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -90,10 +90,10 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
-      ]
+      ],
+      "speakerId": "goguma"
     },
     {
       "type": "choice",
@@ -107,11 +107,10 @@
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "goguma": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -131,10 +130,10 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
-      ]
+      ],
+      "speakerId": "goguma"
     },
     {
       "speaker": "???",
@@ -144,10 +143,10 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "goguma"
     },
     {
       "speaker": "주인공",
@@ -163,23 +162,28 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
-      ]
+      ],
+      "reveal": "goguma"
     },
     {
       "speaker": "고구마",
       "speakerType": "normal",
-      "text": "제 이름은 {고구마}예요.\" (← 이 대사부터 화자 이름이 ???에서 실제 이름으로 바뀜)",
+      "text": "제 이름은 {고구마}예요.",
       "characters": [
         {
           "id": "goguma",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "고구마가 지갑에서 명함을 꺼내 건넨다.",
+      "characters": []
     },
     {
       "speaker": "고구마",
@@ -189,8 +193,7 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
@@ -202,10 +205,15 @@
         {
           "id": "goguma",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "고구마가 사라진다",
+      "characters": []
     },
     {
       "speaker": "주인공",
@@ -215,27 +223,5 @@
     }
   ],
   "choices": null,
-  "next": "s03_skywalk_phone",
-  "phone_message": {
-    "partner": "goguma",
-    "intro_vo": [
-      "생각보다 정말 재미있는 곳이었어.",
-      "그리고 예상하지 못한 만남까지..."
-    ],
-    "messages": [
-      {
-        "sender": "player",
-        "text": "좋은 풍경 소개해 주셔서 감사했어요. 언젠가 카페도 놀러갈게요."
-      },
-      {
-        "sender": "goguma",
-        "text": "먼저 연락해 주셨네요, {player} 씨."
-      },
-      {
-        "sender": "goguma",
-        "text": "언제든 환영이에요. {player} 씨를 위해 따뜻한 음료를 준비해 둬야겠어요~"
-      }
-    ],
-    "outro_vo": "답장에서도 다정함이 느껴지는 것 같아."
-  }
+  "next": "s03_skywalk_phone"
 }

@@ -1,0 +1,288 @@
+{
+  "id": "s03_lego",
+  "title": "Day 1 — 첫 만남 (레고랜드 선택 시, 만나는 인물: 닭갈비)",
+  "type": "normal",
+  "background": "bg_legoland",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "페이드",
+    "닭갈비가 사라진다"
+  ],
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "레고 브릭으로 만들어진 다양한 건축물과 놀이기구를 즐길 수 있는 테마파크. 알록달록한 레고 조형물과 개성 넘치는 공간들이 눈길을 사로잡는다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "와... 생각했던 것보다 훨씬 크잖아? 어릴 때 가지고 놀던 레고를 이렇게 큰 규모로 볼 수 있다니, 생각보다 신기한데?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "안녕하세요~ 춘천에 오신 걸 환영합니다!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "네? 아, 안녕하세요!",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "혹시 춘천 여행은 처음이세요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "네, 이번에 처음 왔어요.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "그렇군요! 잘 오셨어요. 춘천에는 볼거리도 많고, 즐길 거리도 정말 많답니다. 혹시 여행 일정은 다 정하셨을까요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아직 제대로 정하지는 못했어요.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "그렇다면 제가 도와드릴게요! 관광 안내는 자신 있거든요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "하하, 감사합니다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "그런데...",
+      "characters": []
+    },
+    {
+      "type": "choice",
+      "id": "single_s03_lego_1",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "누구세요?",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "누구세요?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "아, 제 소개가 늦었네요. 저는 춘천의 관광지를 알리는 일을 하고 있어요. 사람들에게 춘천의 매력을 소개하는 게 제 일이거든요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_s03_lego_2",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "굉장히 적극적이시네요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "굉장히 적극적이시네요.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "하하, 저는 어디에 가도 잘 어울리는 편이거든요. 많은 사람들에게 춘천을 알리고 좋은 추억을 만들어 주는 게 제 목표랍니다!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "그럼 혹시, 관광 홍보 활동하시는 분이신가요?",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "네, 맞아요! 춘천 관광 홍보 대사 {닭갈비}입니다. 편하게 {닭갈비}라고 불러주세요.\" (← 이 대사부터 화자 이름이 ???에서 실제 이름으로 바뀜)",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아, 저는 {player}입니다. 반가워요!",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "{player}... 정말 예쁜 이름이네요! 저도 반가워요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "아, 그리고 이건... 제 연락처입니다. 혹시 도움이 필요하다면 언제든 연락주세요.",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그럼, 즐거운 여행 되세요! 춘천에서 좋은 추억 많이 만드시고요!",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "정말 밝고 친절한 사람이었어. 왠지 앞으로도 좋은 인연이 될 것 같은 예감이 든다.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s03_lego_phone",
+  "phone_message": {
+    "partner": "dakgalbi",
+    "intro_vo": [
+      "생각보다 정말 재미있는 곳이었어.",
+      "그리고 예상하지 못한 만남까지..."
+    ],
+    "messages": [
+      {
+        "sender": "player",
+        "text": "관광지 추천해주셔서 감사해요. 추천해주신 곳 꼭 가볼게요."
+      },
+      {
+        "sender": "dakgalbi",
+        "text": "아, {player} 씨 맞죠?"
+      },
+      {
+        "sender": "dakgalbi",
+        "text": "ㅎㅎ 마음에 드셨으면 좋겠네요!"
+      },
+      {
+        "sender": "dakgalbi",
+        "text": "다음에 또 만나면 그때는 더 재미있는 곳 소개해 드릴게요~!"
+      }
+    ],
+    "outro_vo": "답장이 정말 빠르네!"
+  }
+}

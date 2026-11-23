@@ -1,0 +1,132 @@
+{
+  "id": "s10_bus",
+  "title": "#10 Day 3 — 수상버스",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_nami_boat_interior",
+  "overlay": null,
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "생각했던 것보다 사람들이 훨씬 더 많다",
+      "characters": [],
+      "background": "bg_nami_boat_interior",
+      "overlay": null
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "네 명이 나란히 앉을 만한 자리는 없고, 두 명씩 나눠 앉아야 할 것 같다.",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "어라? 자리가 별로 없잖아?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "두 명씩 나눠 앉으면 될 것 같은데...",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "뭘 그렇게 고민해. 편한 대로 앉으면 되지.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "그럼...{player}씨는 어디가 편하세요?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "저요?",
+      "characters": []
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "네! 저희는 어디든 괜찮거든요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "어쩐지 세 사람이 서로 눈치를 살피는 것 같기도 하다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아... 저는 ....",
+      "characters": []
+    }
+  ],
+  "choices": {
+    "id": "bus_seat",
+    "question": "좌석 선택",
+    "options": [
+      {
+        "key": "A",
+        "charId": "dakgalbi",
+        "text": "{닭갈비} 옆에 앉는다.",
+        "next": "s10_bus_dakgalbi",
+        "followUp": []
+      },
+      {
+        "key": "B",
+        "charId": "goguma",
+        "text": "{고구마} 옆에 앉는다.",
+        "next": "s10_bus_goguma",
+        "followUp": []
+      },
+      {
+        "key": "C",
+        "charId": "yangnyeom",
+        "text": "{양념} 옆에 앉는다.",
+        "next": "s10_bus_yangnyeom",
+        "followUp": []
+      }
+    ]
+  },
+  "next": null
+}

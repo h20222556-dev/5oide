@@ -1,13 +1,12 @@
 {
   "id": "s07_yangnyeom",
-  "title": "Day 2 — 양념 (명동 거리)",
+  "title": "#7 Day 2 — 양념 (명동 거리)",
   "type": "normal",
-  "background": "bg_myeongdong",
+  "day": 2,
+  "background": "bg_dakgalbi_alley",
+  "overlay": null,
   "time": "낮",
   "bgm": "bgm_main",
-  "direction": [
-    "페이드, 다른 명동 거리 이미지"
-  ],
   "dialogues": [
     {
       "speaker": "양념",
@@ -17,10 +16,11 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "background": "bg_dakgalbi_alley",
+      "overlay": null
     },
     {
       "speaker": "주인공",
@@ -36,8 +36,7 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
@@ -45,7 +44,10 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "오늘 보니까 주변에 가게가 정말 많네요. 어제는 닭갈비 먹느라 제대로 구경을 못했거든요.",
-      "characters": []
+      "characters": [],
+      "background": "bg_dakgalbi_alley",
+      "overlay": null,
+      "fade": "black"
     },
     {
       "speaker": "양념",
@@ -55,8 +57,7 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
@@ -69,13 +70,12 @@
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "당연한 거 아니에요? 춘천의 중심 상권 중 하나니까요. 쇼핑할 곳도 많고 먹거리도 다양하죠.",
+      "text": "당연한 거 아니에요? 춘천의 중심 상권 중 하나니까요. 쇼핑할 곳도 많고, 먹거리도 다양하죠.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
@@ -93,15 +93,14 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "{양념} 씨는 먹는 이야기만 나오면 신나 보이시네요.",
+      "text": "{양념}씨는 먹는 이야기만 나오면 신나 보이시네요.",
       "characters": []
     },
     {
@@ -112,15 +111,14 @@
       "options": [
         {
           "key": "A",
-          "text": "다음에는 {양념} 씨가 추천하는 맛집 꼭 가보고 싶어요.",
+          "text": "다음에는 {양념}씨가 추천 맛집 꼭 가보고 싶어요.",
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "yangnyeom": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -129,32 +127,30 @@
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "다음에는 {양념} 씨가 추천하는 맛집 꼭 가보고 싶어요.",
+      "text": "다음에는 {양념}씨가 추천 맛집 꼭 가보고 싶어요.",
       "characters": []
     },
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "제 추천이요? ...좋아요. 괜찮은 곳으로 골라드릴게요.",
+      "text": "제 추천이요? ...좋아요 괜찮을 곳으로 골라드릴게요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "원하신다면... 따라가 줄 수도 있고요.",
+      "text": "...원하신다면 따라가줄 수도 있고요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음",
-          "blush": false
+          "expression": "멋쩍음"
         }
       ]
     },
@@ -166,15 +162,14 @@
       "options": [
         {
           "key": "A",
-          "text": "저는 먹는 것보다 구경하는 게 더 좋은 것 같아요.",
+          "text": "저는 먹는 것보다 구경하는 게 더 좋은 것 같아요",
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "yangnyeom": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -183,19 +178,18 @@
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "저는 먹는 것보다 구경하는 게 더 좋은 것 같아요.",
+      "text": "저는 먹는 것보다 구경하는 게 더 좋은 것 같아요",
       "characters": []
     },
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "뭐, 사람마다... 다르니까요.",
+      "text": "...뭐, 사람마다 다르니까요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음",
-          "blush": false
+          "expression": "멋쩍음"
         }
       ]
     },
@@ -207,15 +201,14 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "{양념} 씨는 춘천을 정말 잘 아시는 것 같아요.",
+      "text": "{양념}씨는 춘천을 정말 잘 아시는 것 같아요.",
       "characters": []
     },
     {
@@ -226,8 +219,7 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
@@ -239,8 +231,7 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "쓸쓸",
-          "blush": false
+          "expression": "쓸쓸"
         }
       ]
     },
@@ -253,85 +244,105 @@
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "제가 말투가 좀 직설적이잖아요. 별뜻 없이 한 말인데도 상대방이 기분 나빠하거나 저를 까칠한 사람으로 생각할 때가 많거든요.",
+      "text": "제가 말투가 좀 직설적이잖아요. 별뜻 없이 한 말인데도 상대방이 기분 나빠하거나, 저를 까칠한 사람으로 생각할 때가 많거든요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "쓸쓸",
-          "blush": false
+          "expression": "쓸쓸"
         }
       ]
     },
     {
       "type": "choice",
-      "id": "day2_yangnyeom_2",
-      "question": "양념의 고민에 대한 반응",
+      "id": "choice_s07_yangnyeom_1",
+      "question": "",
       "options": [
         {
           "key": "A",
-          "text": "\"말투보다 그 안에 담긴 마음이 더 중요하죠.\"",
+          "text": "말투보다 그 안에 담긴 마음이 더 중요하죠.",
           "next": null,
-          "effectDesc": "양념 호감 상승 표시 (+)",
+          "effectDesc": "",
           "effects": {
-            "score": 3,
-            "scale": "(+)",
-            "troubleState": null,
-            "targetChar": "yangnyeom",
-            "characters": null
+            "like": {
+              "yangnyeom": 2
+            }
           },
           "followUp": [
             {
-              "speaker": "양념[기본]",
-              "text": "그렇게... 생각해 주는 사람도 있네요."
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "...그렇게 생각해 주는 사람도 있네요.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "기본"
+                }
+              ]
             },
             {
-              "speaker": "양념[멋쩍음+홍조]",
-              "text": "조금... 위로가 되네요. 고마워요..."
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "... 조금 위로가 되네요. ...고마워요",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "멋쩍음+홍조"
+                }
+              ]
             }
-          ]
+          ],
+          "endingTitle": null
         },
         {
           "key": "B",
-          "text": "\"그냥 솔직하게 말하면 되는 거 아닌가요?\"",
+          "text": "그냥 솔직하게 말하면 되는 거 아닌가요?",
           "next": null,
-          "effectDesc": "표시 없음",
+          "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "yangnyeom": 1
+            }
           },
           "followUp": [
             {
-              "speaker": "양념[짜증]",
-              "text": "그게 말처럼 쉬웠으면 고민도 안 했겠죠."
+              "speaker": "양념",
+              "speakerType": "normal",
+              "text": "그게 말처럼 쉬웠으면 고민도 안 했겠죠.",
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "center",
+                  "expression": "짜증"
+                }
+              ]
             }
-          ]
+          ],
+          "endingTitle": null
         }
       ]
     },
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "뭐, 그래도... 오늘은 나쁘지 않았네요. {player} 씨 덕에 기분 전환도 됐고요.",
+      "text": "..뭐, 그래도 오늘은 나쁘지 않았네요. {player}씨 덕에 기분 전환도 됐고요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음",
-          "blush": false
+          "expression": "멋쩍음"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "오늘 만남으로 {양념} 씨의 새로운 모습을 알게 된 것 같아.",
+      "text": "오늘 만남으로 {양념}씨의 새로운 모습을 알게 된 것 같아.",
       "characters": []
     }
   ],
   "choices": null,
-  "next": "s08_day2_end"
+  "next": null
 }

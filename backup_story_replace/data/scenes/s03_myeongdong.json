@@ -1,0 +1,362 @@
+{
+  "id": "s03_myeongdong",
+  "title": "Day 1 — 첫 만남 (명동 닭갈비 골목 선택 시, 만나는 인물: 양념)",
+  "type": "normal",
+  "background": "bg_myeongdong",
+  "time": "낮",
+  "bgm": "bgm_main",
+  "direction": [
+    "페이드",
+    "양념이 건네받은 휴대폰에 전화번호를 입력한다.",
+    "양념이 사라진다."
+  ],
+  "dialogues": [
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "춘천의 대표적인 먹거리 거리인 명동 닭갈비 골목. 골목 양쪽으로 식당들이 늘어서 있고, 맛있는 냄새가 풍겨온다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "여기가 춘천 명동 닭갈비 골목이구나!",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "음... 가게가 정말 많네. 어디로 들어가야 하지?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "os",
+      "text": "그렇게 고민한다고 답이 나와요?",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "네? 저요?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "여기서 한참 서성거리면서 길 막고 있는 사람이 당신 말고 또 있나요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아... 죄송해요.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "...뭐, 됐고요. 뭘 그렇게 못 고르는 건데요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아, 그게... 처음 와보는 곳이라 어디로 가야 할지 모르겠어서요.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "그럼 그냥 마음에 드는 곳으로 들어가면 되잖아요. 너무 고민하는 거 아니에요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "말투가 꽤 직설적이네...",
+      "characters": []
+    },
+    {
+      "type": "choice",
+      "id": "single_s03_myeongdong_1",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "혹시 이 근처에 괜찮은 식당 아세요?",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "혹시 이 근처에 괜찮은 식당 아세요?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "...",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "뭐, 처음 오신 거라면 저쪽 가게는 어때요? 음식도 괜찮고 사람들도 많이 가는 것 같던데...",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "오, 감사합니다! 덕분에 결정할 수 있겠어요.",
+      "characters": []
+    },
+    {
+      "type": "choice",
+      "id": "single_s03_myeongdong_2",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "원래 처음 보는 사람한테도 이렇게 직설적이세요?",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "score": 0,
+            "scale": null,
+            "troubleState": null,
+            "targetChar": null,
+            "characters": null
+          },
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "원래 처음 보는 사람한테도 이렇게 직설적이세요?",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "그럼 굳이 돌려서 말해야 하나요? 저는 솔직하게 말하는 편이라서요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "아하... 네...",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "...",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "뭐, 기분 나쁘게 들렸다면 미안해요. 일부러 그러려던 건 아니니까요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "멋쩍음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "그런데 성함이 어떻게 되세요?",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "{양념}이요.\" (← 이 대사부터 화자 이름이 ???에서 실제 이름으로 바뀜)",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "옷차림을 보니 대학생이신가봐요. 저는 {player}이에요. 춘천에 여행하러 왔고요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "네, 그럴 것 같았어요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "그... 여행하실 때 너무 무난한 곳만 가지는 말고요. 가끔은 조금 강렬한 경험도 필요하잖아요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "하하, {양념} 씨다운 말이네요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "혹시 휴대폰 좀 잠깐 보여주실래요?",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "휴대폰...?",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "혹시 춘천에서 길 찾기 어렵거나 궁금한 게 생기면 연락해요. 이 주변은 제 전문이거든요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "웃음",
+          "blush": false
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "말투는 조금 퉁명스럽지만, 생각보다 친절한 사람이네. 왠지 다음에 또 만날 것 같은 기분이 들어.",
+      "characters": []
+    }
+  ],
+  "choices": null,
+  "next": "s03_myeongdong_phone",
+  "phone_message": {
+    "partner": "yangnyeom",
+    "intro_vo": [
+      "생각보다 정말 재미있는 곳이었어.",
+      "그리고 예상하지 못한 만남까지..."
+    ],
+    "messages": [
+      {
+        "sender": "player",
+        "text": "덕분에 추천해주신 식당에서 잘 먹고 가요~"
+      },
+      {
+        "sender": "yangnyeom",
+        "text": "뭐야, 아까 그 사람 맞죠?"
+      },
+      {
+        "sender": "yangnyeom",
+        "text": "진짜 연락까지 하실 줄은 몰랐는데."
+      },
+      {
+        "sender": "yangnyeom",
+        "text": "다음에는 더 괜찮은 곳도 알려줄 수 있어요."
+      },
+      {
+        "sender": "yangnyeom",
+        "text": "궁금하시면 연락하세요."
+      }
+    ],
+    "outro_vo": "말투는... 한결같네."
+  }
+}

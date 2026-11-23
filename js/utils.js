@@ -213,9 +213,15 @@ function resolveTextVariables(text, variables = {}) {
               (cid === '고구마' || cid === 'goguma') ? '고구마' : '볶음밥';
     return josa ? `{${k}:${josa}}` : `{${k}}`;
   });
-  result = result.replace(/\[(닭고기|닭갈비|양념|고구마|볶음밥)\]/g, (_, cid) => {
+  result = result.replace(/\[(주인공|닭고기|닭갈비|양념|고구마|볶음밥)\]/g, (_, cid) => {
+    if (cid === '주인공') return '{player}';
     const k = (cid === '닭고기' || cid === '닭갈비') ? '닭갈비' : cid;
     return `{${k}}`;
+  });
+
+  // 0-b) 슬래시 병기 조사 처리: {var}은/는, {var}이/가, {var}을/를, {var}과/와, {var}이랑/랑, {var}이에요/예요, {var}이라고/라고, {var}으로/로
+  result = result.replace(/\{(player|닭갈비|양념|고구마|볶음밥)\}(은\/는|이\/가|을\/를|과\/와|이랑\/랑|이에요\/예요|이라고\/라고|으로\/로)/g, (_, key, josaPair) => {
+    return `{${key}:${josaPair}}`;
   });
 
   // 1) 템플릿 형태 치환: {변수:조사} 예: {player:은는}, {고구마:으로로}

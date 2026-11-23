@@ -1,0 +1,263 @@
+{
+  "id": "s12_hidden_bokkeumbap",
+  "title": "#12 히든 — 볶음밥 등장",
+  "type": "normal",
+  "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "세 사람과 함께했던 순간들을 떠올리며 선착장을 걷던 중, 저 멀리 가로등 아래 서 있는 한 사람이 눈에 들어왔다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "...어?",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "저 사람은... 설마.",
+      "characters": []
+    },
+    {
+      "speaker": "???",
+      "speakerType": "normal",
+      "text": "....오랜만이야.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "speakerId": "bokkeumbap"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "심장이 덜컥 내려앉았다. 저 사람은...",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "한때 내가 사랑했던 사람이자,",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "얼마 전 헤어진 전 애인이었다.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "저 사람은... 설마.",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{볶음밥}...",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "다시는 마주칠 일이 없을 거라고 생각했다. 그런데 왜 하필 오늘, 이곳에서 만나게 된 걸까?",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "....보고 싶었어.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "reveal": "bokkeumbap"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "...!",
+      "characters": []
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "{player}씨! 한참 찾았잖... 뭐야, {볶음밥}?",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "닭갈비",
+      "speakerType": "normal",
+      "text": "너 언제 온거야? 아니 그것보다...",
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "둘이 아는 사이였어요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "...",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "...잠깐 설마, {player}씨가...",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "놀람"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "원래는 같이 가기로 했던 사람이 한 명 더 있었어요. 그게...",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "fade": "black"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "{볶음밥}...",
+      "characters": []
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "{볶음밥}이 세 사람의 친구라고는 전혀 생각도 못했어.",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "...오늘 올 생각이 없었는데",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "그냥...",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "너희가 돌아올 시간쯤이 되니까 와 있더라.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "...",
+      "characters": []
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "그리고 네가 있을 줄은 몰랐어.",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "늦게 와서 이런 얘기하기 그런데...",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "text": "잠깐 {player}과 이야기할 수 있을까?",
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    }
+  ],
+  "choices": null,
+  "next": "s12_final_choice"
+}

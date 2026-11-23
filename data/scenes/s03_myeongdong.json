@@ -1,21 +1,21 @@
 {
   "id": "s03_myeongdong",
-  "title": "Day 1 — 첫 만남 (명동 닭갈비 골목 선택 시, 만나는 인물: 양념)",
+  "title": "#3-1 Day 1 — 명동 닭갈비 골목 (양념)",
   "type": "normal",
-  "background": "bg_myeongdong",
+  "day": 1,
+  "background": "bg_dakgalbi_alley",
+  "overlay": null,
   "time": "낮",
   "bgm": "bgm_main",
-  "direction": [
-    "페이드",
-    "양념이 건네받은 휴대폰에 전화번호를 입력한다.",
-    "양념이 사라진다."
-  ],
   "dialogues": [
     {
       "speaker": null,
       "speakerType": "narration",
       "text": "춘천의 대표적인 먹거리 거리인 명동 닭갈비 골목. 골목 양쪽으로 식당들이 늘어서 있고, 맛있는 냄새가 풍겨온다.",
-      "characters": []
+      "characters": [],
+      "background": "bg_dakgalbi_alley",
+      "overlay": null,
+      "fade": "black"
     },
     {
       "speaker": "주인공",
@@ -33,7 +33,8 @@
       "speaker": "???",
       "speakerType": "os",
       "text": "그렇게 고민한다고 답이 나와요?",
-      "characters": []
+      "characters": [],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -49,10 +50,10 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -63,15 +64,15 @@
     {
       "speaker": "???",
       "speakerType": "normal",
-      "text": "...뭐, 됐고요. 뭘 그렇게 못 고르는 건데요?",
+      "text": "...뭐 됐고요. 뭘 그렇게 못 고르는 건데요?",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음",
-          "blush": false
+          "expression": "멋쩍음"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -87,10 +88,10 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -110,11 +111,10 @@
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "yangnyeom": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -134,10 +134,10 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "???",
@@ -147,15 +147,15 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음",
-          "blush": false
+          "expression": "멋쩍음"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "오, 감사합니다! 덕분에 결정할 수 있겠어요.",
+      "text": "오! 감사합니다. 덕분에 결정할 수 있겠어요.",
       "characters": []
     },
     {
@@ -166,15 +166,14 @@
       "options": [
         {
           "key": "A",
-          "text": "원래 처음 보는 사람한테도 이렇게 직설적이세요?",
+          "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "yangnyeom": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -183,7 +182,7 @@
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "원래 처음 보는 사람한테도 이렇게 직설적이세요?",
+      "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
       "characters": []
     },
     {
@@ -194,15 +193,15 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "아하... 네...",
+      "text": "아하...네.",
       "characters": []
     },
     {
@@ -213,10 +212,10 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "???",
@@ -226,10 +225,10 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "멋쩍음",
-          "blush": false
+          "expression": "멋쩍음"
         }
-      ]
+      ],
+      "speakerId": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -240,15 +239,15 @@
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "{양념}이요.\" (← 이 대사부터 화자 이름이 ???에서 실제 이름으로 바뀜)",
+      "text": "{양념}이요.",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
-      ]
+      ],
+      "reveal": "yangnyeom"
     },
     {
       "speaker": "주인공",
@@ -264,28 +263,26 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "양념",
       "speakerType": "normal",
-      "text": "그... 여행하실 때 너무 무난한 곳만 가지는 말고요. 가끔은 조금 강렬한 경험도 필요하잖아요?",
+      "text": "...그 여행하실 때 너무 무난한 곳만 가지는 말고요. 가끔은 조금 강렬한 경험도 필요하잖아요?",
       "characters": [
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "하하, {양념} 씨다운 말이네요.",
+      "text": "하하, {양념}씨다운 말이네요.",
       "characters": []
     },
     {
@@ -296,15 +293,20 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "휴대폰...?",
+      "text": "...휴대폰?",
+      "characters": []
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "양념이 건네받은 휴대폰에 전화번호를 입력한다.",
       "characters": []
     },
     {
@@ -315,10 +317,15 @@
         {
           "id": "yangnyeom",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "양념이 사라진다.",
+      "characters": []
     },
     {
       "speaker": "주인공",
@@ -328,35 +335,5 @@
     }
   ],
   "choices": null,
-  "next": "s03_myeongdong_phone",
-  "phone_message": {
-    "partner": "yangnyeom",
-    "intro_vo": [
-      "생각보다 정말 재미있는 곳이었어.",
-      "그리고 예상하지 못한 만남까지..."
-    ],
-    "messages": [
-      {
-        "sender": "player",
-        "text": "덕분에 추천해주신 식당에서 잘 먹고 가요~"
-      },
-      {
-        "sender": "yangnyeom",
-        "text": "뭐야, 아까 그 사람 맞죠?"
-      },
-      {
-        "sender": "yangnyeom",
-        "text": "진짜 연락까지 하실 줄은 몰랐는데."
-      },
-      {
-        "sender": "yangnyeom",
-        "text": "다음에는 더 괜찮은 곳도 알려줄 수 있어요."
-      },
-      {
-        "sender": "yangnyeom",
-        "text": "궁금하시면 연락하세요."
-      }
-    ],
-    "outro_vo": "말투는... 한결같네."
-  }
+  "next": "s03_myeongdong_phone"
 }

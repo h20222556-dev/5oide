@@ -1,39 +1,151 @@
 {
   "id": "ending_yangnyeom",
-  "title": "#16-개별 양념 엔딩",
+  "title": "양념 엔딩",
+  "endingTitle": "솔직해지는 순간",
   "type": "ending",
-  "background": "bg_lakeside_path",
-  "time": "노을",
-  "bgm": "bgm_main",
-  "direction": [],
   "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_ending",
   "dialogues": [
     {
-      "speaker": "볶음밥",
+      "speaker": "양념",
       "speakerType": "normal",
-      "speakerId": "bokkeumbap",
-      "expression": "쓸쓸",
-      "text": "…그래. 잘 지내.",
-      "characters": [],
-      "onlyIf": "hidden"
+      "text": "...저 사실 {player}씨에게 하고 싶은 말이 있어요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "{볶음밥}이 천천히 돌아서고, 주인공은 붙잡지 않는다",
-      "characters": [],
-      "onlyIf": "hidden"
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "오늘 하루 동안 생각해 봤어요. 제가 왜 {player}씨에게 제 마음을 표현하는 걸 망설였는지.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
-      "speaker": null,
-      "speakerType": "narration",
-      "text": "서툰 말 대신, 겉옷 한 벌이 먼저 건너왔다.",
-      "characters": [],
-      "cg": {
-        "id": "cg_ending_yangnyeom",
-        "caption": "호숫가에서 고개를 돌린 채 귀만 빨개져 있고, 손에는 주인공에게 줄 겉옷이 들려 있는 모습"
-      }
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "이상하게 {player}씨에게는 말 한마디도 조심하게 되더라고요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "제 말투 때문에 상처받지는 않을까, 괜히 부담스러워하지는 않을까... 그런 생각이 자꾸 들었어요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "그런데 이제는 더 이상 숨기고 싶지 않아요.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "너를 좋아해",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "돌려 말하는 거 아니야. 내 진심이야.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_ending_yangnyeom_1",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "저도요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": null,
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "저도요.",
+      "characters": []
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "...정말 다행이다.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "양념",
+      "speakerType": "normal",
+      "text": "앞으로도 나는 나답게 말할 거야. 대신 네 마음도 생각하면서.",
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "{양념}씨는 솔직한 성격에서 상대를 배려하는 마음을 담는 법을 배워가고 있었다. 이제는 서로의 마음을 숨기지 않고 솔직하게 나눌 수 있을 것 같다.",
+      "characters": []
     }
   ],
-  "choices": null
+  "choices": null,
+  "next": null
 }

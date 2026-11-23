@@ -1,24 +1,26 @@
 {
   "id": "s07_dakgalbi",
-  "title": "Day 2 — 닭갈비 (춘천 시내)",
+  "title": "#7 Day 2 — 닭고기 (춘천 시내)",
   "type": "normal",
-  "background": "bg_chuncheon_city",
+  "day": 2,
+  "background": "bg_street_statue",
+  "overlay": null,
   "time": "낮",
   "bgm": "bgm_main",
-  "direction": [],
   "dialogues": [
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "{player} 씨, 여기예요~!",
+      "text": "{player}씨! 여기예요~!",
       "characters": [
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
-      ]
+      ],
+      "background": "bg_street_statue",
+      "overlay": null
     },
     {
       "speaker": "주인공",
@@ -34,15 +36,14 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "그러게요. 그건 그렇고, 춘천은 생각보다 큰 도시군요?",
+      "text": "그러게요, 그건 그렇고 춘천은 생각보다 큰 도시군요?",
       "characters": []
     },
     {
@@ -53,8 +54,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
@@ -67,20 +67,19 @@
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "그뿐만이 아니에요! 춘천에는 애니메이션박물관도 있고, 김유정 문학촌도 있고, 그리고 또...",
+      "text": "그 뿐만이 아니에요! 춘천에는 애니메이션박물관도 있고, 김유정 문학촌도 있고, 그리고 또...",
       "characters": [
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "{닭갈비} 씨는 춘천을 정말 좋아하시나 봐요.",
+      "text": "{닭갈비}씨는 춘천을 정말 좋아하시나 봐요.",
       "characters": []
     },
     {
@@ -91,8 +90,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
     },
@@ -104,15 +102,14 @@
       "options": [
         {
           "key": "A",
-          "text": "{닭갈비} 씨도 춘천처럼 매력이 여러 가지인가봐요?",
+          "text": "{닭갈비}씨도 춘천처럼 매력이 여러 가지인가봐요?",
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "dakgalbi": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -121,7 +118,7 @@
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "{닭갈비} 씨도 춘천처럼 매력이 여러 가지인가봐요?",
+      "text": "{닭갈비}씨도 춘천처럼 매력이 여러 가지인가봐요?",
       "characters": []
     },
     {
@@ -132,8 +129,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
     },
@@ -145,8 +141,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
     },
@@ -158,15 +153,14 @@
       "options": [
         {
           "key": "A",
-          "text": "...아, 네...",
+          "text": "아...네...",
           "next": null,
           "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "dakgalbi": 1
+            },
+            "compact": true
           },
           "followUp": []
         }
@@ -175,7 +169,7 @@
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "...아, 네...",
+      "text": "아...네...",
       "characters": []
     },
     {
@@ -186,21 +180,19 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "역시, 겉으로 보이는 모습만으로는 제 매력을 다 알 수 없는 거겠죠?",
+      "text": "역시 겉으로 보이는 모습만으로는 제 매력을 다 알 수 없는 거겠죠?",
       "characters": [
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
     },
@@ -212,15 +204,14 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
-      "text": "그럼 {닭갈비} 씨의 속은 어떤데요?",
+      "text": "그럼 {닭갈비}씨의 속은 어떤데요?",
       "characters": []
     },
     {
@@ -231,21 +222,19 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "웃음",
-          "blush": false
+          "expression": "웃음"
         }
       ]
     },
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "사실... 저는 가끔 고민이 있어요.",
+      "text": "사실 저는 가끔 고민이 있어요.",
       "characters": [
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "쓸쓸",
-          "blush": false
+          "expression": "쓸쓸"
         }
       ]
     },
@@ -263,8 +252,7 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "쓸쓸",
-          "blush": false
+          "expression": "쓸쓸"
         }
       ]
     },
@@ -276,80 +264,100 @@
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "쓸쓸",
-          "blush": false
+          "expression": "쓸쓸"
         }
       ]
     },
     {
       "type": "choice",
-      "id": "day2_dakgalbi",
-      "question": "닭갈비의 고민에 대한 반응",
+      "id": "choice_s07_dakgalbi_1",
+      "question": "",
       "options": [
         {
           "key": "A",
-          "text": "\"저는 지금의 {닭갈비} 씨가 좋아요.\"",
+          "text": "저는 지금의 {닭갈비}씨가 좋아요.",
           "next": null,
-          "effectDesc": "닭갈비 호감 상승 표시 (+)",
+          "effectDesc": "",
           "effects": {
-            "score": 3,
-            "scale": "(+)",
-            "troubleState": null,
-            "targetChar": "dakgalbi",
-            "characters": null
+            "like": {
+              "dakgalbi": 2
+            }
           },
           "followUp": [
             {
-              "speaker": "닭갈비[웃음]",
-              "text": "정말요? 저라는 사람 자체를 봐주시는 것 같아서 정말 기뻐요!"
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "정말요? 저라는 사람 자체를 봐주시는 것 같아서 정말 기뻐요!",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
             },
             {
-              "speaker": "닭갈비[기본+홍조]",
-              "text": "저도 지금의 {player} 씨가..."
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "저도... 지금의 {player}씨가...",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "기본+홍조"
+                }
+              ]
             }
-          ]
+          ],
+          "endingTitle": null
         },
         {
           "key": "B",
-          "text": "\"그걸 제가 어떻게 알아요?\"",
+          "text": "그걸 제가 어떻게 알아요?",
           "next": null,
-          "effectDesc": "표시 없음",
+          "effectDesc": "",
           "effects": {
-            "score": 0,
-            "scale": null,
-            "troubleState": null,
-            "targetChar": null,
-            "characters": null
+            "like": {
+              "dakgalbi": 1
+            }
           },
           "followUp": [
             {
-              "speaker": "닭갈비[당황]",
-              "text": "아, 그러네요... 제가 갑자기 너무 어려운 질문을 드렸죠? 죄송해요...!"
+              "speaker": "닭갈비",
+              "speakerType": "normal",
+              "text": "아... 그러네요! 제가 갑자기 너무 어려운 질문을 드렸죠? 죄송해요...",
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "당황"
+                }
+              ]
             }
-          ]
+          ],
+          "endingTitle": null
         }
       ]
     },
     {
       "speaker": "닭갈비",
       "speakerType": "normal",
-      "text": "큼... 오늘 정말 즐거웠어요! 다음에는 저만의 매력을 더 많이 보여드릴 테니까 기대하세요!",
+      "text": "...큼. 오늘 정말 즐거웠어요! 다음에는 저만의 매력을 더 많이 보여드릴테니까 기대하세요!",
       "characters": [
         {
           "id": "dakgalbi",
           "position": "center",
-          "expression": "기본",
-          "blush": false
+          "expression": "기본"
         }
       ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
-      "text": "오늘 만남으로 {닭갈비} 씨와 더 친해진 것 같아.",
+      "text": "오늘 만남으로 {닭갈비}씨와 더 친해진 것 같아.",
       "characters": []
     }
   ],
   "choices": null,
-  "next": "s08_day2_end"
+  "next": null
 }

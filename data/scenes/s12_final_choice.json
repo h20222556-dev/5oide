@@ -1,0 +1,13 @@
+{
+  "id": "s12_final_choice",
+  "title": "#12 최종 선택 화면",
+  "type": "final",
+  "day": 3,
+  "background": "bg_pier",
+  "overlay": "sunset",
+  "time": "황혼",
+  "bgm": "bgm_main",
+  "dialogues": [],
+  "choices": null,
+  "next": null
+}

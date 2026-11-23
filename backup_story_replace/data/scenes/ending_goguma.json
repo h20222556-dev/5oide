@@ -1,0 +1,39 @@
+{
+  "id": "ending_goguma",
+  "title": "#16-개별 고구마 엔딩",
+  "type": "ending",
+  "background": "bg_ginkgo_road",
+  "time": "노을",
+  "bgm": "bgm_main",
+  "direction": [],
+  "day": 3,
+  "dialogues": [
+    {
+      "speaker": "볶음밥",
+      "speakerType": "normal",
+      "speakerId": "bokkeumbap",
+      "expression": "쓸쓸",
+      "text": "…그래. 잘 지내.",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "{볶음밥}이 천천히 돌아서고, 주인공은 붙잡지 않는다",
+      "characters": [],
+      "onlyIf": "hidden"
+    },
+    {
+      "speaker": null,
+      "speakerType": "narration",
+      "text": "늘 챙기던 손이, 처음으로 받는 손이 되었다.",
+      "characters": [],
+      "cg": {
+        "id": "cg_ending_goguma",
+        "caption": "은행나무길에서 말없이 손을 잡고 있고, 다른 손에는 은행잎 책갈피가 있는 모습"
+      }
+    }
+  ],
+  "choices": null
+}

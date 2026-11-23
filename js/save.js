@@ -8,6 +8,7 @@ class SaveManager {
   constructor() {
     this.KEY_PREFIX = 'oidate_';
     this.SLOT_COUNT = 3;
+    this.STORY_VERSION = 'v2_full_spec';
   }
 
   _slotKey(slot) {
@@ -18,22 +19,18 @@ class SaveManager {
     const data = {
       slot,
       timestamp: Date.now(),
+      storyVersion: gameState.storyVersion || this.STORY_VERSION,
       gender: gameState.gender || 'female',
       playerName: gameState.playerName || '주인공',
       chapter: gameState.chapter ?? 1,
       sceneId: gameState.sceneId ?? 's01_prologue',
       dialogueIndex: gameState.dialogueIndex ?? 0,
       affinity: { ...gameState.affinity },
-      reunion_temp: gameState.reunion_temp ?? 0,
-      troubleStates: { ...(gameState.troubleStates || {}) },
-      hiddenUnlocked: !!gameState.hiddenUnlocked,
+      hiddenRoute: !!gameState.hiddenRoute,
       day1Visited: [...(gameState.day1Visited || [])],
       day2Visited: [...(gameState.day2Visited || [])],
       day2Target: gameState.day2Target || null,
-      day3SeatVisited: [...(gameState.day3SeatVisited || [])],
-      day3Order: [...(gameState.day3Order || [])],
-      day3Initialized: !!gameState.day3Initialized,
-      chosenSeat: gameState.chosenSeat || null,
+      busChoice: gameState.busChoice || null,
       revealedSpeakers: Array.isArray(gameState.revealedSpeakers)
         ? gameState.revealedSpeakers
         : Array.from(gameState.revealedSpeakers || []),
