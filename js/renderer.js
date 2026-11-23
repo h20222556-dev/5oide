@@ -42,6 +42,7 @@ class Renderer {
     this._preloadedUrls   = new Set();
     this._loadedUrls      = new Set();
     this.transitionMode   = 'cut';
+    this.showChoiceImages = false;
 
     // 모달들
     this.genderModal      = document.getElementById('modal-gender');
@@ -704,9 +705,6 @@ class Renderer {
     if (!this.choicesContainer) return;
     this.choicesContainer.innerHTML = '';
     this.choicesContainer.classList.remove('hidden', 'choices-left-aligned');
-    if (opts && opts.alignLeft) {
-      this.choicesContainer.classList.add('choices-left-aligned');
-    }
 
     if (question) {
       const qEl = document.createElement('div');
@@ -734,12 +732,14 @@ class Renderer {
         `;
         btn.disabled = true;
       } else {
-        const imgUrl = opt.imageKey ? this.assetManifest?.backgrounds?.[opt.imageKey] : null;
-        if (imgUrl && cleanText.includes('—')) {
+        const imgUrl = (this.showChoiceImages && opt.imageKey)
+          ? this.assetManifest?.backgrounds?.[opt.imageKey]
+          : null;
+        if (cleanText.includes('—')) {
           const [placeName, placeDesc] = cleanText.split('—').map(s => s.trim());
           btn.classList.add('choice-btn-card');
           btn.innerHTML = `
-            <img class="choice-card-thumb" src="${imgUrl}" alt="${placeName}">
+            ${imgUrl ? `<img class="choice-card-thumb" src="${imgUrl}" alt="${placeName}">` : ''}
             <span class="choice-card-title">${placeName}</span>
             ${placeDesc ? `<span class="choice-card-desc">${placeDesc}</span>` : ''}
           `;

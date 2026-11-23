@@ -313,29 +313,47 @@ button {
 }
 
 /* ──────────────────────────────────────────
-   선택지
+   선택지 (상단 메뉴 아래 ~ 대사창 위 장면 영역의 가로·세로 정중앙)
 ────────────────────────────────────────── */
 #choices-container {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  top: calc(var(--menu-bar-height) + 10px);
+  bottom: calc(var(--dialogue-height) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90%, 560px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 60%;
+  justify-content: safe center;
+  align-items: stretch;
+  gap: 12px;
+  padding: 6px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 50;
+}
+
+.choice-question {
+  width: 100%;
+  text-align: center;
+  font-size: 0.98em;
+  font-weight: 700;
+  color: #f4f6fa;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  padding: 2px 6px;
 }
 
 .choice-btn {
   width: 100%;
-  min-height: 44px;
+  min-height: 48px;
   padding: 12px 20px;
-  background: rgba(10, 10, 30, 0.82);
+  background: rgba(10, 10, 30, 0.84);
   color: var(--color-text);
-  font-size: 0.85em;
+  font-size: 0.9em;
   line-height: 1.45;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 8px;
   text-align: center;
   transition: background var(--transition-fast), transform var(--transition-fast);
@@ -343,6 +361,7 @@ button {
   white-space: normal;
   word-break: keep-all;
   overflow-wrap: anywhere;
+  flex-shrink: 0;
 }
 
 .choice-btn:hover {
@@ -350,45 +369,18 @@ button {
   transform: scale(1.02);
 }
 
-/* ─── 작업 5: 처음 선택 화면(첫 장소 선택 & 성별 선택) 왼쪽 정렬 (폭 72%/최대 440px, 왼쪽 여백 16px, 간격 10px) ─── */
-#choices-container.choices-left-aligned {
-  top: auto;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--dialogue-height) + 12px);
-  transform: none;
-  width: 100%;
-  max-height: calc(100% - var(--dialogue-height) - var(--menu-bar-height) - 24px);
-  overflow-y: auto;
-  align-items: flex-start;
-  padding: 6px 16px;
-  gap: 10px;
-}
-
-#choices-container.choices-left-aligned .choice-question {
-  width: min(72%, 440px);
-  text-align: left;
-  font-size: 14px;
-  font-weight: 700;
-  color: #f0f4ff;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
-}
-
-#choices-container.choices-left-aligned .choice-btn {
-  width: min(72%, 440px);
-  max-width: min(72%, 440px);
-  min-height: 48px;
-  font-size: 13.5px;
-  text-align: left;
-  word-break: keep-all;
+.choice-btn:active {
+  background: var(--color-btn-active);
 }
 
 .choice-btn.choice-btn-card {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 8px 10px;
+  padding: 12px 16px;
+  text-align: center;
 }
 
 .choice-card-thumb {
@@ -400,32 +392,16 @@ button {
 }
 
 .choice-card-title {
-  font-size: 14.5px;
+  font-size: 1em;
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .choice-card-desc {
-  font-size: 12px;
+  font-size: 0.84em;
   color: #d0d8e8;
-  line-height: 1.35;
-  word-break: keep-all;
-}
-
-#modal-gender .gender-options {
-  align-items: flex-start;
-  gap: 10px;
-  padding-left: 0;
-}
-
-#modal-gender .gender-options .choice-btn-large {
-  width: 72%;
-  max-width: 72%;
-  min-height: 48px;
-  padding: 12px 14px;
-  font-size: 14px;
-  text-align: left;
+  line-height: 1.4;
   word-break: keep-all;
 }
 
@@ -560,9 +536,10 @@ button {
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
-  padding-bottom: 110px;
+  padding: 32px;
+  box-sizing: border-box;
 }
 
 #title-game-title {
@@ -586,7 +563,7 @@ button {
 #title-menu {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   gap: 14px;
 }
 
@@ -1076,20 +1053,19 @@ button {
     min-width: auto;
   }
 
-  /* 선택지 컨테이너 — 화면 폭 안 중앙, 대사창 위쪽 배치, 넘치면 내부 스크롤 */
+  /* 선택지 컨테이너 — 상단 메뉴 아래 ~ 대사창 위 장면 영역 정중앙, 좌우 여백 16px, 간격 12px */
   #choices-container {
     position: absolute;
-    top: auto;
+    top: calc(env(safe-area-inset-top, 0px) + 52px);
     left: 0;
     right: 0;
     bottom: calc(38% + 10px);
     transform: none;
-    width: min(100%, 720px);
+    width: 100%;
     margin-inline: auto;
     box-sizing: border-box;
-    padding: 6px max(14px, env(safe-area-inset-right, 0px)) 6px max(14px, env(safe-area-inset-left, 0px));
-    max-height: calc(62vh - 104px);
-    max-height: calc(62dvh - 104px);
+    padding: 6px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px));
+    max-height: none;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -1097,8 +1073,8 @@ button {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
-    justify-content: flex-start;
+    gap: 12px;
+    justify-content: safe center;
   }
 
   .choice-question {
@@ -1140,6 +1116,10 @@ button {
   .modal-btn {
     min-height: 44px;
     font-size: 15px;
+  }
+
+  #title-content {
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   }
 
   .title-btn {
