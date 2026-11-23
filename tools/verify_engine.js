@@ -47,6 +47,12 @@ for (const [cid, table] of Object.entries(manifest.characters.male)) {
     assert(fs.existsSync(path.join(rootDir, rel)), `남성 스프라이트 존재: ${cid}.${expr} -> ${rel}`);
   }
 }
+for (const [cid, table] of Object.entries(manifest.characters.female)) {
+  assert(Object.keys(table).length > 0, `여성 스프라이트 매핑 존재: ${cid}`);
+  for (const [expr, rel] of Object.entries(table)) {
+    assert(fs.existsSync(path.join(rootDir, rel)), `여성 스프라이트 존재: ${cid}.${expr} -> ${rel}`);
+  }
+}
 
 // 2. 이전 스토리 잔존 여부 검증
 const sceneFiles = fs.readdirSync(path.join(rootDir, 'data', 'scenes')).filter(f => f.endsWith('.json'));

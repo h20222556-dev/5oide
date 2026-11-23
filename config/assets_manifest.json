@@ -73,10 +73,29 @@
       }
     },
     "female": {
-      "dakgalbi": {},
-      "yangnyeom": {},
-      "goguma": {},
-      "bokkeumbap": {}
+      "dakgalbi": {
+        "default": "assets/characters/female/ch_dakgogi_f_default.png",
+        "surprised": "assets/characters/female/ch_dakgogi_f_surprised.png",
+        "blush": "assets/characters/female/ch_dakgogi_f_blush.png",
+        "neutral": "assets/characters/female/ch_dakgogi_f_neutral.png",
+        "laugh": "assets/characters/female/ch_dakgogi_f_laugh.png"
+      },
+      "yangnyeom": {
+        "default": "assets/characters/female/ch_yangnyeom_f_default.png",
+        "blush": "assets/characters/female/ch_yangnyeom_f_blush.png",
+        "smile": "assets/characters/female/ch_yangnyeom_f_smile.png",
+        "blush_smile_away": "assets/characters/female/ch_yangnyeom_f_blush_smile_away.png"
+      },
+      "goguma": {
+        "default": "assets/characters/female/ch_goguma_f_default.png",
+        "surprised": "assets/characters/female/ch_goguma_f_surprised.png",
+        "smile": "assets/characters/female/ch_goguma_f_smile.png",
+        "blush": "assets/characters/female/ch_goguma_f_blush.png",
+        "neutral": "assets/characters/female/ch_goguma_f_neutral.png"
+      },
+      "bokkeumbap": {
+        "default": "assets/characters/female/ch_bokkeumbap_f_default.png"
+      }
     }
   },
   "expressionMap": {
