@@ -765,8 +765,9 @@ button {
 #title-menu {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 10px;
+  overflow: visible;
 }
 
 .title-btn {
@@ -782,21 +783,92 @@ button {
               transform var(--transition-fast), border-color var(--transition-fast);
 }
 
-.title-btn:hover {
-  background: rgba(232, 180, 200, 0.18);
-  color: #fff;
-  border-color: var(--color-accent);
-  transform: scale(1.03);
+.title-btn.title-img-btn {
+  position: relative;
+  width: 200px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease, filter 0.18s ease;
 }
 
-.title-btn:active {
-  transform: scale(0.98);
+.title-btn-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
-.title-btn:disabled {
-  opacity: 0.72;
-  cursor: wait;
+.title-btn-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 20px;
+  background: var(--pink-soft);
+  color: var(--plum);
+  border: var(--ui-border-width) solid var(--pink-main);
+  border-radius: var(--ui-radius-md);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  box-shadow: var(--ui-shadow);
+}
+
+.title-btn.title-img-btn.is-fallback .title-btn-img {
+  display: none;
+}
+
+.title-btn.title-img-btn.is-fallback .title-btn-fallback {
+  display: inline-flex;
+}
+
+@media (hover: hover) {
+  .title-btn.title-img-btn:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: transparent;
+    border-color: transparent;
+    transform: translateY(-2px);
+    filter: drop-shadow(0 6px 14px rgba(244, 169, 196, 0.78));
+  }
+}
+
+.title-btn.title-img-btn:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+.title-btn.title-img-btn:focus-visible {
+  outline: 3px solid var(--plum);
+  outline-offset: 3px;
+}
+
+.title-btn.title-img-btn:disabled,
+.title-btn.title-img-btn[aria-disabled="true"] {
+  opacity: 1;
+  filter: saturate(0.55);
+  cursor: not-allowed;
   transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-btn.title-img-btn {
+    transition: none !important;
+    transform: none !important;
+  }
 }
 
 /* ──────────────────────────────────────────
@@ -1334,14 +1406,20 @@ button {
   }
 
   #title-content {
-    padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    align-items: center;
+    justify-content: flex-end;
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
   }
 
-  .title-btn {
-    min-width: 180px;
+  #title-menu {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .title-btn.title-img-btn {
+    width: clamp(240px, 77vw, 320px);
     min-height: 44px;
-    font-size: 1rem;
-    padding: 12px 24px;
+    padding: 0;
   }
 
   #title-game-title {
@@ -3045,7 +3123,46 @@ button {
   }
 }
 
+@media (max-width: 380px) and (orientation: portrait), (max-height: 700px) and (orientation: portrait) {
+  #title-menu {
+    gap: 8px;
+  }
+
+  .title-btn.title-img-btn {
+    width: clamp(220px, 72vw, 260px);
+  }
+}
+
+@media (max-height: 580px) and (orientation: portrait) {
+  #title-menu {
+    gap: 4px;
+  }
+
+  .title-btn.title-img-btn {
+    width: 220px;
+  }
+}
+
 @media (max-height: 500px) and (orientation: landscape) {
+  #title-content {
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #title-menu {
+    display: grid;
+    grid-template-columns: repeat(2, 260px);
+    row-gap: 8px;
+    column-gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .title-btn.title-img-btn {
+    width: 260px;
+  }
+
   #game-menu-bar {
     top: max(6px, env(safe-area-inset-top, 0px));
     left: max(8px, env(safe-area-inset-left, 0px));

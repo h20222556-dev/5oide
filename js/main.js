@@ -18,10 +18,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const setTitleReady = (ready) => {
     if (btnNewGame) {
       btnNewGame.disabled = !ready;
-      btnNewGame.textContent = ready ? (btnNewGame.dataset.readyLabel || '새로 시작') : '불러오는 중…';
+      btnNewGame.setAttribute('aria-disabled', ready ? 'false' : 'true');
+      const fallbackEl = btnNewGame.querySelector('.title-btn-fallback');
+      if (fallbackEl) {
+        fallbackEl.textContent = ready ? (btnNewGame.dataset.readyLabel || '새로 시작') : '불러오는 중…';
+      }
     }
     if (btnLoad) {
       btnLoad.disabled = !ready;
+      btnLoad.setAttribute('aria-disabled', ready ? 'false' : 'true');
     }
   };
 
