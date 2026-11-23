@@ -1110,6 +1110,7 @@ const gameConfig = {
   storyVersion: STORY_VERSION,
   PHONE_ASPECT_WIDTH: 9,
   PHONE_ASPECT_HEIGHT: 19.5,
+  SHOW_CHOICE_IMAGES: false,
   TRANSITION_MODE: 'cut',
   textSpeed: 40,
   autoSpeed: 2000,

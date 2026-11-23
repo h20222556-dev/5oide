@@ -78,6 +78,7 @@ class GameEngine {
       }
       if (this.config?.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config?.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
+      if (this.config) this.renderer.showChoiceImages = this.config.SHOW_CHOICE_IMAGES === true;
       if (this.config && typeof this.renderer.setHudVisible === 'function') {
         this.renderer.setHudVisible(this.config.SHOW_HUD === true);
       }
@@ -110,6 +111,7 @@ class GameEngine {
       }
       if (this.config.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
+      this.renderer.showChoiceImages = this.config.SHOW_CHOICE_IMAGES === true;
       if (typeof document !== 'undefined' && document.documentElement) {
         if (this.config.PHONE_ASPECT_WIDTH) document.documentElement.style.setProperty('--phone-aspect-w', String(this.config.PHONE_ASPECT_WIDTH));
         if (this.config.PHONE_ASPECT_HEIGHT) document.documentElement.style.setProperty('--phone-aspect-h', String(this.config.PHONE_ASPECT_HEIGHT));
@@ -736,14 +738,12 @@ class GameEngine {
 
     // 5. 일반 씬의 선택지가 있는 경우
     if (scene.choices && scene.choices.options?.length > 0) {
-      const choiceOpts = {};
       let opts = scene.choices.options;
       if (scene.id === 's02_place_select' && scene.choices.id === 'place_1') {
-        choiceOpts.alignLeft = true;
         const placeImgMap = { lego: 'bg_legoland', skywalk: 'bg_skywalk', myeongdong: 'bg_dakgalbi_alley' };
         opts = opts.map(o => ({ ...o, imageKey: placeImgMap[o.placeKey] || null }));
       }
-      this._presentChoices(scene.choices.question, opts, choiceOpts);
+      this._presentChoices(scene.choices.question, opts);
       return;
     }
 

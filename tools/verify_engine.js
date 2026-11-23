@@ -365,7 +365,8 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   assert(s07.dialogues.some(d => d.chatList === 'day1'), '항목 8: #7에 코드 채팅 목록(day1) 연결됨');
   assert(s08.dialogues.some(d => d.chatList === 'day2_step1') && s08.dialogues.some(d => d.chatList === 'day2_step3'), '항목 8: #8에 순차 도착 채팅 목록(day2_step1~3) 연결됨');
 
-  // 12) 작업 3, 4, 6 검증: 폰 UI 비율 상수, 전환 모드, 화자 이름 색 비중복 및 대비 4.5:1 이상
+  // 12) 작업 1, 3, 4, 6 검증: 선택지 이미지 숨김, 폰 UI 비율 상수, 전환 모드, 화자 이름 색 비중복 및 대비 4.5:1 이상
+  assert(config.SHOW_CHOICE_IMAGES === false, '작업 1: SHOW_CHOICE_IMAGES 기본값 === false');
   assert(config.PHONE_ASPECT_WIDTH === 9 && config.PHONE_ASPECT_HEIGHT === 19.5, '작업 3: PHONE_ASPECT_WIDTH=9, PHONE_ASPECT_HEIGHT=19.5');
   assert(config.TRANSITION_MODE === 'cut', '작업 4: TRANSITION_MODE 기본값 === cut');
   const hexToLum = (hex) => {
