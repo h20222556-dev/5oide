@@ -90,6 +90,25 @@ class Renderer {
     if (this.screenGame) this.screenGame.classList.toggle('active', screenId === 'game');
   }
 
+  setTitleBackground(gender = 'female') {
+    const titleBg = document.getElementById('title-bg');
+    if (!titleBg) return;
+    const key = gender === 'male' ? 'bg_title_m' : 'bg_title_f';
+    const url = this.assetManifest?.backgrounds?.[key] || `assets/backgrounds/${key}.png`;
+    titleBg.style.backgroundImage = `url('${url}')`;
+  }
+
+  showTitleWithFade() {
+    this.showScreen('title');
+    if (!this.screenTitle) return;
+    this.screenTitle.classList.remove('title-fade-in');
+    void this.screenTitle.offsetWidth;
+    this.screenTitle.classList.add('title-fade-in');
+    setTimeout(() => {
+      if (this.screenTitle) this.screenTitle.classList.remove('title-fade-in');
+    }, 600);
+  }
+
   preloadImage(url) {
     if (!url || this._preloadedUrls.has(url)) return;
     this._preloadedUrls.add(url);
@@ -902,30 +921,51 @@ class Renderer {
 
   // ─── 성별 / 이름 모달 ──────────────────────────────────────────────────────
 
-  showGenderModal(onSelect, onBack) {
+  showGenderModal(onSelect, onBack, opts = {}) {
     if (!this.genderModal) return;
+    const isInitial = !!opts.initial;
+    this.genderModal.classList.remove('is-fading-out');
+    this.genderModal.classList.toggle('initial-black-bg', isInitial);
     this.genderModal.classList.remove('hidden');
 
     const btnFemale = document.getElementById('btn-gender-female');
     const btnMale = document.getElementById('btn-gender-male');
     const btnBack = document.getElementById('btn-gender-back');
 
-    if (btnFemale) {
-      btnFemale.onclick = () => {
-        this.genderModal.classList.add('hidden');
-        if (typeof onSelect === 'function') onSelect('female');
-      };
+    if (btnBack) {
+      btnBack.classList.toggle('hidden', isInitial);
     }
-    if (btnMale) {
-      btnMale.onclick = () => {
+
+    let handled = false;
+    const finishSelect = (gender) => {
+      if (handled) return;
+      handled = true;
+      const reducedMotion = typeof window !== 'undefined'
+        && typeof window.matchMedia === 'function'
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (isInitial && !reducedMotion) {
+        this.genderModal.classList.add('is-fading-out');
+        setTimeout(() => {
+          this.genderModal.classList.add('hidden');
+          this.genderModal.classList.remove('initial-black-bg', 'is-fading-out');
+          if (typeof onSelect === 'function') onSelect(gender);
+        }, 450);
+      } else {
         this.genderModal.classList.add('hidden');
-        if (typeof onSelect === 'function') onSelect('male');
-      };
-    }
+        this.genderModal.classList.remove('initial-black-bg', 'is-fading-out');
+        if (typeof onSelect === 'function') onSelect(gender);
+      }
+    };
+
+    if (btnFemale) btnFemale.onclick = () => finishSelect('female');
+    if (btnMale) btnMale.onclick = () => finishSelect('male');
     if (btnBack) {
       btnBack.onclick = (e) => {
         e.stopPropagation();
+        if (isInitial) return;
         this.genderModal.classList.add('hidden');
+        this.genderModal.classList.remove('initial-black-bg', 'is-fading-out');
         if (typeof onBack === 'function') onBack();
       };
     }

@@ -716,7 +716,6 @@ button {
 #title-bg {
   position: absolute;
   inset: 0;
-  background-image: url('../assets/backgrounds/bg_title.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -2499,13 +2498,45 @@ button {
    성별 선택 / 기록실 / 설정 모달 — UI 디자인 가이드 파스텔 톤 통일
 ────────────────────────────────────────── */
 #modal-gender.modal-overlay,
+#modal-name.modal-overlay,
 #modal-gallery.modal-overlay,
 #modal-settings.modal-overlay {
   background: rgba(24, 14, 28, 0.58);
   backdrop-filter: blur(4px);
 }
 
+#modal-gender.modal-overlay.initial-black-bg {
+  background: #000000;
+  backdrop-filter: none;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+#modal-gender.modal-overlay.is-fading-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes titleFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#screen-title.title-fade-in {
+  animation: titleFadeIn 0.55s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #modal-gender.modal-overlay.initial-black-bg {
+    transition: none;
+  }
+  #screen-title.title-fade-in {
+    animation: none;
+  }
+}
+
 #modal-gender .modal-content,
+#modal-name .modal-content,
 #modal-gallery .modal-content,
 #modal-settings .modal-content {
   background: linear-gradient(180deg, var(--ivory) 0%, #FAF5FD 100%);
@@ -2517,6 +2548,7 @@ button {
 }
 
 #modal-gender .modal-header,
+#modal-name .modal-header,
 #modal-gallery .modal-header,
 #modal-settings .modal-header {
   padding-bottom: 12px;
@@ -2525,6 +2557,7 @@ button {
 }
 
 #modal-gender .modal-header h2,
+#modal-name .modal-header h2,
 #modal-gallery .modal-header h2,
 #modal-settings .modal-header h2 {
   font-family: var(--font-title);
@@ -2560,14 +2593,29 @@ button {
   color: var(--plum);
 }
 
-#modal-gender .modal-desc {
+#modal-gender .modal-desc,
+#modal-name .modal-desc {
   color: var(--gray-violet-text);
   font-size: 0.94rem;
   line-height: 1.5;
   word-break: keep-all;
 }
 
+#modal-name #input-player-name {
+  background: var(--ivory);
+  border: var(--ui-border-width) solid var(--lavender);
+  border-radius: var(--ui-radius-sm);
+  color: var(--plum);
+  font-weight: 600;
+}
+
+#modal-name #input-player-name:focus {
+  border-color: var(--pink-main);
+  box-shadow: 0 0 0 3px rgba(244, 169, 196, 0.35);
+}
+
 #modal-gender .modal-btn,
+#modal-name .modal-btn,
 #modal-settings .modal-btn {
   min-height: 44px;
   padding: 10px 22px;
@@ -2581,12 +2629,14 @@ button {
 }
 
 #modal-gender .modal-btn:hover,
+#modal-name .modal-btn:hover,
 #modal-settings .modal-btn:hover {
   opacity: 1;
   background: #F096B8;
 }
 
 #modal-gender .modal-btn.secondary,
+#modal-name .modal-btn.secondary,
 #modal-settings .modal-btn.secondary {
   background: var(--lavender-soft);
   color: var(--plum);
@@ -2594,6 +2644,7 @@ button {
 }
 
 #modal-gender .modal-btn.secondary:hover,
+#modal-name .modal-btn.secondary:hover,
 #modal-settings .modal-btn.secondary:hover {
   background: #E2D9F6;
 }
