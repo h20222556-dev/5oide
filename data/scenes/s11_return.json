@@ -34,8 +34,13 @@
       "text": "늦었네요. 길 잃은 줄 알았어요.",
       "characters": [
         {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "yangnyeom",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -46,8 +51,18 @@
       "text": "많이 걸으셨죠? 피곤하지는 않았어요?",
       "characters": [
         {
-          "id": "goguma",
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -56,7 +71,23 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "덕분에 정말 즐거웠어요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",

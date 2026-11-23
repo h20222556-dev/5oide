@@ -68,9 +68,10 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "goguma": 1
+              "goguma": 2
             },
-            "compact": true
+            "compact": true,
+            "labelMode": "up"
           },
           "followUp": []
         }
@@ -80,7 +81,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "여기 자주 오시나 봐요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -106,12 +113,7 @@
           "text": "혹시 이 근처에 다른 볼거리도 있나요?",
           "next": null,
           "effectDesc": "",
-          "effects": {
-            "like": {
-              "goguma": 1
-            },
-            "compact": true
-          },
+          "effects": null,
           "followUp": []
         }
       ]
@@ -120,7 +122,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "혹시 이 근처에 다른 볼거리도 있나요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -152,7 +160,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아, 저는 {player}이라고 해요. 이번에 춘천에 처음 놀러와봤어요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -183,7 +197,13 @@
       "speaker": null,
       "speakerType": "narration",
       "text": "고구마가 지갑에서 명함을 꺼내 건넨다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",

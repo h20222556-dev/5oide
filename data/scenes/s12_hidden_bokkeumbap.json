@@ -43,37 +43,73 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "심장이 덜컥 내려앉았다. 저 사람은...",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "한때 내가 사랑했던 사람이자,",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "얼마 전 헤어진 전 애인이었다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "저 사람은... 설마.",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{볶음밥}...",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "다시는 마주칠 일이 없을 거라고 생각했다. 그런데 왜 하필 오늘, 이곳에서 만나게 된 걸까?",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "볶음밥",
@@ -92,7 +128,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "...!",
-      "characters": []
+      "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -100,8 +142,13 @@
       "text": "{player}씨! 한참 찾았잖... 뭐야, {볶음밥}?",
       "characters": [
         {
+          "id": "bokkeumbap",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "dakgalbi",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -112,8 +159,13 @@
       "text": "너 언제 온거야? 아니 그것보다...",
       "characters": [
         {
+          "id": "bokkeumbap",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "dakgalbi",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -124,8 +176,18 @@
       "text": "둘이 아는 사이였어요?",
       "characters": [
         {
-          "id": "goguma",
+          "id": "bokkeumbap",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "dakgalbi",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -135,6 +197,21 @@
       "speakerType": "normal",
       "text": "...",
       "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "기본"
+        },
         {
           "id": "yangnyeom",
           "position": "center",
@@ -147,6 +224,21 @@
       "speakerType": "normal",
       "text": "...잠깐 설마, {player}씨가...",
       "characters": [
+        {
+          "id": "bokkeumbap",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "기본"
+        },
         {
           "id": "yangnyeom",
           "position": "center",
@@ -171,13 +263,25 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{볶음밥}...",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{볶음밥}이 세 사람의 친구라고는 전혀 생각도 못했어.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "볶음밥",
@@ -185,8 +289,13 @@
       "text": "...오늘 올 생각이 없었는데",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "bokkeumbap",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -197,8 +306,13 @@
       "text": "그냥...",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "bokkeumbap",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -209,8 +323,13 @@
       "text": "너희가 돌아올 시간쯤이 되니까 와 있더라.",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "bokkeumbap",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -219,7 +338,18 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "...",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "bokkeumbap",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "볶음밥",
@@ -227,8 +357,13 @@
       "text": "그리고 네가 있을 줄은 몰랐어.",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "bokkeumbap",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -239,8 +374,13 @@
       "text": "늦게 와서 이런 얘기하기 그런데...",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "bokkeumbap",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -251,8 +391,13 @@
       "text": "잠깐 {player}과 이야기할 수 있을까?",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "bokkeumbap",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]

@@ -76,7 +76,6 @@ function parseBackgroundDirective(line) {
   if (t.startsWith('카페 안')) return { bg: 'bg_cafe', overlay: null };
   if (t.startsWith('숙소 내부 / 밤')) return { bg: 'bg_hotel', overlay: 'night' };
   if (t.startsWith('숙소 내부 / 아침')) return { bg: 'bg_hotel', overlay: null };
-  if (t.startsWith('채팅 목록')) return { bg: 'bg_chat_list', overlay: null };
   if (t.startsWith('사람들이 많이 있는 선착장')) return { bg: 'bg_pier', overlay: null };
   if (t.startsWith('닭고기가 나오는 전광판 홍보 영상')) return { bg: 'bg_promo_video', overlay: null };
   if (t.startsWith('수상버스 안 / 해질녘')) return { bg: 'bg_nami_boat_interior', overlay: 'sunset' };
@@ -98,16 +97,52 @@ function isVisualDirective(line) {
   return false;
 }
 
+function cloneChars(list) {
+  return (list || []).map(c => ({ ...c }));
+}
+
+function upsertActiveChar(activeChars, id, expr) {
+  const existing = activeChars.find(c => c.id === id);
+  if (existing) {
+    existing.expression = expr || existing.expression || '기본';
+  } else {
+    activeChars.push({ id, position: 'center', expression: expr || '기본' });
+  }
+  if (activeChars.length === 1) {
+    activeChars[0].position = 'center';
+  } else if (activeChars.length === 2) {
+    activeChars[0].position = 'left';
+    activeChars[1].position = 'right';
+  } else if (activeChars.length >= 3) {
+    activeChars[0].position = 'left';
+    activeChars[1].position = 'center';
+    activeChars[2].position = 'right';
+  }
+}
+
 // 대사 한 줄 파싱
 function parseDialogueLine(rawLine, state) {
   const line = rawLine.trim();
   if (!line) return null;
+
+  // 채팅 목록 지시 (#6, #7, #8) — 이미지 대신 코드 UI로 표시
+  if (line.startsWith('채팅 목록')) {
+    state.activeChars = [];
+    if (state.sceneId === 's08_day2_end') {
+      state.chatListMode = 'day2_step0';
+    } else {
+      state.chatListMode = 'day1';
+    }
+    return null;
+  }
 
   // 배경 지시
   const bgDir = parseBackgroundDirective(line);
   if (bgDir) {
     state.pendingBg = bgDir.bg;
     state.pendingOverlay = bgDir.overlay;
+    state.activeChars = [];
+    if (bgDir.bg === 'bg_black') state.chatListMode = null;
     if (!state.initialBg) {
       state.initialBg = bgDir.bg;
       state.initialOverlay = bgDir.overlay;
@@ -134,12 +169,19 @@ function parseDialogueLine(rawLine, state) {
     if (line.includes('검정 화면')) {
       state.pendingBg = 'bg_black';
       state.pendingOverlay = null;
+      state.chatListMode = null;
     } else if (line.includes('→ 창밖 풍경')) {
       state.pendingBg = 'bg_train_window';
       state.pendingOverlay = null;
     } else if (line.includes('→ 휴대폰 화면')) {
-      state.pendingBg = 'bg_phone_screen';
-      state.pendingOverlay = null;
+      if (state.sceneId === 's08_day2_end') {
+        state.pendingBg = 'bg_hotel';
+        state.pendingOverlay = 'night';
+        state.chatListMode = 'day2_step3';
+      } else {
+        state.pendingBg = 'bg_phone_screen';
+        state.pendingOverlay = null;
+      }
     }
     if (/^효과음\s*:/.test(line)) {
       const sfxName = line.replace(/^효과음\s*:/, '').trim();
@@ -147,6 +189,7 @@ function parseDialogueLine(rawLine, state) {
     }
     if (/페이드/.test(line)) {
       state.pendingFade = line.includes('흰') ? 'white' : 'black';
+      state.activeChars = [];
     }
     return null;
   }
@@ -166,6 +209,9 @@ function parseDialogueLine(rawLine, state) {
       obj.fade = state.pendingFade;
       state.pendingFade = null;
     }
+    if (state.chatListMode && state.chatListMode !== 'day2_step0') {
+      obj.chatList = state.chatListMode;
+    }
     return obj;
   };
 
@@ -174,11 +220,14 @@ function parseDialogueLine(rawLine, state) {
   if (stageM) {
     const inner = normalizePlaceholders(stageM[1].trim());
     // "사라진다" 지문이면 캐릭터 퇴장 처리
+    if (inner.includes('사라진다')) {
+      state.activeChars = [];
+    }
     return attachPending({
       speaker: null,
       speakerType: 'narration',
       text: inner,
-      characters: [],
+      characters: cloneChars(state.activeChars),
     });
   }
 
@@ -190,14 +239,13 @@ function parseDialogueLine(rawLine, state) {
     const id2 = CHAR_ID_MAP[dualM[3]];
     const expr2 = dualM[4].trim();
     const text = normalizePlaceholders(dualM[5].trim());
+    upsertActiveChar(state.activeChars, id1, expr1);
+    upsertActiveChar(state.activeChars, id2, expr2);
     return attachPending({
       speaker: `{${ROLE_NAME[id1]}}, {${ROLE_NAME[id2]}}`,
       speakerType: 'normal',
       text,
-      characters: [
-        { id: id1, position: 'left', expression: expr1 },
-        { id: id2, position: 'right', expression: expr2 },
-      ],
+      characters: cloneChars(state.activeChars),
     });
   }
 
@@ -219,11 +267,12 @@ function parseDialogueLine(rawLine, state) {
   if (rawSpeaker.startsWith('(영상)')) {
     const who = rawSpeaker.replace('(영상)', '').trim();
     const cid = CHAR_ID_MAP[who];
+    if (cid) upsertActiveChar(state.activeChars, cid, '웃음');
     return attachPending({
       speaker: cid ? `영상 속 ${ROLE_NAME[cid]}` : rawSpeaker,
       speakerType: 'normal',
       text,
-      characters: cid ? [{ id: cid, position: 'center', expression: '웃음' }] : [],
+      characters: cloneChars(state.activeChars),
     });
   }
 
@@ -238,20 +287,21 @@ function parseDialogueLine(rawLine, state) {
       else if (CHAR_ID_MAP[tag]) cid = CHAR_ID_MAP[tag];
       else expr = tag;
     }
+    if (cid && speakerType !== 'os' && speakerType !== 'vo') {
+      upsertActiveChar(state.activeChars, cid, expr);
+    }
     const obj = {
       speaker: '???',
       speakerType,
       text,
-      characters: (cid && speakerType !== 'os' && speakerType !== 'vo')
-        ? [{ id: cid, position: 'center', expression: expr }]
-        : [],
+      characters: cloneChars(state.activeChars),
     };
     if (cid) obj.speakerId = cid;
     if (textLarge) obj.textLarge = true;
     return attachPending(obj);
   }
 
-  // 주인공(V.O.) / 주인공(O.S.) / 주인공
+  // 주인공(V.O.) / 주인공(O.S.) / 주인공 — 직전 캐릭터 스프라이트와 마지막 표정 유지
   if (rawSpeaker.startsWith('주인공')) {
     if (rawSpeaker.includes('(V.O.)')) speakerType = 'vo';
     else if (rawSpeaker.includes('(O.S.)')) speakerType = 'os';
@@ -259,7 +309,7 @@ function parseDialogueLine(rawLine, state) {
       speaker: '주인공',
       speakerType,
       text,
-      characters: [],
+      characters: cloneChars(state.activeChars),
     };
     if (textLarge) obj.textLarge = true;
     return attachPending(obj);
@@ -267,14 +317,14 @@ function parseDialogueLine(rawLine, state) {
 
   // 영상 내레이션 / 안내방송 / 승선 안내 방송
   if (rawSpeaker === '영상 내레이션') {
-    return attachPending({ speaker: null, speakerType: 'narration', text, characters: [] });
+    return attachPending({ speaker: null, speakerType: 'narration', text, characters: cloneChars(state.activeChars) });
   }
   if (rawSpeaker.startsWith('안내방송') || rawSpeaker.startsWith('승선 안내 방송')) {
     return attachPending({
       speaker: '안내방송',
       speakerType: 'os',
       text,
-      characters: [],
+      characters: cloneChars(state.activeChars),
     });
   }
 
@@ -283,11 +333,26 @@ function parseDialogueLine(rawLine, state) {
   if (charM) {
     const cid = CHAR_ID_MAP[charM[1]];
     const expr = charM[2] ? charM[2].trim() : '기본';
+
+    // #8 Day 2 밤 채팅 목록 도착 메시지 (스프라이트 없이 채팅 목록에 차례로 추가)
+    if (state.sceneId === 's08_day2_end' && state.chatListMode && state.chatListMode.startsWith('day2_')) {
+      if (cid === 'dakgalbi') state.chatListMode = 'day2_step1';
+      else if (cid === 'yangnyeom') state.chatListMode = 'day2_step2';
+      else if (cid === 'goguma') state.chatListMode = 'day2_step3';
+      return attachPending({
+        speaker: ROLE_NAME[cid],
+        speakerType: 'normal',
+        text,
+        characters: [],
+      });
+    }
+
+    upsertActiveChar(state.activeChars, cid, expr);
     const obj = {
       speaker: ROLE_NAME[cid],
       speakerType: 'normal',
       text,
-      characters: [{ id: cid, position: 'center', expression: expr }],
+      characters: cloneChars(state.activeChars),
     };
     if (textLarge) obj.textLarge = true;
     return attachPending(obj);
@@ -297,14 +362,24 @@ function parseDialogueLine(rawLine, state) {
     speaker: rawSpeaker,
     speakerType,
     text,
-    characters: [],
+    characters: cloneChars(state.activeChars),
   });
 }
 
 // 마크다운 블록(라인 배열)을 대사 + 인라인 단일버튼 + 인라인 선택화면으로 파싱
 function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonGivesLike = false } = {}) {
   const dialogues = [];
-  const state = { initialBg: null, initialOverlay: null, pendingBg: null, pendingOverlay: null, pendingSfx: null, pendingFade: null };
+  const state = {
+    sceneId,
+    initialBg: null,
+    initialOverlay: null,
+    pendingBg: null,
+    pendingOverlay: null,
+    pendingSfx: null,
+    pendingFade: null,
+    activeChars: [],
+    chatListMode: null,
+  };
   let singleCount = 0;
   let choiceCount = 0;
   let endingTitle = null;
@@ -325,14 +400,14 @@ function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonG
       continue;
     }
 
-    // [버튼] 문구 (+1) 또는 [버튼] 문구
-    const btnM = trimmed.match(/^\[버튼\]\s*(.+?)(?:\s*\(\+(\d+)\))?$/);
+    // [버튼] 문구 (+2) 또는 [버튼] 문구 (0) 또는 [버튼] 문구
+    const btnM = trimmed.match(/^\[버튼\]\s*(.+?)(?:\s*\((?:\+(\d+)|0)\))?$/);
     if (btnM) {
       singleCount++;
       const btnText = normalizePlaceholders(stripOuterQuotes(btnM[1]));
       const pts = btnM[2] ? parseInt(btnM[2], 10) : 0;
       const effects = (pts > 0 && charId)
-        ? { like: { [charId]: pts }, compact: buttonGivesLike }
+        ? { like: { [charId]: pts }, compact: buttonGivesLike, labelMode: buttonGivesLike ? 'up' : null }
         : null;
       dialogues.push({
         type: 'choice',
@@ -354,7 +429,7 @@ function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonG
         speaker: '주인공',
         speakerType: 'os',
         text: btnText,
-        characters: [],
+        characters: cloneChars(state.activeChars),
       });
       i++;
       continue;
@@ -387,7 +462,17 @@ function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonG
             if (!sub) { i++; continue; }
             if (sub.startsWith('```')) {
               i++;
-              const fState = { initialBg: null, initialOverlay: null, pendingBg: null, pendingOverlay: null, pendingSfx: null, pendingFade: null };
+              const fState = {
+                sceneId,
+                initialBg: null,
+                initialOverlay: null,
+                pendingBg: null,
+                pendingOverlay: null,
+                pendingSfx: null,
+                pendingFade: null,
+                activeChars: cloneChars(state.activeChars),
+                chatListMode: null,
+              };
               while (i < secLines.length && !secLines[i].trim().startsWith('```')) {
                 const d = parseDialogueLine(secLines[i], fState);
                 if (d) followUp.push(d);

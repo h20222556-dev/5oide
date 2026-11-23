@@ -38,13 +38,25 @@
       "speaker": null,
       "speakerType": "narration",
       "text": "고구마가 주인공의 사진을 몇 장 찍어준다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "그런데 {고구마}씨는 사진은 별로 못 본 것 같아요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -62,7 +74,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "{고구마}씨도 누군가에게 챙김받아도 되는 사람이에요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "아쉬움/미안"
+        }
+      ]
     },
     {
       "type": "choice",
@@ -135,13 +153,25 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "그럼요. 다음에도 이렇게 {고구마}씨가 원하는 걸 해요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "오늘 {고구마}씨는 다른 사람 뿐만 아니라 자신도 행복해질 수 있다는 걸 조금씩 알아가는 것 같다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": null,

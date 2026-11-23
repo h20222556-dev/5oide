@@ -32,8 +32,13 @@
       "text": "좋겠네. 아주 신났어.",
       "characters": [
         {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
           "id": "yangnyeom",
-          "position": "center",
+          "position": "right",
           "expression": "시큰둥"
         }
       ]
@@ -44,8 +49,18 @@
       "text": "후후, 아쉽지만 저는 {양념}과 같이 앉아야겠네요.",
       "characters": [
         {
-          "id": "goguma",
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "yangnyeom",
           "position": "center",
+          "expression": "시큰둥"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
           "expression": "아쉬움"
         }
       ]
@@ -54,7 +69,23 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{닭갈비}씨는 무척 기뻐 보인다. 평소보다 한층 더 들뜬 것 같다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "center",
+          "expression": "시큰둥"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "아쉬움"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -97,7 +128,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "사진 찍기에도 정말 좋겠네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -167,7 +204,13 @@
               "speaker": "주인공",
               "speakerType": "vo",
               "text": "좋아하는 장소를 나에게 보여줄 생각에 무척 신난 것 같다.",
-              "characters": []
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
             }
           ],
           "endingTitle": null
@@ -211,7 +254,13 @@
               "speaker": "주인공",
               "speakerType": "vo",
               "text": "{닭갈비}씨는 벌써 사진을 찍을 생각에 들떠 있다. 평소보다 특별한 추억을 만들고 싶은 걸까?",
-              "characters": []
+              "characters": [
+                {
+                  "id": "dakgalbi",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
             }
           ],
           "endingTitle": null
@@ -234,7 +283,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{닭갈비}씨와 함께라면 평소와는 다른 여행이 될 것 같다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": null,

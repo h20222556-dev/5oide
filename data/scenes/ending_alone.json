@@ -30,8 +30,13 @@
       "text": "돌아가서도 계속 연락해요!",
       "characters": [
         {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -42,8 +47,18 @@
       "text": "다음에 또 보자.",
       "characters": [
         {
-          "id": "yangnyeom",
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -52,25 +67,89 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "누구에게도 마음을 전하지 않았다. 그렇다고 이 여행이 의미 없었던 건 아니다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "춘천에서의 추억, 남이섬에서 보낸 하루, 새로운 친구들, 그리고 마음을 알아가는 시간.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "언젠가 다시 이곳에 오게 된다면, 그때는 어떤 이야기가 기다리고 있을까?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "또 올게, 춘천, 그리고 남이섬.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": null,

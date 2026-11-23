@@ -26,13 +26,25 @@
       "speaker": null,
       "speakerType": "narration",
       "text": "메타세쿼이아길에 도착한다. 높게 뻗은 나무들 사이로 햇빛이 비친다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "우와, 나무들이 정말 높네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -50,7 +62,13 @@
       "speaker": "???",
       "speakerType": "os",
       "text": "헉, 춘천 홍보 영상에 나오셨던 {닭갈비}씨 맞으시죠? 사진 한 장 부탁드려도 될까요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -68,7 +86,13 @@
       "speaker": null,
       "speakerType": "narration",
       "text": "닭고기가 관광객들과 사진을 찍고 춘천 관광지를 소개해 준다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -86,7 +110,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "오늘은 {닭갈비}씨도 여행하러 온 거잖아요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "아쉬움/미안"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -104,7 +134,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "저한테도 뭔가 알려주려고 애쓰지않아도 돼요. 그냥 같이 걸어도 좋으니까요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -134,7 +170,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "네. 저는 {닭갈비}씨가 춘천을 소개해 줘서 좋은 게 아니에요. 그냥 {닭갈비}씨랑 함께 있는 게 좋아요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "당황"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -243,13 +285,25 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "물론이죠!",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "오늘의 {닭갈비}씨는 평소보다 조금 더 솔직하고 편안해 보인다. 나와 함께하는 시간이 그만큼 즐거웠으면...",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
     }
   ],
   "choices": null,

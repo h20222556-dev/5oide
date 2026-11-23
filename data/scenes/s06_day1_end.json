@@ -21,26 +21,28 @@
       "speakerType": "vo",
       "text": "오늘은 정말 많은 일이 있었네.",
       "characters": [],
-      "background": "bg_chat_list",
-      "overlay": null
+      "chatList": "day1"
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "처음 만난 사람들이었는데, 다들 참 인상적이었어.",
-      "characters": []
+      "characters": [],
+      "chatList": "day1"
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "내일은 또 어떤 하루가 기다리고 있을까?",
-      "characters": []
+      "characters": [],
+      "chatList": "day1"
     },
     {
       "speaker": null,
       "speakerType": "narration",
       "text": "휴대폰을 내려놓고 천천히 잠에 빠져든다",
-      "characters": []
+      "characters": [],
+      "chatList": "day1"
     }
   ],
   "choices": null,

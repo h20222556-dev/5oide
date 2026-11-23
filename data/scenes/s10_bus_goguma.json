@@ -32,8 +32,13 @@
       "text": "뭐야, {고구마}랑 앉는 거예요?",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
           "id": "dakgalbi",
-          "position": "center",
+          "position": "right",
           "expression": "아쉬움"
         }
       ]
@@ -44,8 +49,13 @@
       "text": "{player}씨와 같이 앉고 싶었는데!",
       "characters": [
         {
+          "id": "goguma",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
           "id": "dakgalbi",
-          "position": "center",
+          "position": "right",
           "expression": "아쉬움"
         }
       ]
@@ -56,8 +66,18 @@
       "text": "...어쩔 수 없잖아.",
       "characters": [
         {
-          "id": "yangnyeom",
+          "id": "goguma",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
           "position": "center",
+          "expression": "아쉬움"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
           "expression": "시큰둥"
         }
       ]
@@ -66,7 +86,23 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{고구마}씨는 평소처럼 부드럽게 웃고 있지만, 어쩐지 평소보다 조금 더 밝아 보인다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "아쉬움"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "시큰둥"
+        }
+      ]
     },
     {
       "speaker": "양념",
@@ -87,8 +123,13 @@
       "text": "남이섬에는 예쁜 카페와 음식점도 있어요.",
       "characters": [
         {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -99,8 +140,13 @@
       "text": "산책하다가 맛있는 음식도 먹고, 예쁜 카페에서 잠깐 쉬어갈 수도 있답니다.",
       "characters": [
         {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -109,7 +155,18 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "듣기만 해도 여유로운 여행이 될 것 같네요.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -117,8 +174,13 @@
       "text": "{player}씨는 여행을 가면 어떤 시간을 가장 좋아하세요?",
       "characters": [
         {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -145,8 +207,13 @@
               "text": "저도요! 특히 그 지역에서만 맛볼 수 있는 음식은 더 특별하게 느껴져요.",
               "characters": [
                 {
+                  "id": "yangnyeom",
+                  "position": "left",
+                  "expression": "기본"
+                },
+                {
                   "id": "goguma",
-                  "position": "center",
+                  "position": "right",
                   "expression": "웃음"
                 }
               ]
@@ -157,8 +224,13 @@
               "text": "그럼 오늘은 맛있는 음식을 찾아다니는 코스도 넣어볼까요?",
               "characters": [
                 {
+                  "id": "yangnyeom",
+                  "position": "left",
+                  "expression": "기본"
+                },
+                {
                   "id": "goguma",
-                  "position": "center",
+                  "position": "right",
                   "expression": "웃음"
                 }
               ]
@@ -167,7 +239,18 @@
               "speaker": "주인공",
               "speakerType": "vo",
               "text": "{고구마}씨는 함께 먹거리를 찾아다닐 생각에 즐거워 보인다.",
-              "characters": []
+              "characters": [
+                {
+                  "id": "yangnyeom",
+                  "position": "left",
+                  "expression": "기본"
+                },
+                {
+                  "id": "goguma",
+                  "position": "right",
+                  "expression": "웃음"
+                }
+              ]
             }
           ],
           "endingTitle": null
@@ -189,8 +272,13 @@
               "text": "그런 시간도 정말 좋죠.",
               "characters": [
                 {
+                  "id": "yangnyeom",
+                  "position": "left",
+                  "expression": "기본"
+                },
+                {
                   "id": "goguma",
-                  "position": "center",
+                  "position": "right",
                   "expression": "웃음"
                 }
               ]
@@ -201,8 +289,13 @@
               "text": "바쁘게 돌아다니는 것보다 가끔은 여유롭게 쉬어가는 것도 여행의 묘미니까요.",
               "characters": [
                 {
+                  "id": "yangnyeom",
+                  "position": "left",
+                  "expression": "기본"
+                },
+                {
                   "id": "goguma",
-                  "position": "center",
+                  "position": "right",
                   "expression": "웃음"
                 }
               ]
@@ -218,8 +311,13 @@
       "text": "남이섬에 도착하면 맛있는 것도 먹고, 예쁜 카페도 들러봐요.",
       "characters": [
         {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -228,7 +326,18 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "{고구마}씨와 함께라면 느긋하고 따뜻한 하루를 보낼 수 있을 것 같다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": null,

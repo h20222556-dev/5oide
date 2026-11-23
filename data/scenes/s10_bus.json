@@ -40,8 +40,13 @@
       "text": "두 명씩 나눠 앉으면 될 것 같은데...",
       "characters": [
         {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "당황"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -52,8 +57,18 @@
       "text": "뭘 그렇게 고민해. 편한 대로 앉으면 되지.",
       "characters": [
         {
-          "id": "yangnyeom",
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "당황"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -65,7 +80,17 @@
       "characters": [
         {
           "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -74,7 +99,23 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "저요?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -82,8 +123,18 @@
       "text": "네! 저희는 어디든 괜찮거든요.",
       "characters": [
         {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
           "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -92,13 +143,45 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "어쩐지 세 사람이 서로 눈치를 살피는 것 같기도 하다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아... 저는 ....",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     }
   ],
   "choices": {

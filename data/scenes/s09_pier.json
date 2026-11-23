@@ -60,19 +60,37 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "... 저 사람은",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "어제 만난 {닭갈비}씨네...",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "춘천 관광 홍보 뿐만 아니라 수상버스 홍보 영상에도 출연하고 있었구나.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "???",
@@ -121,7 +139,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "아! {닭갈비}....",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
     },
     {
       "speaker": "{고구마}, {양념}",
@@ -129,8 +153,13 @@
       "text": "...{player}씨?",
       "characters": [
         {
-          "id": "goguma",
+          "id": "dakgalbi",
           "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
           "expression": "놀람"
         },
         {
@@ -144,19 +173,67 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "어라? {고구마}씨.... 그리고 {양념}씨도...?",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "놀람"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "놀람"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "설마 세 분...",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "놀람"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "놀람"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "os",
       "text": "서로 아는 사이였어요?",
-      "characters": [],
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "left",
+          "expression": "웃음"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "놀람"
+        },
+        {
+          "id": "yangnyeom",
+          "position": "right",
+          "expression": "놀람"
+        }
+      ],
       "textLarge": true
     },
     {
@@ -196,8 +273,13 @@
       "text": "와, 정말 신기하네요! 셋이 같은 사람과 친구가 됐다니!",
       "characters": [
         {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
           "id": "goguma",
-          "position": "center",
+          "position": "right",
           "expression": "웃음"
         }
       ]
@@ -208,8 +290,18 @@
       "text": "뭐야! 내가 {player}씨의 춘천 친구는 나뿐인 줄 알았는데!",
       "characters": [
         {
-          "id": "dakgalbi",
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
           "expression": "당황"
         }
       ]
@@ -221,8 +313,18 @@
       "characters": [
         {
           "id": "yangnyeom",
-          "position": "center",
+          "position": "left",
           "expression": "시큰둥"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
+          "expression": "당황"
         }
       ]
     },
@@ -230,13 +332,45 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "어쩐지 분위기가 묘하다. 세 사람이 모두 나를 초대했다니...",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "시큰둥"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
+          "expression": "당황"
+        }
+      ]
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "각자 나와 친해졌다고 생각했던 모양이다. 조금 신기하기도 하고 묘하게 쑥스러워졌다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "시큰둥"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
+          "expression": "당황"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -244,8 +378,18 @@
       "text": "그런데.. 걔는 정말 안온대?",
       "characters": [
         {
-          "id": "dakgalbi",
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "시큰둥"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -257,7 +401,17 @@
       "characters": [
         {
           "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -266,7 +420,23 @@
       "speaker": "안내방송",
       "speakerType": "os",
       "text": "남이섬행 수상버스가 곧 출발합니다. 승객 여러분께서는 승선해 주시기 바랍니다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
+          "expression": "기본"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -274,8 +444,18 @@
       "text": "그래, 이럴 때가 아니지!",
       "characters": [
         {
-          "id": "dakgalbi",
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
           "expression": "기본"
         }
       ]
@@ -286,8 +466,18 @@
       "text": "자, 얼른 가요!",
       "characters": [
         {
-          "id": "dakgalbi",
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
           "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
           "expression": "웃음"
         }
       ]
@@ -296,7 +486,23 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "오랜 친구들 사이에 새로 사귄 친구가 합류한 여행이라니. 조금 어색하지만 기대되기도 한다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "yangnyeom",
+          "position": "left",
+          "expression": "기본"
+        },
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        },
+        {
+          "id": "dakgalbi",
+          "position": "right",
+          "expression": "웃음"
+        }
+      ]
     }
   ],
   "choices": null,

@@ -101,7 +101,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "저도 좋아해요",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
     },
     {
       "speaker": "고구마",
@@ -119,7 +125,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "늘 다른 사람의 행복을 먼저 생각하던 {고구마}씨. 이제는 서로의 바람을 하나씩 나누며, 함께 행복해지는 방법을 찾아가고 싶다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
     }
   ],
   "choices": null,

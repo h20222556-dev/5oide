@@ -88,16 +88,21 @@ class GameEngine {
   setAchievedEndings() {}
 
   async init() {
-    // 1. config 및 에셋 매니페스트 로드
-    this.config = await loadJSON('config/game_config.json');
-    this.scoreScale = await loadJSON('config/score_scale.json');
-    this.charactersAll = await loadJSON('config/characters.json');
-    try {
-      this.assetManifest = await loadJSON('config/assets_manifest.json');
-    } catch (err) {
-      console.warn('[GameEngine] assets_manifest.json 로드 실패:', err);
-      this.assetManifest = null;
-    }
+    // 1. config 및 에셋 매니페스트 병렬 로드
+    const [cfg, scale, chars, manifest] = await Promise.all([
+      loadJSON('config/game_config.json'),
+      loadJSON('config/score_scale.json'),
+      loadJSON('config/characters.json'),
+      loadJSON('config/assets_manifest.json').catch(err => {
+        console.warn('[GameEngine] assets_manifest.json 로드 실패:', err);
+        return null;
+      }),
+    ]);
+    this.config = cfg;
+    this.scoreScale = scale;
+    this.charactersAll = chars;
+    this.assetManifest = manifest;
+
     if (this.renderer) {
       if (this.assetManifest && typeof this.renderer.setAssetManifest === 'function') {
         this.renderer.setAssetManifest(this.assetManifest);
@@ -108,16 +113,19 @@ class GameEngine {
       }
     }
 
-    // 2. 모든 씬 파일 로드
+    // 2. 모든 씬 파일 병렬 로드 (초기 접속 시 시작 버튼 대기 시간 최소화)
     const sceneFiles = this.config.sceneFiles || [];
-    for (const file of sceneFiles) {
-      try {
-        const scene = await loadJSON(`data/scenes/${file}`);
-        if (scene && scene.id) {
-          this.scenes.set(scene.id, scene);
-        }
-      } catch (err) {
-        console.warn(`[GameEngine] 씬 로드 실패 (${file}):`, err);
+    const loadedScenes = await Promise.all(
+      sceneFiles.map(file =>
+        loadJSON(`data/scenes/${file}`).catch(err => {
+          console.warn(`[GameEngine] 씬 로드 실패 (${file}):`, err);
+          return null;
+        })
+      )
+    );
+    for (const scene of loadedScenes) {
+      if (scene && scene.id) {
+        this.scenes.set(scene.id, scene);
       }
     }
 
@@ -209,6 +217,7 @@ class GameEngine {
     if (this.renderer) {
       this.renderer.hideChoices();
       this.renderer.hidePhoneMessages();
+      if (typeof this.renderer.hideChatList === 'function') this.renderer.hideChatList();
       this.renderer.showScreen('title');
     }
   }
@@ -327,6 +336,7 @@ class GameEngine {
     if (this.renderer) {
       this.renderer.hideChoices();
       this.renderer.hidePhoneMessages();
+      if (typeof this.renderer.hideChatList === 'function') this.renderer.hideChatList();
       this.renderer.setBackground(scene.background, scene.overlay || null, this.state.gender);
       this.renderer.setTime(scene.time);
       this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
@@ -464,6 +474,19 @@ class GameEngine {
     if (this.renderer) {
       if (d.background) {
         this.renderer.setBackground(d.background, d.overlay || null, this.state.gender);
+      }
+      if (typeof this.renderer.showChatList === 'function') {
+        if (d.chatList) {
+          this.renderer.showChatList(d.chatList, {
+            gender: this.state.gender,
+            playerName: this.state.playerName,
+            day1Visited: this.state.day1Visited,
+            charactersMap: this.currentCharacters,
+            vars,
+          });
+        } else {
+          this.renderer.hideChatList();
+        }
       }
       this.renderer.setSpeaker(speakerDisplayName, speakerColor, d.speakerType);
       if (typeof this.renderer.showCG === 'function') this.renderer.showCG(d.cg || null);
@@ -660,7 +683,7 @@ class GameEngine {
       const endLabel = scene.endingTitle ? `엔딩: ${scene.endingTitle}` : '이야기가 마무리되었습니다.';
       this._presentChoices(endLabel, [
         { text: '타이틀 화면으로 돌아가기', next: '__TITLE__' }
-      ]);
+      ], { isEndingTitle: true });
       return;
     }
 
@@ -821,13 +844,14 @@ class GameEngine {
   _applyLikeEffects(effects) {
     const charName = (id) => this.currentCharacters[id]?.name || id;
     const isCompact = !!effects.compact;
+    const labelMode = effects.labelMode || null;
     for (const [id, delta] of Object.entries(effects.like || {})) {
       if (!delta || delta <= 0) continue;
       const prev = this.state.affinity[id] || 0;
       const next = Math.max(0, Math.min(10, prev + delta));
       this.state.affinity[id] = next;
       if (this.renderer && typeof this.renderer.showLikeFeedback === 'function') {
-        this.renderer.showLikeFeedback(id, charName(id), delta, prev, next, isCompact);
+        this.renderer.showLikeFeedback(id, charName(id), delta, prev, next, isCompact, labelMode);
       }
     }
     if (this.renderer) {

@@ -27,14 +27,14 @@
       "speakerType": "vo",
       "text": "그러고 보니 어제 만났던 사람들....",
       "characters": [],
-      "background": "bg_chat_list",
-      "overlay": null
+      "chatList": "day1"
     },
     {
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "처음 만난 사이였지만, 왠지 조금 더 이야기해 보고 싶단 말이지...",
-      "characters": []
+      "characters": [],
+      "chatList": "day1"
     }
   ],
   "choices": null,

@@ -255,6 +255,46 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   const oldSaveRes = rAlone.engine.loadState({ sceneId: 's01_prologue', dialogueIndex: 0 });
   assert(oldSaveRes === false, 'storyVersion 없는 구버전 세이브 로드 차단됨');
 
+  // 8) 항목 1: Day 1~2 12개 단일 버튼 (+2)/(0) 및 labelMode === 'up' 검증
+  const expectedBtns = [
+    ['s03_lego', [0, 2]],
+    ['s03_skywalk', [2, 0]],
+    ['s03_myeongdong', [2, 0]],
+    ['s07_dakgalbi', [2, 0]],
+    ['s07_goguma', [2, 0]],
+    ['s07_yangnyeom', [2, 0]],
+  ];
+  for (const [sid, exp] of expectedBtns) {
+    const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${sid}.json`), 'utf8'));
+    const singles = sc.dialogues.filter(d => d.type === 'choice' && d.single);
+    const pts = singles.map(s => {
+      const like = s.options[0].effects?.like;
+      return like ? Object.values(like)[0] : 0;
+    });
+    const labelsOk = singles.every(s => !s.options[0].effects || s.options[0].effects.labelMode === 'up');
+    assert(JSON.stringify(pts) === JSON.stringify(exp) && labelsOk, `항목 1: ${sid} 단일 버튼 점수 ${JSON.stringify(pts)} === ${JSON.stringify(exp)} & labelMode='up'`);
+  }
+
+  // 9) 항목 2: 캐릭터 스프라이트 유지 (주인공 O.S./V.O./버튼 중 유지, '사라진다' 지문에서 해제)
+  const s03Lego = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's03_lego.json'), 'utf8'));
+  const btnOsLine = s03Lego.dialogues.find(d => d.speaker === '주인공' && d.speakerType === 'os' && d.text === '누구세요?');
+  const vanishIdx = s03Lego.dialogues.findIndex(d => d.text && d.text.includes('사라진다'));
+  assert(btnOsLine && btnOsLine.characters?.length === 1 && btnOsLine.characters[0].id === 'dakgalbi', '항목 2: [버튼] 주인공 대사 중 닭고기 스프라이트 유지됨');
+  assert(vanishIdx > 0 && s03Lego.dialogues[vanishIdx].characters.length === 0, '항목 2: "사라진다" 지문에서 스프라이트 해제됨');
+
+  // 10) 항목 3: Day 2 고구마 루트 bg_cafe만 사용 (카페 입구 없음)
+  const s07Gog = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_goguma.json'), 'utf8'));
+  const gogBgs = new Set([s07Gog.background, ...s07Gog.dialogues.map(d => d.background).filter(Boolean)]);
+  assert(gogBgs.size === 1 && gogBgs.has('bg_cafe'), `항목 3: s07_goguma 배경이 bg_cafe만 사용됨 (${[...gogBgs].join(',')})`);
+
+  // 11) 항목 8: #6, #7, #8 채팅 목록 코드 UI 속성 존재 확인
+  const s06 = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's06_day1_end.json'), 'utf8'));
+  const s07 = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_day2.json'), 'utf8'));
+  const s08 = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's08_day2_end.json'), 'utf8'));
+  assert(s06.dialogues.some(d => d.chatList === 'day1'), '항목 8: #6에 코드 채팅 목록(day1) 연결됨');
+  assert(s07.dialogues.some(d => d.chatList === 'day1'), '항목 8: #7에 코드 채팅 목록(day1) 연결됨');
+  assert(s08.dialogues.some(d => d.chatList === 'day2_step1') && s08.dialogues.some(d => d.chatList === 'day2_step3'), '항목 8: #8에 순차 도착 채팅 목록(day2_step1~3) 연결됨');
+
   console.log('\n====================================================');
   console.log(` 검증 결과: ${passed} / ${total} 테스트 통과 (${Math.round((passed / total) * 100)}%)`);
   console.log('====================================================');

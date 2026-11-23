@@ -101,7 +101,13 @@
       "speaker": "주인공",
       "speakerType": "os",
       "text": "저도요",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "기본+홍조"
+        }
+      ]
     },
     {
       "speaker": "닭갈비",
@@ -131,7 +137,13 @@
       "speaker": "주인공",
       "speakerType": "vo",
       "text": "이제 {닭갈비}씨는 누군가를 즐겁게 해주기 위해서가 아니라, 자신이 행복해지기 위해 여행을 떠날 수 있을 것이다.",
-      "characters": []
+      "characters": [
+        {
+          "id": "dakgalbi",
+          "position": "center",
+          "expression": "웃음+홍조"
+        }
+      ]
     }
   ],
   "choices": null,
