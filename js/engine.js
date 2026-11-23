@@ -236,7 +236,7 @@ class GameEngine {
   _resolveBgKey(bgId, overlay = null) {
     if (!bgId) return null;
     if (bgId === 'bg_hotel') return overlay === 'night' ? 'bg_hotel_night' : 'bg_hotel_morning';
-    if (bgId === 'bg_promo_video') return 'bg_pier';
+    if (bgId === 'bg_promo_video') return this.state.gender === 'male' ? 'bg_day3_billboard_m' : 'bg_day3_billboard_f';
     return bgId;
   }
 

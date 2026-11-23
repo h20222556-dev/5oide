@@ -122,7 +122,7 @@ class Renderer {
     if (!bgId || bgId === 'bg_black') return;
     let resolvedId = bgId;
     if (bgId === 'bg_hotel') resolvedId = overlay === 'night' ? 'bg_hotel_night' : 'bg_hotel_morning';
-    else if (bgId === 'bg_promo_video') resolvedId = gender === 'male' ? 'bg_promo_video_m' : 'bg_promo_video_f';
+    else if (bgId === 'bg_promo_video') resolvedId = gender === 'male' ? 'bg_day3_billboard_m' : 'bg_day3_billboard_f';
     const p = this.assetManifest?.backgrounds?.[resolvedId];
     if (p) this.preloadImage(p);
   }
@@ -142,10 +142,13 @@ class Renderer {
   setBackground(bgId, overlay = null, gender = 'female') {
     if (!this.bgLayer) return;
 
-    // #9 전광판 홍보 영상: bg_pier 배경 위에 전광판 컴포넌트를 겹쳐서 표시
+    // #9 Day 3 전광판 홍보 장면: 제작한 남/여 전광판 배경 이미지를 전체 배경으로 표시 (중복 스탠딩 숨김)
     if (bgId === 'bg_promo_video') {
-      this._renderBackgroundImage('bg_pier', null);
-      this.showPromoBillboard(gender);
+      this.hidePromoBillboard();
+      this._billboardActive = true;
+      this._clearAllCharacterSlots();
+      const billboardKey = gender === 'male' ? 'bg_day3_billboard_m' : 'bg_day3_billboard_f';
+      this._renderBackgroundImage(billboardKey, null);
       return;
     }
 
