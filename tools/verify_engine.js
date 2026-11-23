@@ -35,6 +35,7 @@ console.log('====================================================');
 // 1. 설정 및 에셋 매니페스트 검증
 assert(config.storyVersion === 'v2_full_spec', 'game_config.storyVersion === v2_full_spec');
 assert(config.SHOW_HUD === false, '우측 상단 HUD 숨김 플래그 SHOW_HUD === false');
+assert(config.LIKE_THRESHOLD === 8, '호감도 판정 기준치 LIKE_THRESHOLD === 8');
 assert(config.endingThresholds.dakgalbi === 8 && config.endingThresholds.yangnyeom === 8 && config.endingThresholds.goguma === 8, '엔딩 기준치 3명 모두 8점');
 
 // 실제 파일 존재 검증 (매니페스트의 모든 경로)
@@ -193,8 +194,12 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
         continue;
       }
 
-      // Day 2 마지막 2지선다 / Day 3 버스 2지선다 / Day 3 남이섬 2지선다
-      if (sid.startsWith('s07_') && sid !== 's07_day2') {
+      // Day 1~2 대화 속 2지선다 / Day 2 마지막 2지선다 / Day 3 버스 2지선다 / Day 3 남이섬 2지선다
+      if (sid === 's03_lego' || sid === 's03_skywalk' || sid === 's03_myeongdong') {
+        const highIdx = lastChoices.opts.findIndex(o => o.effects?.like);
+        const lowIdx = lastChoices.opts.findIndex(o => !o.effects?.like);
+        lastChoices.onSelect(day2Idx === 0 ? highIdx : lowIdx);
+      } else if (sid.startsWith('s07_') && sid !== 's07_day2') {
         lastChoices.onSelect(day2Idx);
       } else if (sid.startsWith('s10_bus_')) {
         lastChoices.onSelect(busIdx);
@@ -255,32 +260,97 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   const oldSaveRes = rAlone.engine.loadState({ sceneId: 's01_prologue', dialogueIndex: 0 });
   assert(oldSaveRes === false, 'storyVersion 없는 구버전 세이브 로드 차단됨');
 
-  // 8) 항목 1: Day 1~2 12개 단일 버튼 (+2)/(0) 및 labelMode === 'up' 검증
-  const expectedBtns = [
-    ['s03_lego', [0, 2]],
-    ['s03_skywalk', [2, 0]],
-    ['s03_myeongdong', [2, 0]],
-    ['s07_dakgalbi', [2, 0]],
-    ['s07_goguma', [2, 0]],
-    ['s07_yangnyeom', [2, 0]],
+  // 8) Day 1~2 6개 대화 화면: 동시 2지선다 (+2/0, labelMode='up') + 각 선택지 A/B 분기 및 공통 합류 검증
+  const expectedPairs = [
+    ['s03_lego', 'dakgalbi', [0, 2], '그럼, 혹시 관광 홍보 활동하시는 분이신가요?'],
+    ['s03_skywalk', 'goguma', [2, 0], '그러고 보니 아직 자기소개도 못했네요.'],
+    ['s03_myeongdong', 'yangnyeom', [2, 0], '그런데 성함이 어떻게 되세요?'],
+    ['s07_dakgalbi', 'dakgalbi', [2, 0], '그럼 {닭갈비}씨의 속은 어떤데요?'],
+    ['s07_goguma', 'goguma', [2, 0], '{고구마}씨는 항상 여유롭고 다정하신 것 같아요.'],
+    ['s07_yangnyeom', 'yangnyeom', [2, 0], '{양념}씨는 춘천을 정말 잘 아시는 것 같아요.'],
   ];
-  for (const [sid, exp] of expectedBtns) {
+  for (const [sid, cid, exp, mergeText] of expectedPairs) {
     const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${sid}.json`), 'utf8'));
-    const singles = sc.dialogues.filter(d => d.type === 'choice' && d.single);
-    const pts = singles.map(s => {
-      const like = s.options[0].effects?.like;
-      return like ? Object.values(like)[0] : 0;
-    });
-    const labelsOk = singles.every(s => !s.options[0].effects || s.options[0].effects.labelMode === 'up');
-    assert(JSON.stringify(pts) === JSON.stringify(exp) && labelsOk, `항목 1: ${sid} 단일 버튼 점수 ${JSON.stringify(pts)} === ${JSON.stringify(exp)} & labelMode='up'`);
+    const pairIdx = sc.dialogues.findIndex(d => d.type === 'choice');
+    const pair = sc.dialogues[pairIdx];
+    const pts = pair.options.map(o => (o.effects?.like ? o.effects.like[cid] : 0));
+    const labelsOk = pair.options.every(o => !o.effects || o.effects.labelMode === 'up');
+    const nextMerge = sc.dialogues[pairIdx + 1];
+    assert(pair && pair.options.length === 2 && !pair.single, `${sid} 첫 대화 선택지가 동시 2지선다로 구성됨`);
+    assert(JSON.stringify(pts) === JSON.stringify(exp) && labelsOk, `${sid} 2지선다 점수 ${JSON.stringify(pts)} === ${JSON.stringify(exp)} & labelMode='up'`);
+    assert(nextMerge && nextMerge.text === mergeText, `${sid} 선택지 직후 공통 합류 대사 일치`);
+    // A/B 각 선택지 런타임 테스트: 고르지 않은 쪽 응답 미재생 + 점수 정확히 1회 가산 + 공통 합류 도달
+    for (let optIdx = 0; optIdx < 2; optIdx++) {
+      const otherIdx = 1 - optIdx;
+      const pickDistinct = (fu) => (fu.slice(1).map(u => u.text).sort((a, b) => b.length - a.length)[0] || '');
+      const otherUniqueResp = pickDistinct(pair.options[otherIdx].followUp);
+      const chosenResp = pickDistinct(pair.options[optIdx].followUp);
+      const sb = { console, setTimeout, clearTimeout, alert: () => {} };
+      vm.createContext(sb);
+      vm.runInContext(utilsCode, sb);
+      sb.loadJSON = async (p) => JSON.parse(fs.readFileSync(path.join(rootDir, p), 'utf8'));
+      vm.runInContext(engineCode + '\nthis.GameEngine = GameEngine;', sb);
+      const eng = new sb.GameEngine();
+      let ch = null;
+      let playedTexts = [];
+      let fbLabels = [];
+      await eng.init();
+      eng.setRenderer({
+        setAssetManifest() {}, setHudVisible() {}, hideChoices() { ch = null; }, hidePhoneMessages() {},
+        hideChatList() {}, hidePromoBillboard() {}, setBackground() {}, setTime() {}, updateDebugPanel() {},
+        showCG() {}, setAffinityVisible() {}, updateMenuBar() {}, updateAffinityBar() {},
+        preloadBackground() {}, preloadCharacterSprites() {},
+        showLikeFeedback(id, name, delta, prev, next, compact, labelMode) { fbLabels.push({ delta, labelMode }); },
+        setSpeaker() {}, setDialogueStyle() {}, setCharacters() {},
+        startTyping(t, sp, cb) { playedTexts.push(t); if (cb) cb(); },
+        completeTyping() {}, showScreen() {},
+        showChoices(q, opts, onSel) { ch = { q, opts, onSel }; },
+      });
+      eng.state.gender = 'male';
+      eng.state.playerName = '테스터';
+      eng._initNewGameState();
+      eng.goToScene(sid, 0);
+      let g = 0;
+      let picked = false;
+      while (eng.state.sceneId === sid || eng.state.sceneId === '__followup__') {
+        if (g++ > 120) break;
+        if (eng.state.choiceActive && ch) {
+          if (!picked) {
+            picked = true;
+            ch.onSel(optIdx);
+          } else {
+            break; // Day 2 두 번째 선택지(고민 2지선다) 도달 시 종료
+          }
+          continue;
+        }
+        eng.nextDialogue();
+      }
+      const expectedScore = exp[optIdx];
+      assert(eng.state.affinity[cid] === expectedScore, `${sid} 옵션 ${optIdx} 선택 -> 호감도 ${eng.state.affinity[cid]} === ${expectedScore} (이중 가산 없음)`);
+      assert(!playedTexts.some(t => otherUniqueResp && t.includes(otherUniqueResp.slice(0, 10))), `${sid} 옵션 ${optIdx} 선택 -> 고르지 않은 응답 미재생`);
+      assert(playedTexts.some(t => chosenResp && t.includes(chosenResp.slice(0, 10))), `${sid} 옵션 ${optIdx} 선택 -> 고른 응답 정상 재생`);
+      if (expectedScore > 0) {
+        assert(fbLabels.length === 1 && fbLabels[0].labelMode === 'up', `${sid} 옵션 ${optIdx} (+2) -> '상승했다' 피드백 1회`);
+      } else {
+        assert(fbLabels.length === 0, `${sid} 옵션 ${optIdx} (0) -> 피드백 미표시`);
+      }
+    }
   }
 
-  // 9) 항목 2: 캐릭터 스프라이트 유지 (주인공 O.S./V.O./버튼 중 유지, '사라진다' 지문에서 해제)
+  // 9) 항목 2: 캐릭터 스프라이트 유지 (선택한 주인공 대사 중 유지, '사라진다' 지문에서 해제)
   const s03Lego = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's03_lego.json'), 'utf8'));
-  const btnOsLine = s03Lego.dialogues.find(d => d.speaker === '주인공' && d.speakerType === 'os' && d.text === '누구세요?');
+  const legoChoice = s03Lego.dialogues.find(d => d.type === 'choice');
+  const btnOsLine = legoChoice.options[0].followUp[0];
   const vanishIdx = s03Lego.dialogues.findIndex(d => d.text && d.text.includes('사라진다'));
-  assert(btnOsLine && btnOsLine.characters?.length === 1 && btnOsLine.characters[0].id === 'dakgalbi', '항목 2: [버튼] 주인공 대사 중 닭고기 스프라이트 유지됨');
+  assert(btnOsLine && btnOsLine.speaker === '주인공' && btnOsLine.characters?.length === 1 && btnOsLine.characters[0].id === 'dakgalbi', '항목 2: 선택 직후 주인공 대사 중 닭고기 스프라이트 유지됨');
   assert(vanishIdx > 0 && s03Lego.dialogues[vanishIdx].characters.length === 0, '항목 2: "사라진다" 지문에서 스프라이트 해제됨');
+
+  // 엔딩 단일 버튼 유지 확인
+  for (const edId of ['ending_dakgalbi', 'ending_yangnyeom', 'ending_goguma']) {
+    const ed = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${edId}.json`), 'utf8'));
+    const singles = ed.dialogues.filter(d => d.type === 'choice' && d.single && d.options.length === 1);
+    assert(singles.length === 1, `${edId} 엔딩 단일 버튼 1개 그대로 유지됨`);
+  }
 
   // 10) 항목 3: Day 2 고구마 루트 bg_cafe만 사용 (카페 입구 없음)
   const s07Gog = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', 's07_goguma.json'), 'utf8'));

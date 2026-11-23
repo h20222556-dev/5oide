@@ -962,12 +962,13 @@ class GameEngine {
   // ─── #12 춘천 선착장 해질녘 판정 (기준치 8점, 세 명 모두 미달일 때만 볶음밥 등장) ───
 
   _handlePierSunsetJudgement() {
-    const th = this.config?.endingThresholds || { dakgalbi: 8, yangnyeom: 8, goguma: 8 };
+    const baseTh = this.config?.LIKE_THRESHOLD ?? 8;
+    const th = this.config?.endingThresholds || { dakgalbi: baseTh, yangnyeom: baseTh, goguma: baseTh };
     const aff = this.state.affinity || {};
     const isHidden = (
-      (aff.dakgalbi || 0) < (th.dakgalbi ?? 8) &&
-      (aff.yangnyeom || 0) < (th.yangnyeom ?? 8) &&
-      (aff.goguma || 0) < (th.goguma ?? 8)
+      (aff.dakgalbi || 0) < (th.dakgalbi ?? baseTh) &&
+      (aff.yangnyeom || 0) < (th.yangnyeom ?? baseTh) &&
+      (aff.goguma || 0) < (th.goguma ?? baseTh)
     );
 
     this.state.hiddenRoute = isHidden;
@@ -982,12 +983,13 @@ class GameEngine {
   // ─── #12 최종 선택 화면 (버튼 잠김 / 히든 노출) ─────────────────────────────
 
   _presentFinalChoice() {
-    const th = this.config?.endingThresholds || { dakgalbi: 8, yangnyeom: 8, goguma: 8 };
+    const baseTh = this.config?.LIKE_THRESHOLD ?? 8;
+    const th = this.config?.endingThresholds || { dakgalbi: baseTh, yangnyeom: baseTh, goguma: baseTh };
     const options = [];
 
     // 1. 닭고기
     const dakgalbiName = this.currentCharacters.dakgalbi.name;
-    const dakgalbiOk = (this.state.affinity.dakgalbi || 0) >= (th.dakgalbi ?? 8);
+    const dakgalbiOk = (this.state.affinity.dakgalbi || 0) >= (th.dakgalbi ?? baseTh);
     options.push({
       text: `${dakgalbiName}에게 마음을 전한다`,
       disabled: !dakgalbiOk,
@@ -997,7 +999,7 @@ class GameEngine {
 
     // 2. 양념
     const yangnyeomName = this.currentCharacters.yangnyeom.name;
-    const yangnyeomOk = (this.state.affinity.yangnyeom || 0) >= (th.yangnyeom ?? 8);
+    const yangnyeomOk = (this.state.affinity.yangnyeom || 0) >= (th.yangnyeom ?? baseTh);
     options.push({
       text: `${yangnyeomName}에게 마음을 전한다`,
       disabled: !yangnyeomOk,
@@ -1007,7 +1009,7 @@ class GameEngine {
 
     // 3. 고구마
     const gogumaName = this.currentCharacters.goguma.name;
-    const gogumaOk = (this.state.affinity.goguma || 0) >= (th.goguma ?? 8);
+    const gogumaOk = (this.state.affinity.goguma || 0) >= (th.goguma ?? baseTh);
     options.push({
       text: `${gogumaName}에게 마음을 전한다`,
       disabled: !gogumaOk,

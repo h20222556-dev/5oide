@@ -490,13 +490,24 @@ function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonG
             break;
           }
 
+          const isDay12PairChoice = buttonGivesLike && choiceCount === 1;
+          const finalFollowUp = isDay12PairChoice
+            ? [{ speaker: '주인공', speakerType: 'os', text: optText, characters: cloneChars(state.activeChars) }, ...followUp]
+            : followUp;
+
+          const optEffects = (pts > 0 && charId)
+            ? (isDay12PairChoice
+                ? { like: { [charId]: pts }, compact: true, labelMode: 'up' }
+                : { like: { [charId]: pts } })
+            : null;
+
           options.push({
             key: String.fromCharCode(65 + options.length),
             text: optText,
             next: null,
             effectDesc: '',
-            effects: (pts > 0 && charId) ? { like: { [charId]: pts } } : null,
-            followUp,
+            effects: optEffects,
+            followUp: finalFollowUp,
             endingTitle: optEndingTitle,
           });
           continue;
@@ -1109,6 +1120,7 @@ const gameConfig = {
     holdMs: 3500,
     fadeInMs: 1500,
   },
+  LIKE_THRESHOLD: 8,
   endingThresholds: {
     dakgalbi: 8,
     yangnyeom: 8,

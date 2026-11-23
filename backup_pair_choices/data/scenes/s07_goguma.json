@@ -1,0 +1,384 @@
+{
+  "id": "s07_goguma",
+  "title": "#7 Day 2 — 고구마 (카페)",
+  "type": "normal",
+  "day": 2,
+  "background": "bg_cafe",
+  "overlay": null,
+  "time": "낮",
+  "bgm": "bgm_main",
+  "dialogues": [
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "여기가 {고구마}씨가 운영하는 카페란 말이지?",
+      "characters": [],
+      "background": "bg_cafe",
+      "overlay": null
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "어서 오세요~ 기다리고 있었답니다.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "안녕하세요! 카페가 정말 아늑하네요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "후후, 감사합니다. 편하게 쉬었다 가셨으면 좋겠어요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "주문하신 음료 나왔습니다. 아직 조금 뜨거울테니 천천히 드세요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ],
+      "fade": "white"
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "음료도 맛있고 분위기도 좋네요. 춘천은 어딘가 여유로운 느낌이 있네요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "저도 그런 점이 좋아요. 특히 여유롭게 호수 주변을 산책하는 걸 좋아하거든요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{고구마}씨도 평소에 여유롭게 시간을 보내는 걸 좋아하시나봐요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "호수요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "네! 춘천에는 의암호나 공지천처럼 산책하기 좋은 곳이 많아요. 그래서 '호반의 도시'라고 불린답니다.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_s07_goguma_1",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "{고구마}씨와 잘 어울리는 풍경이네요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "goguma": 2
+            },
+            "compact": true,
+            "labelMode": "up"
+          },
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{고구마}씨와 잘 어울리는 풍경이네요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그런가요? 그런 얘기는 처음 들어보네요. 고마워요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "single_s07_goguma_2",
+      "question": "",
+      "single": true,
+      "options": [
+        {
+          "key": "A",
+          "text": "산책을 자주 하시나요?",
+          "next": null,
+          "effectDesc": "",
+          "effects": null,
+          "followUp": []
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "산책을 자주 하시나요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "네, 천천히 걷다 보면 복잡했던 생각도 조금씩 정리되는 것 같아요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "{고구마}씨는 항상 여유롭고 다정하신 것 같아요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "기본"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "..",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "쓸쓸"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "사실은 그렇지만도 않아요. 다른 사람의 부탁을 거절하지를 못해서 정작 제가 하고 싶은 일은 자꾸 미루게 되더라고요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "쓸쓸"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "os",
+      "text": "무슨 일을 하고 싶으신데요?",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "쓸쓸"
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "그것도 잘... 다른 사람을 챙기다 보면 제 마음이 뒷전이 되어 버려서요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "쓸쓸"
+        }
+      ]
+    },
+    {
+      "type": "choice",
+      "id": "choice_s07_goguma_1",
+      "question": "",
+      "options": [
+        {
+          "key": "A",
+          "text": "가끔은 자신을 먼저 챙겨도 괜찮아요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "goguma": 2
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "고마워요. 다른 사람만큼 저 자신에게도 다정해져야겠어요.",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "웃음"
+                }
+              ]
+            },
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "{player}씨와 이야기하니 마음이 한결 따뜻해지네요.",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "기본+홍조"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        },
+        {
+          "key": "B",
+          "text": "부탁을 거절하는 연습부터 해봐요.",
+          "next": null,
+          "effectDesc": "",
+          "effects": {
+            "like": {
+              "goguma": 1
+            }
+          },
+          "followUp": [
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "아... 역시 그래야 할까요?",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "당황"
+                }
+              ]
+            },
+            {
+              "speaker": "고구마",
+              "speakerType": "normal",
+              "text": "하지만 막상 부탁을 받으면 거절하기가 쉽지 않더라고요...",
+              "characters": [
+                {
+                  "id": "goguma",
+                  "position": "center",
+                  "expression": "당황"
+                }
+              ]
+            }
+          ],
+          "endingTitle": null
+        }
+      ]
+    },
+    {
+      "speaker": "고구마",
+      "speakerType": "normal",
+      "text": "오늘 이야기 나눠서 즐거웠어요. 다음에도 편하게 놀러 오세요.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    },
+    {
+      "speaker": "주인공",
+      "speakerType": "vo",
+      "text": "오늘 만남으로 {고구마}씨에 대해 많이 알 수 있었어.",
+      "characters": [
+        {
+          "id": "goguma",
+          "position": "center",
+          "expression": "웃음"
+        }
+      ]
+    }
+  ],
+  "choices": null,
+  "next": null
+}
