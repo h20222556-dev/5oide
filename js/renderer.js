@@ -443,7 +443,7 @@ class Renderer {
 
     this.speakerName.textContent = cleanName;
     this.speakerName.style.display = 'inline-block';
-    this.speakerName.style.color = color || 'var(--color-primary, #ff9ecd)';
+    this.speakerName.style.color = 'var(--plum)';
   }
 
 
@@ -717,6 +717,7 @@ class Renderer {
 
   showChoices(question, options, onSelect, opts = {}) {
     if (!this.choicesContainer) return;
+    this.setArrow(false);
     this.choicesContainer.innerHTML = '';
     this.choicesContainer.classList.remove('hidden', 'choices-left-aligned');
 

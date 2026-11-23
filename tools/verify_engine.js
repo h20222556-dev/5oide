@@ -459,6 +459,8 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
 
   // 디자인 팔레트 대비 검증 (4.5:1 이상)
   assert(contrastRatio('#70435F', '#FFFDFB') >= 4.5, '팔레트 대비: --plum on --ivory >= 4.5:1');
+  assert(contrastRatio('#70435F', '#FBE5ED') >= 4.5, '팔레트 대비: --plum on --pink-soft >= 4.5:1');
+  assert(contrastRatio('#70435F', '#F8C9DA') >= 4.5, '팔레트 대비: --plum on --pink-tag-bg >= 4.5:1');
   assert(contrastRatio('#6B6178', '#FFFDFB') >= 4.5, '팔레트 대비: --gray-violet-text on --ivory >= 4.5:1');
   assert(contrastRatio('#6B6178', '#EEE9FA') >= 4.5, '팔레트 대비: --gray-violet-text on --lavender-soft >= 4.5:1');
   assert(contrastRatio('#4A253D', '#F4A9C4') >= 4.5, '팔레트 대비: --plum-dark on --pink-main >= 4.5:1');

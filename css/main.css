@@ -32,6 +32,7 @@
   /* ─── UI 디자인 가이드 공용 토큰 (대화창·호감도 게이지·저장창·팝업) ─── */
   --pink-main:        #F4A9C4;
   --pink-soft:        #FBE5ED;
+  --pink-tag-bg:      #F8C9DA;   /* 이름표 배경 (--plum #70435F 대비 5.20:1 >= 4.5:1) */
   --lavender:         #B9A8E2;
   --lavender-soft:    #EEE9FA;
   --sky:              #B9D7F2;
@@ -287,48 +288,98 @@ button {
 .affinity-popup.negative { color: #aaa; }
 
 /* ──────────────────────────────────────────
-   대사창
+   대사창 (디자인 가이드 5-1: 아이보리→연핑크 반투명 패널 + 리본/탭 이름표)
 ────────────────────────────────────────── */
 #dialogue-box {
   position: absolute;
-  bottom: 0; left: 0;
-  width: 100%;
-  height: var(--dialogue-height);
-  background: var(--color-dialogue-bg);
-  padding: 14px 20px 10px 20px;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(90%, 1100px);
+  min-height: 124px;
+  max-height: 30%;
+  height: auto;
+  background: linear-gradient(180deg, rgba(255, 253, 251, 0.94) 0%, rgba(251, 229, 237, 0.92) 100%);
+  border: var(--ui-border-width) solid var(--pink-main);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow);
+  padding: 22px 34px 18px 28px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: flex-start;
   cursor: pointer;
   z-index: 30;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/* 패널 오른쪽 위 은은한 별 장식 (클릭 비차단, 텍스트 방해 없음) */
+#dialogue-box::after {
+  content: '✦';
+  position: absolute;
+  top: 9px;
+  right: 16px;
+  font-size: 12px;
+  color: var(--pink-main);
+  opacity: 0.72;
+  pointer-events: none;
+  line-height: 1;
 }
 
 #speaker-name {
-  font-size: 0.95em;
-  font-weight: 700;
-  color: var(--speaker-color);
-  letter-spacing: 0.05em;
-  min-height: 1.2em;
+  position: absolute;
+  top: -19px;
+  left: 22px;
+  display: inline-block;
+  width: auto;
+  max-width: calc(100% - 56px);
+  padding: 5px 18px;
+  background: linear-gradient(180deg, #FCE3EC 0%, var(--pink-tag-bg) 100%);
+  border: var(--ui-border-width) solid var(--pink-main);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(112, 67, 95, 0.14);
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--plum);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  z-index: 32;
 }
 
 #dialogue-text {
   flex: 1;
-  font-size: 0.88em;
-  line-height: 1.6;
-  color: var(--color-text);
+  font-size: 19px;
+  line-height: 1.62;
+  color: var(--plum);
+  font-weight: 500;
   word-break: keep-all;
-  overflow: hidden;
+  overflow-wrap: break-word;
+  padding-right: 18px;
+}
+
+@keyframes dialogueArrowFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
 }
 
 #dialogue-arrow {
   position: absolute;
-  bottom: 10px;
+  bottom: 11px;
   right: 18px;
-  font-size: 0.8em;
-  color: var(--color-text-dim);
-  animation: blink 1s step-end infinite;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--pink-main);
+  pointer-events: none;
+  animation: dialogueArrowFloat 1.15s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #dialogue-arrow {
+    animation: none;
+    transform: none;
+  }
 }
 
 /* ──────────────────────────────────────────
@@ -337,7 +388,7 @@ button {
 #choices-container {
   position: absolute;
   top: calc(var(--menu-bar-height) + 10px);
-  bottom: calc(var(--dialogue-height) + 10px);
+  bottom: calc(30% + 26px);
   left: 50%;
   transform: translateX(-50%);
   width: min(90%, 560px);
@@ -927,14 +978,14 @@ button {
   /* 상단 배경 및 캐릭터 레이어 */
   #game-background {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 38%;
+    top: 0; left: 0; right: 0; bottom: 0;
     width: 100%; height: auto;
     z-index: 1;
   }
 
   #characters-layer {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 38%;
+    top: 0; left: 0; right: 0; bottom: 26%;
     width: 100%; height: auto;
     z-index: 2;
   }
@@ -952,43 +1003,53 @@ button {
     object-fit: contain;
   }
 
-  /* 하단 대사창 */
+  /* 하단 대사창 (모바일 세로: 전체 폭 좌우 작은 여백, safe-area 하단 여백) */
   #dialogue-box {
     position: absolute;
-    bottom: 0; left: 0; right: 0;
-    width: 100%;
-    min-height: 38%;
-    max-height: 48%;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    transform: none;
+    width: auto;
+    min-height: 118px;
+    max-height: 36%;
     height: auto;
-    background: rgba(10, 10, 20, 0.94);
-    border-top: 2px solid rgba(255, 255, 255, 0.15);
-    padding: 16px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.94) 0%, rgba(251, 229, 237, 0.92) 100%);
+    border: var(--ui-border-width) solid var(--pink-main);
+    border-radius: var(--ui-radius-lg);
+    padding: 22px 24px 18px 18px;
     z-index: 30;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    overflow: visible;
   }
 
   #speaker-name {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    min-height: 24px;
+    top: -17px;
+    left: 14px;
+    padding: 4px 14px;
+    font-size: 14.5px;
+    font-weight: 800;
+    margin-bottom: 0;
+    min-height: auto;
   }
 
   #dialogue-text {
     font-size: 16px !important;
     line-height: 1.6;
+    color: var(--plum);
     max-height: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     word-break: keep-all;
+    padding-right: 12px;
   }
 
   #dialogue-arrow {
-    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-    right: 16px;
-    font-size: 14px;
+    bottom: 9px;
+    right: 14px;
+    font-size: 13px;
   }
 
   /* 상단 메뉴바 — 한 줄 고정, 좁으면 가로 스크롤 */
@@ -1072,13 +1133,13 @@ button {
     min-width: auto;
   }
 
-  /* 선택지 컨테이너 — 상단 메뉴 아래 ~ 대사창 위 장면 영역 정중앙, 좌우 여백 16px, 간격 12px */
+  /* 선택지 컨테이너 — 상단 메뉴 아래 ~ 대사창(이름표 포함) 위 장면 영역 정중앙, 좌우 여백 16px, 간격 12px */
   #choices-container {
     position: absolute;
     top: calc(env(safe-area-inset-top, 0px) + 52px);
     left: 0;
     right: 0;
-    bottom: calc(38% + 10px);
+    bottom: calc(36% + 34px + env(safe-area-inset-bottom, 0px));
     transform: none;
     width: 100%;
     margin-inline: auto;
@@ -1227,23 +1288,23 @@ button {
 }
 
 /* ──────────────────────────────────────────
-   대사 스타일 (V.O. 속마음, O.S. 화면밖, 나레이션)
+   대사 스타일 (V.O. 속마음, O.S. 화면밖, 나레이션 — 진한 자주 --plum 유지)
 ────────────────────────────────────────── */
 .dialogue-vo {
   font-style: italic;
-  color: #dcdde1 !important;
-  opacity: 0.92;
+  color: var(--plum) !important;
+  opacity: 1;
 }
 
 .dialogue-os {
-  color: #f5f6fa !important;
+  color: var(--plum) !important;
   letter-spacing: 0.2px;
 }
 
 .dialogue-narration {
   font-style: normal;
-  color: #ced6e0 !important;
-  line-height: 1.7;
+  color: var(--plum) !important;
+  line-height: 1.65;
 }
 
 /* ──────────────────────────────────────────
@@ -2850,6 +2911,30 @@ button {
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
+  #dialogue-box {
+    bottom: 8px;
+    width: min(94%, 960px);
+    min-height: 86px;
+    max-height: 34%;
+    padding: 16px 26px 12px 20px;
+  }
+
+  #speaker-name {
+    top: -15px;
+    left: 16px;
+    padding: 3px 13px;
+    font-size: 13.5px;
+  }
+
+  #dialogue-text {
+    font-size: 15px;
+    line-height: 1.52;
+  }
+
+  #choices-container {
+    bottom: calc(34% + 18px);
+  }
+
   .like-gauge-host {
     top: calc(var(--menu-bar-height) + 6px);
     width: min(290px, 70%);
