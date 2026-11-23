@@ -156,14 +156,12 @@ button {
   display: block;
 }
 
-/* 말하는 캐릭터 / 침묵 캐릭터 */
-.char-slot.speaking {
-  filter: brightness(1.1);
-  transform: scale(1.02);
-}
-
+/* 캐릭터 밝기 항상 일정하게 유지 (화자 강조 밝기/스케일 변화 제거) */
+.char-slot.speaking,
 .char-slot.silent {
-  filter: brightness(0.7);
+  filter: none;
+  transform: none;
+  opacity: 1;
 }
 
 /* 실루엣 fallback SVG 배경 */
@@ -1112,13 +1110,13 @@ button {
   clip: rect(0,0,0,0);
 }
 
-/* 추가 호환성 및 팝업 애니메이션 */
-.char-wrapper.speaking {
-  filter: brightness(1.15);
-  transform: scale(1.02);
-}
+/* 캐릭터 래퍼 밝기/투명도 항상 일정 유지 */
+.char-wrapper,
+.char-wrapper.speaking,
 .char-wrapper.silent {
-  filter: brightness(0.75);
+  filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 @keyframes popupFloat {
@@ -1850,7 +1848,140 @@ button {
 }
 
 #game-background.overlay-blur {
-  filter: blur(4px);
+  filter: blur(var(--brochure-blur, 8px));
+  transform: scale(1.04);
+}
+
+#game-background.overlay-blur::after {
+  background: rgba(8, 12, 24, var(--brochure-dim, 0.25));
+}
+
+/* ─── #9 선착장 전광판 홍보 영상 컴포넌트 (bg_pier 위에 겹침) ─── */
+#promo-billboard-overlay {
+  position: absolute;
+  top: calc(var(--menu-bar-height) + 12px);
+  left: 0;
+  right: 0;
+  bottom: calc(var(--dialogue-height) + 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none;
+  padding: 8px 16px;
+}
+
+.billboard-structure {
+  width: min(74%, 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.billboard-frame {
+  width: 100%;
+  background: linear-gradient(145deg, #2b3140 0%, #171b24 100%);
+  border: 4px solid #485268;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(120, 195, 255, 0.28),
+    inset 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+.billboard-screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0d1220;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.billboard-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.billboard-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(160deg, #1b2438 0%, #2a3550 100%);
+  color: #e8eef8;
+  text-align: center;
+  padding: 16px;
+  padding-bottom: 44px;
+}
+
+.billboard-placeholder-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffd1dc;
+}
+
+.billboard-placeholder-sub {
+  font-size: 0.88rem;
+  color: #cfd8e8;
+}
+
+.billboard-subtitle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px 14px;
+  background: linear-gradient(180deg, rgba(6, 10, 22, 0.1) 0%, rgba(6, 10, 22, 0.86) 35%, rgba(6, 10, 22, 0.94) 100%);
+  color: #ffffff;
+  font-family: var(--font-main);
+  font-size: clamp(0.8rem, 1.8vw, 1.08rem);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+  word-break: keep-all;
+}
+
+.billboard-poles {
+  width: 58%;
+  height: 22px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.billboard-pole {
+  width: 12px;
+  height: 100%;
+  background: linear-gradient(90deg, #1a1f2b, #4a5568, #1a1f2b);
+  border-radius: 0 0 3px 3px;
+}
+
+@media (max-width: 768px), (orientation: portrait) {
+  #promo-billboard-overlay {
+    top: calc(env(safe-area-inset-top, 0px) + 54px);
+    bottom: calc(38% + 12px);
+    padding: 6px 10px;
+  }
+  .billboard-structure {
+    width: 92%;
+  }
+  .billboard-frame {
+    padding: 6px;
+    border-width: 3px;
+  }
+  .billboard-subtitle {
+    padding: 6px 8px;
+    font-size: clamp(12px, 3.3vw, 15px);
+  }
 }
 
 /* ─── 강조 대사 (텍스트 크게) ─── */
