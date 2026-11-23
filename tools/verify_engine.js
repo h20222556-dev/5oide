@@ -367,6 +367,7 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
 
   // 12) 작업 1, 3, 4, 6 검증: 선택지 이미지 숨김, 폰 UI 비율 상수, 전환 모드, 화자 이름 색 비중복 및 대비 4.5:1 이상
   assert(config.SHOW_CHOICE_IMAGES === false, '작업 1: SHOW_CHOICE_IMAGES 기본값 === false');
+  assert(config.SHOW_LIKE_FEEDBACK === true, '호감도 게이지: SHOW_LIKE_FEEDBACK 기본값 === true');
   assert(config.PHONE_ASPECT_WIDTH === 9 && config.PHONE_ASPECT_HEIGHT === 19.5, '작업 3: PHONE_ASPECT_WIDTH=9, PHONE_ASPECT_HEIGHT=19.5');
   assert(config.TRANSITION_MODE === 'cut', '작업 4: TRANSITION_MODE 기본값 === cut');
   const hexToLum = (hex) => {
@@ -393,6 +394,76 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
     const cr = contrastRatio(col, '#0A0A14');
     assert(cr >= 4.5, `작업 6: ${sp}(${col}) 대사창 대비 ${cr.toFixed(2)}:1 >= 4.5:1`);
   }
+
+  // 13) 호감도 게이지 음수 허용 + SaveManager 메타/챕터 매핑/레거시 호환/용량 초과 처리 검증
+  const saveCode = fs.readFileSync(path.join(rootDir, 'js/save.js'), 'utf8');
+  const mockStore = {};
+  const saveSb = {
+    console,
+    localStorage: {
+      getItem: (k) => (Object.prototype.hasOwnProperty.call(mockStore, k) ? mockStore[k] : null),
+      setItem: (k, v) => { mockStore[k] = String(v); },
+      removeItem: (k) => { delete mockStore[k]; },
+    },
+  };
+  vm.createContext(saveSb);
+  vm.runInContext(saveCode + '\nthis.SaveManager = SaveManager;', saveSb);
+  const SM = saveSb.SaveManager;
+  assert(SM.resolveChapterLabel('s01_prologue', 'bg_train_window') === '프롤로그', '챕터 매핑: 프롤로그');
+  assert(SM.resolveChapterLabel('s03_lego', 'bg_legoland') === 'DAY 1 · 레고랜드', '챕터 매핑: DAY 1 · 레고랜드');
+  assert(SM.resolveChapterLabel('s07_day2', null) === 'DAY 2 · 가까워지는 시간', '챕터 매핑: DAY 2 기본');
+  assert(SM.resolveChapterLabel('s07_goguma', 'bg_cafe') === 'DAY 2 · 카페', '챕터 매핑: DAY 2 · 카페');
+  assert(SM.resolveChapterLabel('s10_bus', 'bg_nami_boat_interior') === 'DAY 3 · 수상버스', '챕터 매핑: DAY 3 · 수상버스');
+  assert(SM.resolveChapterLabel('s11_dakgalbi', 'bg_metasequoia_road') === 'DAY 3 · 메타세쿼이아길', '챕터 매핑: DAY 3 · 메타세쿼이아길');
+  assert(SM.resolveChapterLabel('s12_final_choice', 'bg_pier') === 'DAY 3 · 선택', '챕터 매핑: DAY 3 · 선택');
+  assert(SM.resolveChapterLabel('ending_dakgalbi', 'bg_pier') === '엔딩', '챕터 매핑: 엔딩');
+
+  const sm = new SM();
+  const savedOk = sm.save(1, {
+    storyVersion: 'v2_full_spec',
+    gender: 'male',
+    playerName: '테스터',
+    sceneId: 's03_lego',
+    dialogueIndex: 5,
+    affinity: { dakgalbi: -1, yangnyeom: 2, goguma: 0 },
+    bgKey: 'bg_legoland',
+    spriteKeys: [{ id: 'dakgalbi', expression: '기본', position: 'center' }],
+  });
+  assert(savedOk === true, 'SaveManager.save() 정상 저장');
+  // 메타 정보 없는 이전 저장 데이터(동일 스토리 버전)
+  mockStore['oidate_save_2'] = JSON.stringify({
+    slot: 2,
+    timestamp: 1700000000000,
+    storyVersion: 'v2_full_spec',
+    gender: 'female',
+    playerName: '구데이터',
+    sceneId: 's01_prologue',
+    dialogueIndex: 2,
+    affinity: { dakgalbi: 0, yangnyeom: 0, goguma: 0 },
+  });
+  // 이전 스토리 버전 저장 데이터
+  mockStore['oidate_save_3'] = JSON.stringify({
+    slot: 3,
+    timestamp: 1690000000000,
+    storyVersion: 'v1_old',
+    gender: 'female',
+    playerName: '구버전',
+    sceneId: 's01_prologue',
+    dialogueIndex: 0,
+  });
+  const slots = sm.listSlots();
+  assert(slots[0].chapterLabel === 'DAY 1 · 레고랜드' && slots[0].bgKey === 'bg_legoland' && slots[0].spriteKeys.length === 1, '신규 슬롯 메타 정보 정상 포함');
+  assert(slots[1].chapterLabel === '저장된 데이터' && slots[1].date === '저장 시각 정보 없음' && !slots[1].isVersionMismatch, '메타 없는 이전 저장 데이터 호환 표시');
+  assert(slots[2].isVersionMismatch === true, '이전 스토리 버전 슬롯 isVersionMismatch === true');
+  assert(sm.load(1).affinity.dakgalbi === -1, '음수 호감도 저장/불러오기 보존');
+
+  // 디자인 팔레트 대비 검증 (4.5:1 이상)
+  assert(contrastRatio('#70435F', '#FFFDFB') >= 4.5, '팔레트 대비: --plum on --ivory >= 4.5:1');
+  assert(contrastRatio('#70435F', '#FBE5ED') >= 4.5, '팔레트 대비: --plum on --pink-soft >= 4.5:1');
+  assert(contrastRatio('#70435F', '#F8C9DA') >= 4.5, '팔레트 대비: --plum on --pink-tag-bg >= 4.5:1');
+  assert(contrastRatio('#6B6178', '#FFFDFB') >= 4.5, '팔레트 대비: --gray-violet-text on --ivory >= 4.5:1');
+  assert(contrastRatio('#6B6178', '#EEE9FA') >= 4.5, '팔레트 대비: --gray-violet-text on --lavender-soft >= 4.5:1');
+  assert(contrastRatio('#4A253D', '#F4A9C4') >= 4.5, '팔레트 대비: --plum-dark on --pink-main >= 4.5:1');
 
   console.log('\n====================================================');
   console.log(` 검증 결과: ${passed} / ${total} 테스트 통과 (${Math.round((passed / total) * 100)}%)`);
