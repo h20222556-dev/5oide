@@ -5,28 +5,28 @@
       "name": "다곡희",
       "role": "닭갈비",
       "gender": "female",
-      "color": "#ff6b6b"
+      "color": "#FFA94D"
     },
     "yangnyeom": {
       "id": "yangnyeom",
       "name": "양연미",
       "role": "양념",
       "gender": "female",
-      "color": "#ee5253"
+      "color": "#FF6B6B"
     },
     "goguma": {
       "id": "goguma",
       "name": "고규미",
       "role": "고구마",
       "gender": "female",
-      "color": "#feca57"
+      "color": "#B197FC"
     },
     "bokkeumbap": {
       "id": "bokkeumbap",
       "name": "박복은",
       "role": "볶음밥",
       "gender": "female",
-      "color": "#ff9f43",
+      "color": "#FFE066",
       "isHidden": true
     }
   },
@@ -36,28 +36,28 @@
       "name": "다고길",
       "role": "닭갈비",
       "gender": "male",
-      "color": "#ff6b6b"
+      "color": "#FFA94D"
     },
     "yangnyeom": {
       "id": "yangnyeom",
       "name": "양연우",
       "role": "양념",
       "gender": "male",
-      "color": "#ee5253"
+      "color": "#FF6B6B"
     },
     "goguma": {
       "id": "goguma",
       "name": "고구민",
       "role": "고구마",
       "gender": "male",
-      "color": "#feca57"
+      "color": "#B197FC"
     },
     "bokkeumbap": {
       "id": "bokkeumbap",
       "name": "박복검",
       "role": "볶음밥",
       "gender": "male",
-      "color": "#ff9f43",
+      "color": "#FFE066",
       "isHidden": true
     }
   }

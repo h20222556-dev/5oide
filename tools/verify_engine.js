@@ -365,6 +365,34 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   assert(s07.dialogues.some(d => d.chatList === 'day1'), '항목 8: #7에 코드 채팅 목록(day1) 연결됨');
   assert(s08.dialogues.some(d => d.chatList === 'day2_step1') && s08.dialogues.some(d => d.chatList === 'day2_step3'), '항목 8: #8에 순차 도착 채팅 목록(day2_step1~3) 연결됨');
 
+  // 12) 작업 3, 4, 6 검증: 고정 스테이지 상수, 전환 모드, 화자 이름 색 비중복 및 대비 4.5:1 이상
+  assert(config.STAGE_WIDTH === 390 && config.STAGE_HEIGHT === 844 && config.STAGE_MAX_SCALE === 1.5, '작업 3: STAGE_WIDTH=390, STAGE_HEIGHT=844, STAGE_MAX_SCALE=1.5');
+  assert(config.TRANSITION_MODE === 'cut', '작업 4: TRANSITION_MODE 기본값 === cut');
+  const hexToLum = (hex) => {
+    const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(c => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)));
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  };
+  const contrastRatio = (fg, bg) => {
+    const l1 = hexToLum(fg), l2 = hexToLum(bg);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  };
+  const speakerPalette = {
+    '주인공': '#FF9ECD',
+    '닭갈비': characters.male.dakgalbi.color,
+    '양념': characters.male.yangnyeom.color,
+    '고구마': characters.male.goguma.color,
+    '볶음밥': characters.male.bokkeumbap.color,
+    '안내방송': '#74C0FC',
+    '관광객': '#8CE99A',
+    '???': '#CED4DA',
+  };
+  const uniqueColors = new Set(Object.values(speakerPalette).map(c => c.toUpperCase()));
+  assert(uniqueColors.size === Object.keys(speakerPalette).length, '작업 6: 모든 화자 이름 색이 서로 중복되지 않음');
+  for (const [sp, col] of Object.entries(speakerPalette)) {
+    const cr = contrastRatio(col, '#0A0A14');
+    assert(cr >= 4.5, `작업 6: ${sp}(${col}) 대사창 대비 ${cr.toFixed(2)}:1 >= 4.5:1`);
+  }
+
   console.log('\n====================================================');
   console.log(` 검증 결과: ${passed} / ${total} 테스트 통과 (${Math.round((passed / total) * 100)}%)`);
   console.log('====================================================');

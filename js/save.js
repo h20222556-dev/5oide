@@ -86,8 +86,10 @@ class SaveManager {
   saveSettings(settings) {
     try {
       localStorage.setItem(`${this.KEY_PREFIX}settings`, JSON.stringify(settings));
+      return true;
     } catch (err) {
       console.warn('[SaveManager] 설정 저장 실패:', err);
+      return false;
     }
   }
 

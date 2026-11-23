@@ -1089,16 +1089,16 @@ fs.mkdirSync(dataConfigDir, { recursive: true });
 
 const charactersData = {
   female: {
-    dakgalbi: { id: 'dakgalbi', name: '다곡희', role: '닭갈비', gender: 'female', color: '#ff6b6b' },
-    yangnyeom: { id: 'yangnyeom', name: '양연미', role: '양념', gender: 'female', color: '#ee5253' },
-    goguma: { id: 'goguma', name: '고규미', role: '고구마', gender: 'female', color: '#feca57' },
-    bokkeumbap: { id: 'bokkeumbap', name: '박복은', role: '볶음밥', gender: 'female', color: '#ff9f43', isHidden: true },
+    dakgalbi: { id: 'dakgalbi', name: '다곡희', role: '닭갈비', gender: 'female', color: '#FFA94D' },
+    yangnyeom: { id: 'yangnyeom', name: '양연미', role: '양념', gender: 'female', color: '#FF6B6B' },
+    goguma: { id: 'goguma', name: '고규미', role: '고구마', gender: 'female', color: '#B197FC' },
+    bokkeumbap: { id: 'bokkeumbap', name: '박복은', role: '볶음밥', gender: 'female', color: '#FFE066', isHidden: true },
   },
   male: {
-    dakgalbi: { id: 'dakgalbi', name: '다고길', role: '닭갈비', gender: 'male', color: '#ff6b6b' },
-    yangnyeom: { id: 'yangnyeom', name: '양연우', role: '양념', gender: 'male', color: '#ee5253' },
-    goguma: { id: 'goguma', name: '고구민', role: '고구마', gender: 'male', color: '#feca57' },
-    bokkeumbap: { id: 'bokkeumbap', name: '박복검', role: '볶음밥', gender: 'male', color: '#ff9f43', isHidden: true },
+    dakgalbi: { id: 'dakgalbi', name: '다고길', role: '닭갈비', gender: 'male', color: '#FFA94D' },
+    yangnyeom: { id: 'yangnyeom', name: '양연우', role: '양념', gender: 'male', color: '#FF6B6B' },
+    goguma: { id: 'goguma', name: '고구민', role: '고구마', gender: 'male', color: '#B197FC' },
+    bokkeumbap: { id: 'bokkeumbap', name: '박복검', role: '볶음밥', gender: 'male', color: '#FFE066', isHidden: true },
   },
 };
 
@@ -1108,6 +1108,10 @@ const gameConfig = {
   title: '오이데 (춘천에서 5명의 이상한 데이트)',
   version: '2.0.0',
   storyVersion: STORY_VERSION,
+  STAGE_WIDTH: 390,
+  STAGE_HEIGHT: 844,
+  STAGE_MAX_SCALE: 1.5,
+  TRANSITION_MODE: 'cut',
   textSpeed: 40,
   autoSpeed: 2000,
   skipSpeed: 25,

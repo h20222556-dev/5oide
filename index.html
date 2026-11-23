@@ -2,11 +2,13 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>오이데 (춘천에서 5명의 이상한 데이트)</title>
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+<div id="stage-viewport">
+<div id="app-stage">
 
   <!-- ══════════════════════════════════════
        1. 타이틀 화면
@@ -14,7 +16,6 @@
   <div id="screen-title" class="screen active">
     <div id="title-bg"></div>
     <div id="title-content">
-      <h1 id="title-game-title">춘천에서 5명의<br>이상한 데이트<span class="title-sub">(오이데)</span></h1>
       <nav id="title-menu">
         <button class="title-btn" id="btn-new-game" data-ready-label="새로 시작" disabled>불러오는 중…</button>
         <button class="title-btn" id="btn-title-load" disabled>불러오기</button>
@@ -84,6 +85,9 @@
       <div id="chapter-title-overlay" class="hidden">
         <div id="chapter-title-text"></div>
       </div>
+
+      <!-- 일반 장면 페이드 전환 오버레이 (TRANSITION_MODE='fade' 전용, 입력 비차단) -->
+      <div id="scene-fade-overlay" class="hidden"></div>
 
       <!-- 대사창 -->
       <div id="dialogue-box">
@@ -205,6 +209,12 @@
       <div id="gallery-grid"></div>
     </div>
   </div>
+
+  <!-- 저장 완료/실패 토스트 팝업 (스테이지 내부, 입력 비차단) -->
+  <div id="save-toast" class="hidden" role="status" aria-live="polite"></div>
+
+</div><!-- /#app-stage -->
+</div><!-- /#stage-viewport -->
 
   <!-- ══════════════════════════════════════
        8. 개발자 디버그 패널 (D 키로 토글)
