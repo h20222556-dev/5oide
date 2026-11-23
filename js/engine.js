@@ -77,6 +77,7 @@ class GameEngine {
         this.renderer.setAssetManifest(this.assetManifest);
       }
       if (this.config?.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
+      if (this.config?.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
       if (this.config && typeof this.renderer.setHudVisible === 'function') {
         this.renderer.setHudVisible(this.config.SHOW_HUD === true);
       }
@@ -108,6 +109,7 @@ class GameEngine {
         this.renderer.setAssetManifest(this.assetManifest);
       }
       if (this.config.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
+      if (this.config.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
       if (typeof this.renderer.setHudVisible === 'function') {
         this.renderer.setHudVisible(this.config.SHOW_HUD === true);
       }
@@ -137,9 +139,11 @@ class GameEngine {
     this.settings.sfxVolume = this.config.sfxVolume ?? 0.7;
     this.settings.showAffinity = this.config.showAffinity !== false;
 
-    // 4. 프롤로그 첫 장면 배경(bg_train_window) 백그라운드 프리로드 (시작 버튼 비차단)
+    // 4. 프롤로그 및 초반 장면 배경 백그라운드 프리로드 (시작 버튼 비차단)
     if (this.renderer && typeof this.renderer.preloadBackground === 'function') {
-      this.renderer.preloadBackground('bg_train_window', null, this.state.gender);
+      ['bg_train_window', 'bg_phone_screen', 'bg_brochure', 'bg_legoland', 'bg_skywalk', 'bg_dakgalbi_alley'].forEach(bg => {
+        this.renderer.preloadBackground(bg, null, this.state.gender);
+      });
     }
   }
 
@@ -464,17 +468,25 @@ class GameEngine {
       processedText = processedText.replace(/\(←\s*이 대사부터[^\)]+\)/g, '').trim();
     }
 
-    // 화자 이름 결정
+    // 화자 이름 및 고유 이름 색 결정 (모든 화자 서로 구분, 주인공 기준색 #FF9ECD 유지)
+    const EXTRA_SPEAKER_COLORS = {
+      '주인공': '#FF9ECD',
+      '안내방송': '#74C0FC',
+      '관광객': '#8CE99A',
+      '???': '#CED4DA',
+    };
     let speakerDisplayName = d.speaker;
     let speakerColor = null;
 
     if (d.speaker === '???') {
       speakerDisplayName = '???';
+      speakerColor = EXTRA_SPEAKER_COLORS['???'];
     } else if (d.speaker) {
       if (d.speaker.includes('나레이션') || d.speaker.includes('내레이션') || d.speakerType === 'narration') {
         speakerDisplayName = null;
       } else if (d.speaker.includes('{')) {
         speakerDisplayName = resolveTextVariables(d.speaker, vars);
+        speakerColor = EXTRA_SPEAKER_COLORS['???'];
       } else {
         let cleanSpeaker = d.speaker.replace(/\(V\.O\.\)|\(O\.S\.\)|\(속마음\)|\(화면\s*밖\)|\[화면\s*밖\]/g, '').trim();
         let matched = false;
@@ -487,8 +499,15 @@ class GameEngine {
             break;
           }
         }
-        if (!matched && cleanSpeaker === '주인공') {
-          speakerDisplayName = this.state.playerName;
+        if (!matched) {
+          if (cleanSpeaker === '주인공') {
+            speakerDisplayName = this.state.playerName;
+            speakerColor = EXTRA_SPEAKER_COLORS['주인공'];
+          } else if (cleanSpeaker.includes('안내방송')) {
+            speakerColor = EXTRA_SPEAKER_COLORS['안내방송'];
+          } else if (cleanSpeaker.includes('관광객')) {
+            speakerColor = EXTRA_SPEAKER_COLORS['관광객'];
+          }
         }
       }
     }
@@ -711,7 +730,14 @@ class GameEngine {
 
     // 5. 일반 씬의 선택지가 있는 경우
     if (scene.choices && scene.choices.options?.length > 0) {
-      this._presentChoices(scene.choices.question, scene.choices.options);
+      const choiceOpts = {};
+      let opts = scene.choices.options;
+      if (scene.id === 's02_place_select' && scene.choices.id === 'place_1') {
+        choiceOpts.alignLeft = true;
+        const placeImgMap = { lego: 'bg_legoland', skywalk: 'bg_skywalk', myeongdong: 'bg_dakgalbi_alley' };
+        opts = opts.map(o => ({ ...o, imageKey: placeImgMap[o.placeKey] || null }));
+      }
+      this._presentChoices(scene.choices.question, opts, choiceOpts);
       return;
     }
 

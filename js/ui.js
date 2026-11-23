@@ -215,7 +215,22 @@ class UIController {
       (slotNum) => {
         if (this.engine) {
           const state = this.engine.getState();
-          this.saveManager.save(slotNum, state);
+          const ok = this.saveManager.save(slotNum, state);
+          if (this.renderer && typeof this.renderer.showToast === 'function') {
+            this.renderer.showToast(ok ? '세이브가 저장되었습니다.' : '저장에 실패했습니다.');
+          }
+          // 슬롯 정보 즉시 갱신
+          const updatedSlots = this.saveManager.getAllSlots();
+          const slotEl = document.querySelector(`.slot-action-btn[data-slot="${slotNum - 1}"]`)?.closest('.save-slot');
+          const s = updatedSlots[slotNum - 1];
+          if (slotEl && s) {
+            const thumb = slotEl.querySelector('.slot-empty-text');
+            const player = slotEl.querySelector('.slot-player');
+            const date = slotEl.querySelector('.slot-date');
+            if (thumb) thumb.textContent = s.sceneId;
+            if (player) player.textContent = `${s.playerName} (${s.gender === 'male' ? '남' : '여'})`;
+            if (date) date.textContent = s.date;
+          }
         }
         this._saveModalOpen = false;
       },
@@ -246,7 +261,11 @@ class UIController {
 
     this.renderer.showSettingsModal(curSettings, (newSettings) => {
       this.engine.applySettings(newSettings);
-      if (this.saveManager) this.saveManager.saveSettings(newSettings);
+      let ok = true;
+      if (this.saveManager) ok = this.saveManager.saveSettings(newSettings) !== false;
+      if (this.renderer && typeof this.renderer.showToast === 'function') {
+        this.renderer.showToast(ok ? '설정이 저장되었습니다.' : '저장에 실패했습니다.');
+      }
       this._settingsModalOpen = false;
     });
   }
@@ -268,36 +287,23 @@ class UIController {
     if (this.renderer) this.renderer.hideGalleryModal();
   }
 
-  // ─── 반응형 크기 조절 (PC 16:9 유지 / 모바일 세로 100dvh 분할 레이아웃) ────
+  // ─── 반응형 크기 조절 (390x844 고정 비율 세로 스테이지 통째로 스케일링) ────
 
   resizeGame() {
-    const wrapper = document.getElementById('game-wrapper');
-    if (!wrapper) return;
+    const stage = document.getElementById('app-stage');
+    if (!stage) return;
 
-    const winW = window.innerWidth;
+    const stageW = this.engine?.config?.STAGE_WIDTH || 390;
+    const stageH = this.engine?.config?.STAGE_HEIGHT || 844;
+    const maxScale = this.engine?.config?.STAGE_MAX_SCALE || 1.5;
+
+    const winW = window.visualViewport ? window.visualViewport.width : window.innerWidth;
     const winH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    // 모바일 세로 모드 판별 (너비 768px 이하 또는 세로가 더 긴 경우)
-    const isPortrait = winW <= 768 || winW < winH;
+    const scale = Math.min(winW / stageW, winH / stageH, maxScale);
 
-    if (isPortrait) {
-      wrapper.style.width = '100%';
-      wrapper.style.height = `${winH}px`;
-      wrapper.style.aspectRatio = 'unset';
-    } else {
-      // PC / 가로 모드 (16:9 비율 유지)
-      const targetRatio = 16 / 9;
-      let w = winW;
-      let h = winW / targetRatio;
-
-      if (h > winH) {
-        h = winH;
-        w = winH * targetRatio;
-      }
-
-      wrapper.style.width = `${Math.floor(w)}px`;
-      wrapper.style.height = `${Math.floor(h)}px`;
-      wrapper.style.aspectRatio = '16 / 9';
-    }
+    stage.style.width = `${stageW}px`;
+    stage.style.height = `${stageH}px`;
+    stage.style.transform = `scale(${scale})`;
   }
 }

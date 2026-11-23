@@ -34,8 +34,14 @@ class Renderer {
     this.btnClosePhone    = document.getElementById('btn-close-phone');
     this.chatListOverlay  = document.getElementById('chat-list-overlay');
     this.promoBillboard   = document.getElementById('promo-billboard-overlay');
+    this.sceneFadeOverlay = document.getElementById('scene-fade-overlay');
+    this.saveToast        = document.getElementById('save-toast');
+    this._toastTimer      = null;
+    this._toastHideTimer  = null;
     this._billboardActive = false;
     this._preloadedUrls   = new Set();
+    this._loadedUrls      = new Set();
+    this.transitionMode   = 'cut';
 
     // 모달들
     this.genderModal      = document.getElementById('modal-gender');
@@ -73,7 +79,9 @@ class Renderer {
     if (!url || this._preloadedUrls.has(url)) return;
     this._preloadedUrls.add(url);
     const img = new Image();
+    img.onload = () => { this._loadedUrls.add(url); };
     img.src = url;
+    if (img.complete && img.naturalWidth > 0) this._loadedUrls.add(url);
   }
 
   preloadBackground(bgId, overlay = null, gender = 'female') {
@@ -167,15 +175,45 @@ class Renderer {
       return;
     }
 
-    const img = new Image();
-    img.onload = () => {
+    const applyBgNow = () => {
       this.bgLayer.dataset.bgUrl = manifestPath;
       this.bgLayer.style.backgroundImage = `url('${manifestPath}')`;
       this.bgLayer.style.backgroundColor = '';
       if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
     };
-    img.onerror = showPlaceholder;
-    img.src = manifestPath;
+
+    const doSwap = () => {
+      // 프리로드 완료된 이미지는 같은 프레임에서 즉시 동기 교체 (깜빡임 없음)
+      if (this._loadedUrls.has(manifestPath)) {
+        applyBgNow();
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        this._loadedUrls.add(manifestPath);
+        applyBgNow();
+      };
+      img.onerror = showPlaceholder;
+      img.src = manifestPath;
+      if (img.complete && img.naturalWidth > 0) {
+        this._loadedUrls.add(manifestPath);
+        applyBgNow();
+      }
+    };
+
+    if (this.transitionMode === 'fade' && this.sceneFadeOverlay && this.bgLayer.dataset.bgUrl) {
+      const ov = this.sceneFadeOverlay;
+      ov.classList.remove('hidden');
+      void ov.offsetWidth;
+      ov.classList.add('visible');
+      setTimeout(() => {
+        doSwap();
+        ov.classList.remove('visible');
+        setTimeout(() => ov.classList.add('hidden'), 190);
+      }, 180);
+    } else {
+      doSwap();
+    }
   }
 
   showPromoBillboard(gender = 'female') {
@@ -352,10 +390,10 @@ class Renderer {
 
   _makePlaceholderBox(charId, displayName, expression) {
     const colorMap = {
-      dakgalbi: '#ff6b6b',
-      yangnyeom: '#ee5253',
-      goguma: '#feca57',
-      bokkeumbap: '#ff9f43',
+      dakgalbi: '#FFA94D',
+      yangnyeom: '#FF6B6B',
+      goguma: '#B197FC',
+      bokkeumbap: '#FFE066',
     };
     const accent = colorMap[charId] || '#a4b0be';
     return `
@@ -574,7 +612,7 @@ class Renderer {
     this._lastChatListMode = mode;
 
     const placeToChar = { lego: 'dakgalbi', skywalk: 'goguma', myeongdong: 'yangnyeom' };
-    const colorMap = { dakgalbi: '#ff6b6b', yangnyeom: '#ee5253', goguma: '#feca57' };
+    const colorMap = { dakgalbi: '#FFA94D', yangnyeom: '#FF6B6B', goguma: '#B197FC' };
     const resolveTxt = (t) => (typeof resolveTextVariables === 'function' ? resolveTextVariables(t, vars) : t);
 
     let rows = [];
@@ -662,7 +700,10 @@ class Renderer {
   showChoices(question, options, onSelect, opts = {}) {
     if (!this.choicesContainer) return;
     this.choicesContainer.innerHTML = '';
-    this.choicesContainer.classList.remove('hidden');
+    this.choicesContainer.classList.remove('hidden', 'choices-left-aligned');
+    if (opts && opts.alignLeft) {
+      this.choicesContainer.classList.add('choices-left-aligned');
+    }
 
     if (question) {
       const qEl = document.createElement('div');
@@ -680,6 +721,7 @@ class Renderer {
       const cleanText = (opt.text || '')
         .replace(/\s*—\s*효과\s*:.*$/, '')
         .replace(/\s*\(효과\s*:.*?\)/, '')
+        .replace(/\s*\(각 보기에[^)]*\)/g, '')
         .trim();
 
       if (opt.disabled) {
@@ -689,7 +731,18 @@ class Renderer {
         `;
         btn.disabled = true;
       } else {
-        btn.textContent = cleanText;
+        const imgUrl = opt.imageKey ? this.assetManifest?.backgrounds?.[opt.imageKey] : null;
+        if (imgUrl && cleanText.includes('—')) {
+          const [placeName, placeDesc] = cleanText.split('—').map(s => s.trim());
+          btn.classList.add('choice-btn-card');
+          btn.innerHTML = `
+            <img class="choice-card-thumb" src="${imgUrl}" alt="${placeName}">
+            <span class="choice-card-title">${placeName}</span>
+            ${placeDesc ? `<span class="choice-card-desc">${placeDesc}</span>` : ''}
+          `;
+        } else {
+          btn.textContent = cleanText;
+        }
         btn.addEventListener('click', () => {
           this.hideChoices();
           if (typeof onSelect === 'function') onSelect(idx);
@@ -730,8 +783,9 @@ class Renderer {
       const item = document.createElement('div');
       item.className = 'affinity-item';
       item.dataset.char = cid;
+      const nameColor = cMeta?.color || '#f0f0f0';
       item.innerHTML = `
-        <span class="affinity-char-name">${name}</span>
+        <span class="affinity-char-name" style="color: ${nameColor};">${name}</span>
         <div class="affinity-gauge">
           <div class="affinity-fill" style="width: ${pct}%"></div>
         </div>
@@ -941,6 +995,28 @@ class Renderer {
 
   hideSaveModal() {
     if (this.saveModal) this.saveModal.classList.add('hidden');
+  }
+
+  // ─── 저장 완료/실패 토스트 팝업 (1.5초 표시 후 페이드, 연속 호출 시 교체) ──
+
+  showToast(message) {
+    if (!this.saveToast) return;
+    if (this._toastTimer) { clearTimeout(this._toastTimer); this._toastTimer = null; }
+    if (this._toastHideTimer) { clearTimeout(this._toastHideTimer); this._toastHideTimer = null; }
+
+    this.saveToast.textContent = message;
+    this.saveToast.classList.remove('hidden', 'visible');
+    void this.saveToast.offsetWidth;
+    this.saveToast.classList.add('visible');
+
+    this._toastTimer = setTimeout(() => {
+      this._toastTimer = null;
+      this.saveToast.classList.remove('visible');
+      this._toastHideTimer = setTimeout(() => {
+        this._toastHideTimer = null;
+        this.saveToast.classList.add('hidden');
+      }, 260);
+    }, 1500);
   }
 
   // ─── 설정 모달 ─────────────────────────────────────────────────────────────
