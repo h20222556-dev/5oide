@@ -11,7 +11,7 @@
     {
       "speaker": null,
       "speakerType": "narration",
-      "text": "와글와글 웅성웅성 효과음",
+      "text": "이른 아침인데도 선착장에는 여행객들이 곳곳에 모여 있다. 저마다 새 뱃길을 타러 온 사람들이다.",
       "characters": [],
       "background": "bg_pier",
       "overlay": null
@@ -25,7 +25,7 @@
     {
       "speaker": null,
       "speakerType": "narration",
-      "text": "[전광판 홍보 영상] 춘천 → 남이섬 직행 수상버스 약 40분",
+      "text": "춘천 → 남이섬 직행 수상버스 약 40분",
       "characters": [],
       "background": "bg_promo_video",
       "overlay": null

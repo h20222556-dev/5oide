@@ -154,7 +154,7 @@ function parseDialogueLine(rawLine, state) {
         return {
           speaker: null,
           speakerType: 'narration',
-          text: `[전광판 홍보 영상] ${subM[1].trim()}`,
+          text: subM[1].trim(),
           characters: [],
           background: bgDir.bg,
           overlay: bgDir.overlay,
