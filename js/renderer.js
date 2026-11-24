@@ -754,7 +754,14 @@ class Renderer {
 
     options.forEach((opt, idx) => {
       const btn = document.createElement('button');
-      btn.className = `choice-btn ${opt.disabled ? 'disabled-choice' : ''}`;
+      btn.type = 'button';
+      const isCompleted = !!opt.completed;
+      const isLocked = !!opt.disabled && !isCompleted;
+      btn.className = [
+        'choice-btn',
+        isLocked ? 'disabled-choice locked-choice' : '',
+        isCompleted ? 'completed-choice' : '',
+      ].filter(Boolean).join(' ');
 
       const cleanText = (opt.text || '')
         .replace(/\s*—\s*효과\s*:.*$/, '')
@@ -762,12 +769,20 @@ class Renderer {
         .replace(/\s*\(각 보기에[^)]*\)/g, '')
         .trim();
 
-      if (opt.disabled) {
+      if (isCompleted) {
+        btn.innerHTML = `
+          <span class="choice-completed-badge" aria-hidden="true">✓ 완료</span>
+          <span class="choice-completed-text">${cleanText}</span>
+        `;
+        btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
+      } else if (isLocked) {
         btn.innerHTML = `
           <span class="choice-locked-main"><span class="lock-icon" aria-hidden="true">🔒</span> ${cleanText}</span>
           <span class="locked-reason">${opt.lockedReason || '잠김'}</span>
         `;
         btn.disabled = true;
+        btn.setAttribute('aria-disabled', 'true');
       } else {
         const imgUrl = (this.showChoiceImages && opt.imageKey)
           ? this.assetManifest?.backgrounds?.[opt.imageKey]
