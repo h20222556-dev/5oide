@@ -9,10 +9,11 @@
 'use strict';
 
 class SaveModal {
-  constructor({ saveManager, confirmPopup, getAssetManifest, onSaveAction, onLoadAction, onDeleteAction, onClose }) {
+  constructor({ saveManager, confirmPopup, getAssetManifest, resolveBackground, onSaveAction, onLoadAction, onDeleteAction, onClose }) {
     this.saveManager = saveManager;
     this.confirmPopup = confirmPopup;
     this.getAssetManifest = getAssetManifest || (() => null);
+    this.resolveBackground = resolveBackground || null;
     this.onSaveAction = onSaveAction;
     this.onLoadAction = onLoadAction;
     this.onDeleteAction = onDeleteAction;
@@ -196,7 +197,11 @@ class SaveModal {
     }
 
     const bgKey = slotData.bgKey;
-    const bgPath = (bgKey && bgKey !== 'bg_black' && manifest?.backgrounds?.[bgKey]) || null;
+    const gender = slotData.gender || 'female';
+    const resolvedBg = (bgKey && bgKey !== 'bg_black' && typeof this.resolveBackground === 'function')
+      ? this.resolveBackground(bgKey, gender)
+      : null;
+    const bgPath = resolvedBg || ((bgKey && bgKey !== 'bg_black' && manifest?.backgrounds?.[bgKey]) || null);
     const placeName = SaveManager.getPlaceName(bgKey);
     const fallbackText = placeName || slotData.chapterLabel || '저장된 데이터';
 
@@ -209,7 +214,6 @@ class SaveModal {
     }
 
     // 배경 위에 저장 당시 스프라이트 작게 합성
-    const gender = slotData.gender || 'female';
     const sprites = Array.isArray(slotData.spriteKeys) ? slotData.spriteKeys : [];
     const spriteImgs = sprites.map(sp => {
       const exprMap = manifest?.expressionMap?.[sp.id] || {};

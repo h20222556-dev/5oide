@@ -67,11 +67,54 @@ class Renderer {
     this._typingIdx      = 0;
     this._typingCallback = null;
     this.assetManifest   = null;
+    this.backgroundsConfig = null;
   }
 
   setAssetManifest(manifest) {
     this.assetManifest = manifest || null;
     if (this.likeGauge) this.likeGauge.setAssetManifest(this.assetManifest);
+  }
+
+  setBackgroundsConfig(bgConfig) {
+    this.backgroundsConfig = bgConfig || null;
+  }
+
+  /**
+   * 배경 ID와 성별을 받아 실제 이미지 경로와 초점(background-position)을 반환합니다.
+   * - config/backgrounds.json 우선 조회 (성별별 객체 또는 단일 경로 지원)
+   * - 성별별 항목에서 요청 성별이 누락되면 반대 성별로 대체하지 않고 null 반환
+   */
+  resolveBackground(bgId, gender = 'female') {
+    if (!bgId || bgId === 'bg_black') return { url: null, focus: '50% 50%' };
+
+    const entry = this.backgroundsConfig && Object.prototype.hasOwnProperty.call(this.backgroundsConfig, bgId)
+      ? this.backgroundsConfig[bgId]
+      : null;
+
+    if (entry !== null && entry !== undefined) {
+      if (typeof entry === 'string') {
+        return { url: entry, focus: '50% 50%' };
+      }
+      if (typeof entry === 'object') {
+        const focus = entry.focus || '50% 50%';
+        const isGendered = Object.prototype.hasOwnProperty.call(entry, 'female')
+          || Object.prototype.hasOwnProperty.call(entry, 'male');
+        if (isGendered) {
+          const gKey = gender === 'male' ? 'male' : 'female';
+          if (entry[gKey]) {
+            return { url: entry[gKey], focus };
+          }
+          console.warn(`[Renderer] 성별(${gKey})에 해당하는 배경 경로가 없습니다: ${bgId}`);
+          return { url: null, focus };
+        }
+        if (entry.src) {
+          return { url: entry.src, focus };
+        }
+      }
+    }
+
+    const manifestPath = this.assetManifest?.backgrounds?.[bgId] || null;
+    return { url: manifestPath, focus: '50% 50%' };
   }
 
   setLikeFeedbackEnabled(enabled) {
@@ -123,8 +166,8 @@ class Renderer {
     let resolvedId = bgId;
     if (bgId === 'bg_hotel') resolvedId = overlay === 'night' ? 'bg_hotel_night' : 'bg_hotel_morning';
     else if (bgId === 'bg_promo_video') resolvedId = gender === 'male' ? 'bg_day3_billboard_m' : 'bg_day3_billboard_f';
-    const p = this.assetManifest?.backgrounds?.[resolvedId];
-    if (p) this.preloadImage(p);
+    const { url } = this.resolveBackground(resolvedId, gender);
+    if (url) this.preloadImage(url);
   }
 
   preloadCharacterSprites(gender = 'female') {
@@ -167,10 +210,10 @@ class Renderer {
       }
     }
 
-    this._renderBackgroundImage(resolvedId, effectiveOverlay);
+    this._renderBackgroundImage(resolvedId, effectiveOverlay, gender);
   }
 
-  _renderBackgroundImage(resolvedId, overlay = null) {
+  _renderBackgroundImage(resolvedId, overlay = null, gender = 'female') {
     if (!this.bgLayer) return;
 
     this.bgLayer.classList.remove('overlay-sunset', 'overlay-night', 'overlay-blur');
@@ -185,16 +228,19 @@ class Renderer {
 
     if (!resolvedId || resolvedId === 'bg_black') {
       this.bgLayer.style.backgroundImage = '';
+      this.bgLayer.style.backgroundPosition = '50% 50%';
       this.bgLayer.style.backgroundColor = '#000';
       if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
       return;
     }
 
-    const manifestPath = this.assetManifest?.backgrounds?.[resolvedId];
+    const { url: manifestPath, focus } = this.resolveBackground(resolvedId, gender);
     const label = this.assetManifest?.backgroundLabels?.[resolvedId] || resolvedId;
 
     const showPlaceholder = () => {
+      console.warn(`[Renderer] 배경 이미지 로드 실패 또는 미등록 (${resolvedId}, gender=${gender}): ${manifestPath || '없음'}`);
       this.bgLayer.style.backgroundImage = '';
+      this.bgLayer.style.backgroundPosition = '50% 50%';
       this.bgLayer.style.backgroundColor = '#1e2438';
       if (this.bgPlaceholder) {
         this.bgPlaceholder.textContent = `[배경 임시 이미지: ${label}]`;
@@ -208,6 +254,7 @@ class Renderer {
     }
 
     if (this.bgLayer.dataset.bgUrl === manifestPath && this.bgLayer.style.backgroundImage) {
+      this.bgLayer.style.backgroundPosition = focus || '50% 50%';
       if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
       return;
     }
@@ -215,6 +262,7 @@ class Renderer {
     const applyBgNow = () => {
       this.bgLayer.dataset.bgUrl = manifestPath;
       this.bgLayer.style.backgroundImage = `url('${manifestPath}')`;
+      this.bgLayer.style.backgroundPosition = focus || '50% 50%';
       this.bgLayer.style.backgroundColor = '';
       if (this.bgPlaceholder) this.bgPlaceholder.style.display = 'none';
     };

@@ -1,0 +1,11 @@
+{
+  "bg_phone_screen": {
+    "female": "assets/backgrounds/bg_promo_video_f.png",
+    "male": "assets/backgrounds/bg_promo_video_m.png",
+    "focus": "50% 45%"
+  },
+  "bg_chuncheon_station": {
+    "src": "assets/backgrounds/bg_chuncheon_station.png",
+    "focus": "50% 45%"
+  }
+}

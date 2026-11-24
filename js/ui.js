@@ -56,6 +56,7 @@ class UIController {
         saveManager: this.saveManager,
         confirmPopup: this.confirmPopup,
         getAssetManifest: () => this.engine?.assetManifest || this.renderer?.assetManifest || null,
+        resolveBackground: (bgKey, gender) => this.renderer?.resolveBackground?.(bgKey, gender)?.url || null,
         onSaveAction: (slotNum) => {
           if (!this.engine || !this.saveManager) return false;
           const state = this.engine.getState();
