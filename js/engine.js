@@ -927,22 +927,25 @@ class GameEngine {
     scene.dialogues = scene._base.concat(line ? [line] : []);
   }
 
-  // ─── 호감도 반영 (내부 affinity 사용, 음수 허용, 화면에는 숫자 없이 하트 게이지 연출만 표시) ───
+  // ─── 호감도 반영 (내부 affinity 사용, 음수·소수 -0.5 허용, 화면에는 하트 게이지 연출 표시) ───
   _applyLikeEffects(effects) {
     const charName = (id) => this.currentCharacters[id]?.name || id;
     const isCompact = !!effects.compact;
     const labelMode = effects.labelMode || null;
     const showFeedback = this.config?.SHOW_LIKE_FEEDBACK !== false;
-    for (const [id, delta] of Object.entries(effects.like || {})) {
+    const map = effects.affection || effects.like || {};
+    for (const [id, delta] of Object.entries(map)) {
       if (!delta) continue;
-      const prev = this.state.affinity[id] || 0;
-      const next = delta < 0 ? (prev + delta) : Math.min(10, prev + delta);
+      const prev = Number(this.state.affinity[id]) || 0;
+      const rawNext = Math.round((prev + delta) * 10) / 10;
+      const next = delta < 0 ? rawNext : Math.min(10, rawNext);
       this.state.affinity[id] = next;
       if (showFeedback && this.renderer && typeof this.renderer.showLikeFeedback === 'function') {
         this.renderer.showLikeFeedback(id, charName(id), delta, prev, next, isCompact, labelMode, this.state.gender);
       }
     }
     if (this.renderer) {
+      this.renderer.updateAffinityBar(this.state.affinity, this.currentCharacters, this.settings.showAffinity);
       this.renderer.updateDebugPanel(this.state, Array.from(this.scenes.values()));
     }
   }
@@ -1213,7 +1216,7 @@ class GameEngine {
   }
 
   applyEffects(effects) {
-    if (effects && (effects.like || effects.likeVisual)) {
+    if (effects && (effects.affection || effects.like || effects.likeVisual)) {
       this._applyLikeEffects(effects);
       return;
     }

@@ -193,7 +193,11 @@
           "text": "원래 처음보는 사람한테도 이렇게 직설적이세요?",
           "next": null,
           "effectDesc": "",
-          "effects": null,
+          "effects": {
+            "like": {
+              "yangnyeom": -1
+            }
+          },
           "followUp": [
             {
               "speaker": "주인공",

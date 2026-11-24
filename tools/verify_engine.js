@@ -202,8 +202,9 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
 
       // Day 1~2 대화 속 2지선다 / Day 2 마지막 2지선다 / Day 3 버스 2지선다 / Day 3 남이섬 2지선다
       if (sid === 's03_lego' || sid === 's03_skywalk' || sid === 's03_myeongdong') {
-        const highIdx = lastChoices.opts.findIndex(o => o.effects?.like);
-        const lowIdx = lastChoices.opts.findIndex(o => !o.effects?.like);
+        const getVal = o => Object.values(o.effects?.like || {})[0] || 0;
+        const highIdx = lastChoices.opts.findIndex(o => getVal(o) > 0);
+        const lowIdx = lastChoices.opts.findIndex(o => getVal(o) <= 0);
         lastChoices.onSelect(day2Idx === 0 ? highIdx : lowIdx);
       } else if (sid.startsWith('s07_') && sid !== 's07_day2') {
         lastChoices.onSelect(day2Idx);
@@ -269,18 +270,18 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   // 8) Day 1~2 6개 대화 화면: 동시 2지선다 (+2/0, labelMode='up') + 각 선택지 A/B 분기 및 공통 합류 검증
   const expectedPairs = [
     ['s03_lego', 'dakgalbi', [0, 2], '그럼, 혹시 관광 홍보 활동하시는 분이신가요?'],
-    ['s03_skywalk', 'goguma', [2, 0], '그러고 보니 아직 자기소개도 못했네요.'],
-    ['s03_myeongdong', 'yangnyeom', [2, 0], '그런데 성함이 어떻게 되세요?'],
-    ['s07_dakgalbi', 'dakgalbi', [2, 0], '그럼 {닭갈비}씨의 속은 어떤데요?'],
+    ['s03_skywalk', 'goguma', [2, -0.5], '그러고 보니 아직 자기소개도 못했네요.'],
+    ['s03_myeongdong', 'yangnyeom', [2, -1], '그런데 성함이 어떻게 되세요?'],
+    ['s07_dakgalbi', 'dakgalbi', [2, -1], '그럼 {닭갈비}씨의 속은 어떤데요?'],
     ['s07_goguma', 'goguma', [2, 0], '{고구마}씨는 항상 여유롭고 다정하신 것 같아요.'],
-    ['s07_yangnyeom', 'yangnyeom', [2, 0], '{양념}씨는 춘천을 정말 잘 아시는 것 같아요.'],
+    ['s07_yangnyeom', 'yangnyeom', [2, -0.5], '{양념}씨는 춘천을 정말 잘 아시는 것 같아요.'],
   ];
   for (const [sid, cid, exp, mergeText] of expectedPairs) {
     const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${sid}.json`), 'utf8'));
     const pairIdx = sc.dialogues.findIndex(d => d.type === 'choice');
     const pair = sc.dialogues[pairIdx];
     const pts = pair.options.map(o => (o.effects?.like ? o.effects.like[cid] : 0));
-    const labelsOk = pair.options.every(o => !o.effects || o.effects.labelMode === 'up');
+    const labelsOk = pair.options.every(o => !o.effects || (o.effects.like && o.effects.like[cid] < 0) || o.effects.labelMode === 'up');
     const nextMerge = sc.dialogues[pairIdx + 1];
     assert(pair && pair.options.length === 2 && !pair.single, `${sid} 첫 대화 선택지가 동시 2지선다로 구성됨`);
     assert(JSON.stringify(pts) === JSON.stringify(exp) && labelsOk, `${sid} 2지선다 점수 ${JSON.stringify(pts)} === ${JSON.stringify(exp)} & labelMode='up'`);
@@ -337,6 +338,8 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
       assert(playedTexts.some(t => chosenResp && t.includes(chosenResp.slice(0, 10))), `${sid} 옵션 ${optIdx} 선택 -> 고른 응답 정상 재생`);
       if (expectedScore > 0) {
         assert(fbLabels.length === 1 && fbLabels[0].labelMode === 'up', `${sid} 옵션 ${optIdx} (+2) -> '상승했다' 피드백 1회`);
+      } else if (expectedScore < 0) {
+        assert(fbLabels.length === 1 && fbLabels[0].delta === expectedScore, `${sid} 옵션 ${optIdx} (${expectedScore}) -> 감소 피드백 1회`);
       } else {
         assert(fbLabels.length === 0, `${sid} 옵션 ${optIdx} (0) -> 피드백 미표시`);
       }
@@ -485,6 +488,49 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   assert(fs.existsSync(path.join(rootDir, bgCfg.bg_phone_screen.female)), '실제 파일 존재: bg_promo_video_f.png');
   assert(fs.existsSync(path.join(rootDir, bgCfg.bg_phone_screen.male)), '실제 파일 존재: bg_promo_video_m.png');
   assert(fs.existsSync(path.join(rootDir, bgCfg.bg_chuncheon_station.src || bgCfg.bg_chuncheon_station)), '실제 파일 존재: bg_chuncheon_station.png');
+
+  // 17) 호감도 감소 8개 선택지(-1 / -0.5) + 소수 저장/불러오기 + 소수 엔딩 기준치(7.5 < 8 <= 8.0) 검증
+  const negTargets = [
+    ['s03_myeongdong', 'yangnyeom', -1, '직설적이세요'],
+    ['s07_dakgalbi', 'dakgalbi', -1, '아...네'],
+    ['s07_dakgalbi', 'dakgalbi', -1, '어떻게 알아요'],
+    ['s07_yangnyeom', 'yangnyeom', -1, '솔직하게 말하면'],
+    ['s07_goguma', 'goguma', -1, '거절하는 연습'],
+    ['s11_dakgalbi', 'dakgalbi', -0.5, '너무 걱정하지 마세요'],
+    ['s03_skywalk', 'goguma', -0.5, '다른 볼거리도'],
+    ['s07_yangnyeom', 'yangnyeom', -0.5, '구경하는 게'],
+  ];
+  for (const [sid, cid, expDelta, substr] of negTargets) {
+    const sc = JSON.parse(fs.readFileSync(path.join(rootDir, 'data', 'scenes', `${sid}.json`), 'utf8'));
+    const foundOpt = sc.dialogues
+      .filter(d => d.type === 'choice')
+      .flatMap(d => d.options || [])
+      .find(o => o.text && o.text.includes(substr));
+    assert(foundOpt && foundOpt.effects?.like?.[cid] === expDelta, `감소 선택지 확인: ${sid} "${substr}" -> ${cid} ${expDelta}`);
+  }
+  // 소수 저장/불러오기 및 기준치 경계(7.5 vs 8.0)
+  const decSaved = sm.save(1, {
+    storyVersion: 'v2_full_spec',
+    gender: 'female',
+    playerName: '소수테스터',
+    sceneId: 's11_dakgalbi',
+    dialogueIndex: 10,
+    affinity: { dakgalbi: 7.5, yangnyeom: 8, goguma: -0.5 },
+  });
+  assert(decSaved === true && sm.load(1).affinity.dakgalbi === 7.5 && sm.load(1).affinity.goguma === -0.5, '소수 호감도(7.5, -0.5) 저장/불러오기 유지');
+  const sbDec = { console, setTimeout, clearTimeout, alert: () => {} };
+  vm.createContext(sbDec);
+  vm.runInContext(utilsCode, sbDec);
+  sbDec.loadJSON = async (p) => JSON.parse(fs.readFileSync(path.join(rootDir, p), 'utf8'));
+  vm.runInContext(engineCode + '\nthis.GameEngine = GameEngine;', sbDec);
+  const decEng = new sbDec.GameEngine();
+  await decEng.init();
+  decEng.state.affinity = { dakgalbi: 7.5, yangnyeom: 7.5, goguma: 7.5 };
+  decEng._handlePierSunsetJudgement();
+  assert(decEng.state.hiddenRoute === true, '소수 기준치 판정: 7.5 < 8 -> 히든 루트 진입');
+  decEng.state.affinity = { dakgalbi: 8.0, yangnyeom: 7.5, goguma: -0.5 };
+  decEng._handlePierSunsetJudgement();
+  assert(decEng.state.hiddenRoute === false, '소수 기준치 판정: 8.0 >= 8 -> 히든 미진입');
 
   // 14) 상단 시스템 버튼 6개 개별 이미지(1x/2x) 존재 및 용량(<=150KB) 검증
   for (const key of ['save', 'load', 'settings', 'title', 'auto', 'skip']) {

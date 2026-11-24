@@ -316,7 +316,7 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "goguma": 1
+              "goguma": -1
             }
           },
           "followUp": [

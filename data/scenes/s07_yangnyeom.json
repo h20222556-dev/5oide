@@ -189,7 +189,11 @@
           "text": "저는 먹는 것보다 구경하는 게 더 좋은 것 같아요",
           "next": null,
           "effectDesc": "",
-          "effects": null,
+          "effects": {
+            "like": {
+              "yangnyeom": -0.5
+            }
+          },
           "followUp": [
             {
               "speaker": "주인공",
@@ -342,7 +346,7 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "yangnyeom": 1
+              "yangnyeom": -1
             }
           },
           "followUp": [
