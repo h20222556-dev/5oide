@@ -106,7 +106,11 @@
           "text": "혹시 이 근처에 다른 볼거리도 있나요?",
           "next": null,
           "effectDesc": "",
-          "effects": null,
+          "effects": {
+            "like": {
+              "goguma": -0.5
+            }
+          },
           "followUp": [
             {
               "speaker": "주인공",

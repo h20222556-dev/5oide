@@ -444,13 +444,13 @@ function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonG
         const cur = secLines[i].trim();
         if (!cur) { i++; continue; }
         if (cur.startsWith('공통') || cur.startsWith('>') || cur.startsWith('###') || cur.startsWith('####')) break;
-        const optM = cur.match(/^-\s*(.+?)(?:\s*\((?:\+(\d+)|0)\))?$/);
+        const optM = cur.match(/^-\s*(.+?)(?:\s*\(([+-]?\d+(?:\.\d+)?)\))?$/);
         if (optM) {
           let rawOptText = optM[1].trim();
           let pts = 0;
-          const scoreInCur = cur.match(/\(\+(\d+)\)\s*$/);
-          if (scoreInCur) pts = parseInt(scoreInCur[1], 10);
-          rawOptText = rawOptText.replace(/\s*\((?:\+\d+|0)\)\s*$/, '').trim();
+          const scoreInCur = cur.match(/\(([+-]?\d+(?:\.\d+)?)\)\s*$/);
+          if (scoreInCur) pts = parseFloat(scoreInCur[1]);
+          rawOptText = rawOptText.replace(/\s*\([+-]?\d+(?:\.\d+)?\)\s*$/, '').trim();
           const optText = normalizePlaceholders(stripOuterQuotes(rawOptText));
 
           // 이 옵션 아래의 ```script ... ``` 블록 수집
@@ -495,8 +495,8 @@ function parseSectionLines(secLines, { charId = null, sceneId = 'scene', buttonG
             ? [{ speaker: '주인공', speakerType: 'os', text: optText, characters: cloneChars(state.activeChars) }, ...followUp]
             : followUp;
 
-          const optEffects = (pts > 0 && charId)
-            ? (isDay12PairChoice
+          const optEffects = (pts !== 0 && charId)
+            ? (isDay12PairChoice && pts > 0
                 ? { like: { [charId]: pts }, compact: true, labelMode: 'up' }
                 : { like: { [charId]: pts } })
             : null;

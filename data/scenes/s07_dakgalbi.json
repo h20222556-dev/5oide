@@ -180,7 +180,11 @@
           "text": "아...네...",
           "next": null,
           "effectDesc": "",
-          "effects": null,
+          "effects": {
+            "like": {
+              "dakgalbi": -1
+            }
+          },
           "followUp": [
             {
               "speaker": "주인공",
@@ -357,7 +361,7 @@
           "effectDesc": "",
           "effects": {
             "like": {
-              "dakgalbi": 1
+              "dakgalbi": -1
             }
           },
           "followUp": [

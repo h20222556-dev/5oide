@@ -865,6 +865,11 @@ class Renderer {
 
   // ─── 호감도 게이지 & 팝업 ───────────────────────────────────────────────────
 
+  _formatAffinityNum(val) {
+    const n = Math.round((Number(val) || 0) * 10) / 10;
+    return Number.isInteger(n) ? String(n) : n.toFixed(1);
+  }
+
   updateAffinityBar(affinity, charactersMap, showAffinity) {
     if (!this.affinityBar) return;
 
@@ -893,7 +898,7 @@ class Renderer {
           <div class="affinity-fill" style="width: ${pct}%"></div>
         </div>
         <span class="affinity-heart">♥</span>
-        <span class="affinity-val">${val}</span>
+        <span class="affinity-val">${this._formatAffinityNum(val)}</span>
       `;
       this.affinityBar.appendChild(item);
     });
@@ -904,7 +909,7 @@ class Renderer {
 
     const name = charName || characterId;
     const isPositive = delta > 0;
-    const text = `${name} 호감도 ${isPositive ? '+' : '-'}${Math.abs(delta)}`;
+    const text = `${name} 호감도 ${isPositive ? '+' : '-'}${this._formatAffinityNum(Math.abs(delta))}`;
 
     const popup = document.createElement('div');
     popup.className = `affinity-popup ${isPositive ? 'positive' : 'negative'}`;
@@ -950,9 +955,9 @@ class Renderer {
         <div style="margin-top:4px;">플레이어: <b>${state.playerName || '-'}</b> (${state.gender === 'male' ? '남성판' : '여성판'})</div>
         <div>장면 ID: <b style="color:#00d2d3;">${state.sceneId || '-'}</b> (대사 ${state.dialogueIndex})</div>
         <div style="margin-top:4px;border-top:1px dashed #555;padding-top:4px;">호감도:</div>
-        <div>- 닭갈비: <b>${state.affinity?.dakgalbi ?? 0}</b></div>
-        <div>- 양념: <b>${state.affinity?.yangnyeom ?? 0}</b></div>
-        <div>- 고구마: <b>${state.affinity?.goguma ?? 0}</b></div>
+        <div>- 닭갈비: <b>${this._formatAffinityNum(state.affinity?.dakgalbi ?? 0)}</b></div>
+        <div>- 양념: <b>${this._formatAffinityNum(state.affinity?.yangnyeom ?? 0)}</b></div>
+        <div>- 고구마: <b>${this._formatAffinityNum(state.affinity?.goguma ?? 0)}</b></div>
         <div style="color:#ff7675;font-weight:bold;margin-top:4px;">좌석 선택(bus_choice): ${state.busChoice || '-'}</div>
         <div>히든 루트(세 명 모두 &lt; 8): <b>${state.hiddenRoute ? '활성(볶음밥 등장)' : '비활성'}</b></div>
       `;
