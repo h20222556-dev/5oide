@@ -159,8 +159,9 @@ node tools/verify_engine.js
 |:---|:---|
 | `assets/backgrounds/bg_black.png` | 암전 화면 / 페이드 배경 |
 | `assets/backgrounds/bg_train_window.png` | 열차 창밖 풍경 이미지 |
-| `assets/backgrounds/bg_phone_screen.png` | 휴대폰 화면 / 캠페인 영상 / 채팅 목록 |
-| `assets/backgrounds/bg_chuncheon_station.png` | 춘천역 이미지 |
+| `assets/backgrounds/bg_promo_video_f.png` | 프롤로그 휴대폰 홍보 영상 (여성 등장인물 버전, `bg_phone_screen`) |
+| `assets/backgrounds/bg_promo_video_m.png` | 프롤로그 휴대폰 홍보 영상 (남성 등장인물 버전, `bg_phone_screen`) |
+| `assets/backgrounds/bg_chuncheon_station.png` | 춘천역 배경 (남녀 공통, `bg_chuncheon_station`) |
 | `assets/backgrounds/bg_brochure.png` | 안내책자 이미지 (블러) |
 | `assets/backgrounds/bg_legoland.png` | 레고랜드 입구 이미지 |
 | `assets/backgrounds/bg_skywalk.png` | 소양강 스카이워크 이미지 |

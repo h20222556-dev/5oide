@@ -38,6 +38,7 @@ class GameEngine {
     this.config = null;
     this.scoreScale = null;
     this.assetManifest = null;
+    this.backgroundsConfig = null;
 
     this.settings = {
       textSpeed: 40,
@@ -78,6 +79,9 @@ class GameEngine {
       if (this.assetManifest && typeof this.renderer.setAssetManifest === 'function') {
         this.renderer.setAssetManifest(this.assetManifest);
       }
+      if (this.backgroundsConfig && typeof this.renderer.setBackgroundsConfig === 'function') {
+        this.renderer.setBackgroundsConfig(this.backgroundsConfig);
+      }
       if (this.config?.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config?.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
       if (this.config) this.renderer.showChoiceImages = this.config.SHOW_CHOICE_IMAGES === true;
@@ -95,8 +99,8 @@ class GameEngine {
   setAchievedEndings() {}
 
   async init() {
-    // 1. config 및 에셋 매니페스트 병렬 로드
-    const [cfg, scale, chars, manifest] = await Promise.all([
+    // 1. config 및 에셋 매니페스트, 배경 설정 병렬 로드
+    const [cfg, scale, chars, manifest, bgConfig] = await Promise.all([
       loadJSON('config/game_config.json'),
       loadJSON('config/score_scale.json'),
       loadJSON('config/characters.json'),
@@ -104,15 +108,26 @@ class GameEngine {
         console.warn('[GameEngine] assets_manifest.json 로드 실패:', err);
         return null;
       }),
+      loadJSON('config/backgrounds.json').catch(err => {
+        console.warn('[GameEngine] backgrounds.json 로드 실패:', err);
+        return null;
+      }),
     ]);
     this.config = cfg;
     this.scoreScale = scale;
     this.charactersAll = chars;
     this.assetManifest = manifest;
+    this.backgroundsConfig = bgConfig;
 
     if (this.renderer) {
       if (this.assetManifest && typeof this.renderer.setAssetManifest === 'function') {
         this.renderer.setAssetManifest(this.assetManifest);
+      }
+      if (this.backgroundsConfig && typeof this.renderer.setBackgroundsConfig === 'function') {
+        this.renderer.setBackgroundsConfig(this.backgroundsConfig);
+      }
+      if (this.backgroundsConfig && typeof this.renderer.setBackgroundsConfig === 'function') {
+        this.renderer.setBackgroundsConfig(this.backgroundsConfig);
       }
       if (this.config.dayTransition) this.renderer.dayTransitionConfig = this.config.dayTransition;
       if (this.config.TRANSITION_MODE) this.renderer.transitionMode = this.config.TRANSITION_MODE;
@@ -153,9 +168,9 @@ class GameEngine {
     this.settings.sfxVolume = this.config.sfxVolume ?? 0.7;
     this.settings.showAffinity = this.config.showAffinity !== false;
 
-    // 4. 프롤로그 및 초반 장면 배경 백그라운드 프리로드 (시작 버튼 비차단)
+    // 4. 프롤로그 및 초반 장면 배경 백그라운드 프리로드 (성별별 홍보 영상 + 춘천역 포함)
     if (this.renderer && typeof this.renderer.preloadBackground === 'function') {
-      ['bg_train_window', 'bg_phone_screen', 'bg_brochure', 'bg_legoland', 'bg_skywalk', 'bg_dakgalbi_alley'].forEach(bg => {
+      ['bg_train_window', 'bg_phone_screen', 'bg_chuncheon_station', 'bg_brochure', 'bg_legoland', 'bg_skywalk', 'bg_dakgalbi_alley'].forEach(bg => {
         this.renderer.preloadBackground(bg, null, this.state.gender);
       });
     }

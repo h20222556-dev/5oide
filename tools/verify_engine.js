@@ -475,6 +475,17 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   assert(contrastRatio('#70435F', '#EDF5FC') >= 4.5, '선택지 대비: --choice-plum on completed sky >= 4.5:1');
   assert(fs.existsSync(path.join(rootDir, 'css', 'choices.css')), '선택지 전용 CSS 파일 존재: css/choices.css');
 
+  // 16) config/backgrounds.json 성별별 배경 및 춘천역 공통 배경 검증
+  const bgCfgPath = path.join(rootDir, 'config', 'backgrounds.json');
+  assert(fs.existsSync(bgCfgPath), 'config/backgrounds.json 파일 존재');
+  const bgCfg = JSON.parse(fs.readFileSync(bgCfgPath, 'utf8'));
+  assert(bgCfg.bg_phone_screen?.female === 'assets/backgrounds/bg_promo_video_f.png', 'bg_phone_screen.female 경로 일치');
+  assert(bgCfg.bg_phone_screen?.male === 'assets/backgrounds/bg_promo_video_m.png', 'bg_phone_screen.male 경로 일치');
+  assert((bgCfg.bg_chuncheon_station?.src || bgCfg.bg_chuncheon_station) === 'assets/backgrounds/bg_chuncheon_station.png', 'bg_chuncheon_station 경로 일치');
+  assert(fs.existsSync(path.join(rootDir, bgCfg.bg_phone_screen.female)), '실제 파일 존재: bg_promo_video_f.png');
+  assert(fs.existsSync(path.join(rootDir, bgCfg.bg_phone_screen.male)), '실제 파일 존재: bg_promo_video_m.png');
+  assert(fs.existsSync(path.join(rootDir, bgCfg.bg_chuncheon_station.src || bgCfg.bg_chuncheon_station)), '실제 파일 존재: bg_chuncheon_station.png');
+
   // 14) 상단 시스템 버튼 6개 개별 이미지(1x/2x) 존재 및 용량(<=150KB) 검증
   for (const key of ['save', 'load', 'settings', 'title', 'auto', 'skip']) {
     const p1 = path.join(rootDir, 'assets', 'ui', `ui_btn_${key}.png`);
