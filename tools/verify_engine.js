@@ -470,6 +470,10 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
   assert(contrastRatio('#6B6178', '#FFFDFB') >= 4.5, '팔레트 대비: --gray-violet-text on --ivory >= 4.5:1');
   assert(contrastRatio('#6B6178', '#EEE9FA') >= 4.5, '팔레트 대비: --gray-violet-text on --lavender-soft >= 4.5:1');
   assert(contrastRatio('#4A253D', '#F4A9C4') >= 4.5, '팔레트 대비: --plum-dark on --pink-main >= 4.5:1');
+  assert(contrastRatio('#70435F', '#F9D8E6') >= 4.5, '선택지 대비: --choice-plum on hover pink >= 4.5:1');
+  assert(contrastRatio('#70435F', '#F6D0DF') >= 4.5, '선택지 대비: --choice-plum on active pink >= 4.5:1');
+  assert(contrastRatio('#70435F', '#EDF5FC') >= 4.5, '선택지 대비: --choice-plum on completed sky >= 4.5:1');
+  assert(fs.existsSync(path.join(rootDir, 'css', 'choices.css')), '선택지 전용 CSS 파일 존재: css/choices.css');
 
   // 14) 상단 시스템 버튼 6개 개별 이미지(1x/2x) 존재 및 용량(<=150KB) 검증
   for (const key of ['save', 'load', 'settings', 'title', 'auto', 'skip']) {
