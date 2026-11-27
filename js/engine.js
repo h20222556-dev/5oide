@@ -232,6 +232,9 @@ class GameEngine {
     this.state.isTyping = false;
     this.state.choiceActive = false;
 
+    if (this.ui && this.ui.qrTrigger) {
+      this.ui.qrTrigger.setSuppressed(false);
+    }
     if (this.audioManager) this.audioManager.stopBGM();
     if (this.renderer) {
       this.renderer.hideChoices();
@@ -374,7 +377,10 @@ class GameEngine {
     this._currentBgKey = this._resolveBgKey(scene.background, scene.overlay || null);
     this._currentSprites = [];
 
-    if (this.ui) this.ui.setChoicesActive(false);
+    if (this.ui) {
+      this.ui.setChoicesActive(false);
+      if (this.ui.qrTrigger) this.ui.qrTrigger.setSuppressed(scene.type === 'ending');
+    }
     if (this.renderer) {
       this.renderer.hideChoices();
       this.renderer.hidePhoneMessages();

@@ -131,6 +131,9 @@ class Renderer {
   showScreen(screenId) {
     if (this.screenTitle) this.screenTitle.classList.toggle('active', screenId === 'title');
     if (this.screenGame) this.screenGame.classList.toggle('active', screenId === 'game');
+    if (typeof this.onScreenChange === 'function') {
+      this.onScreenChange(screenId);
+    }
   }
 
   setTitleBackground(gender = 'female') {

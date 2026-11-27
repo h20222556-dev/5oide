@@ -3605,3 +3605,60 @@ button {
     width: 148px;
   }
 }
+
+/* ──────────────────────────────────────────
+   QR 코드 스캔 진입 버튼 (타이틀 · 게임 화면)
+   ────────────────────────────────────────── */
+.qr-entry-btn {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 45;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--ivory) 0%, #FAF5FD 100%);
+  border: var(--ui-border-width) solid var(--pink-main);
+  color: var(--plum);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--ui-shadow);
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+}
+
+.qr-entry-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--ui-shadow-pink);
+  background: var(--pink-soft);
+}
+
+.qr-entry-btn:active {
+  transform: scale(0.95);
+}
+
+.qr-entry-btn:focus-visible {
+  outline: 2.5px solid var(--plum);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px), (orientation: portrait) {
+  .qr-entry-btn.in-title {
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+  }
+
+  .qr-entry-btn.in-game {
+    top: calc(env(safe-area-inset-top, 0px) + 104px);
+    right: max(10px, env(safe-area-inset-right));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qr-entry-btn {
+    transition: none;
+  }
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오이데 QR 카드 인쇄 시트</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #F6F4F7;
+      color: #1F1A22;
+      padding: 20px;
+    }
+    .toolbar {
+      max-width: 186mm;
+      margin: 0 auto 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #FFFDFB;
+      border: 1.5px solid #F4A9C4;
+      border-radius: 12px;
+    }
+    .toolbar h1 { font-size: 16px; color: #70435F; }
+    .toolbar p { font-size: 12.5px; color: #6B6178; margin-top: 2px; }
+    .print-btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      background: #F4A9C4;
+      color: #4A253D;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .sheet {
+      max-width: 186mm;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8mm;
+    }
+    .qr-card {
+      background: #FFFFFF;
+      border: 1px dashed #B8A9B4;
+      border-radius: 10px;
+      padding: 7mm 6mm 6mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .qr-img-wrap {
+      width: 52mm;
+      height: 52mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+    }
+    .qr-img-wrap img {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      display: block;
+    }
+    .qr-code-num {
+      margin-top: 4mm;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #111111;
+    }
+    .qr-card-title {
+      margin-top: 2mm;
+      font-size: 10pt;
+      color: #5A4A56;
+      word-break: keep-all;
+    }
+    @media print {
+      body { background: #FFFFFF; padding: 0; }
+      .toolbar { display: none !important; }
+      .sheet { max-width: none; gap: 6mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div>
+      <h1>오이데 인쇄용 QR 카드 (총 3장)</h1>
+      <p>A4 세로 기준 페이지당 6장 배치 · 모든 QR 코드는 생성 시 자동 디코딩 검증을 통과했습니다.</p>
+    </div>
+    <button type="button" class="print-btn" onclick="window.print()">인쇄하기 (A4)</button>
+  </div>
+  <main class="sheet">
+    
+    <article class="qr-card">
+      <div class="qr-img-wrap">
+        <img src="data:image/png;base64,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" alt="레고랜드 안내소 스탬프 (샘플) QR 코드" />
+      </div>
+      <div class="qr-code-num">482 915</div>
+      <div class="qr-card-title">레고랜드 안내소 스탬프 (샘플)</div>
+    </article>
+  
+
+    <article class="qr-card">
+      <div class="qr-img-wrap">
+        <img src="data:image/png;base64,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" alt="소양강 스카이워크 전망대 (샘플) QR 코드" />
+      </div>
+      <div class="qr-code-num">307 268</div>
+      <div class="qr-card-title">소양강 스카이워크 전망대 (샘플)</div>
+    </article>
+  
+
+    <article class="qr-card">
+      <div class="qr-img-wrap">
+        <img src="data:image/png;base64,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" alt="춘천 선착장 수상버스 탑승권 (샘플) QR 코드" />
+      </div>
+      <div class="qr-code-num">915 034</div>
+      <div class="qr-card-title">춘천 선착장 수상버스 탑승권 (샘플)</div>
+    </article>
+  
+  </main>
+</body>
+</html>

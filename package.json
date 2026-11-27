@@ -1,0 +1,15 @@
+{
+  "name": "oidate-chuncheon-vn",
+  "version": "2.0.0",
+  "private": true,
+  "description": "춘천에서 5명의 이상한 데이트(오이데) 비주얼 노벨 웹 게임",
+  "scripts": {
+    "qr:cards": "node tools/make-qr-cards.mjs",
+    "qr:newcode": "node tools/new-qr-code.mjs",
+    "verify": "node tools/verify_engine.js"
+  },
+  "devDependencies": {
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4"
+  }
+}

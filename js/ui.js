@@ -40,8 +40,10 @@ class UIController {
     this._saveModalOpen = false;
     this._settingsModalOpen = false;
     this._galleryModalOpen = false;
+    this._qrModalOpen = false;
     this.confirmPopup = null;
     this.saveModal = null;
+    this.qrTrigger = null;
   }
 
   init(engine, renderer, saveManager, audioManager) {
@@ -99,6 +101,16 @@ class UIController {
     this._initTitleMenuButtons();
     this._bindEvents();
     this.resizeGame();
+
+    if (typeof QrTriggerController === 'function') {
+      this.qrTrigger = new QrTriggerController();
+      this.qrTrigger.init(engine, this);
+      if (this.renderer) {
+        this.renderer.onScreenChange = (screenId) => {
+          if (this.qrTrigger) this.qrTrigger.setScreen(screenId);
+        };
+      }
+    }
   }
 
   _initTitleMenuButtons() {
@@ -212,6 +224,8 @@ class UIController {
         return;
       }
 
+      if (this._qrModalOpen) return;
+
       if (e.code === 'KeyD') {
         e.preventDefault();
         if (this.engine) this.engine.toggleDebug();
@@ -276,7 +290,7 @@ class UIController {
 
   _handleAdvanceDialogue() {
     // 모달이 열려있거나 선택지가 떠 있거나 DAY 전환 중이면 대사 넘김 차단
-    if (this._saveModalOpen || this._settingsModalOpen || this._galleryModalOpen) return;
+    if (this._saveModalOpen || this._settingsModalOpen || this._galleryModalOpen || this._qrModalOpen) return;
     if (this._choicesActive || this.engine?.state?.isTransitioning) return;
 
     if (this.engine) {
@@ -366,6 +380,7 @@ class UIController {
     this.closeSaveModal();
     this.closeSettingsModal();
     this.closeGalleryModal();
+    if (this.qrTrigger) this.qrTrigger.closeModal();
   }
 
   // ─── 모달 제어 ─────────────────────────────────────────────────────────────

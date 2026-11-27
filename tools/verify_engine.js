@@ -550,6 +550,46 @@ async function runPlaythrough({ gender = 'male', seat = 'dakgalbi', day2Idx = 0,
     assert(fs.statSync(p2).size <= 250 * 1024, `타이틀 메뉴 2x 용량 <= 250KB: ui_menu_${key}@2x.png (${(fs.statSync(p2).size / 1024).toFixed(1)}KB)`);
   }
 
+  // 18) QR 스캔/입력 통합 처리(resolveCode), 로컬 jsQR 포함, 인쇄용 QR 카드 생성 결과 검증
+  const qrConfigPath = path.join(rootDir, 'config', 'qr_config.json');
+  const qrDataPath = path.join(rootDir, 'data', 'qr_codes.json');
+  assert(fs.existsSync(qrConfigPath), 'config/qr_config.json 파일 존재');
+  assert(fs.existsSync(qrDataPath), 'data/qr_codes.json 파일 존재');
+  assert(fs.existsSync(path.join(rootDir, 'vendor', 'jsQR.js')), '로컬 vendor/jsQR.js 존재 (CDN 미사용)');
+  assert(fs.existsSync(path.join(rootDir, 'vendor', 'jsQR-LICENSE.txt')), 'vendor/jsQR-LICENSE.txt 라이선스 존재');
+  assert(fs.existsSync(path.join(rootDir, 'qr-output', 'index.html')), '인쇄용 qr-output/index.html 존재');
+
+  const qrConfig = JSON.parse(fs.readFileSync(qrConfigPath, 'utf8'));
+  const qrEntries = JSON.parse(fs.readFileSync(qrDataPath, 'utf8'));
+  const { QrResolver } = require(path.join(rootDir, 'js', 'qr_modal.js'));
+
+  const qrMemMap = {};
+  const qrMockStorage = {
+    getItem: (k) => (Object.prototype.hasOwnProperty.call(qrMemMap, k) ? qrMemMap[k] : null),
+    setItem: (k, v) => { qrMemMap[k] = String(v); },
+  };
+
+  const r1 = QrResolver.resolveCode('CCDATE:482915', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(r1.ok === true && r1.entry.id === 'spot_legoland' && r1.isNew === true, 'QR 통합 처리: CCDATE:482915 최초 스캔 성공');
+  const r2 = QrResolver.resolveCode('482 915', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(r2.ok === true && r2.entry.id === 'spot_legoland' && r2.isNew === false, 'QR 통합 처리: 공백 포함 재입력 시 동일 항목 + isNew=false');
+  const r3 = QrResolver.resolveCode('307-268', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(r3.ok === true && r3.entry.id === 'spot_skywalk' && r3.isNew === true, 'QR 통합 처리: 하이픈 포함 입력(307-268) 성공');
+  const r4 = QrResolver.resolveCode('９１５０３４', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(r4.ok === true && r4.entry.id === 'spot_nami_pier' && r4.isNew === true, 'QR 통합 처리: 전각 숫자(９１５０３４) 성공');
+  const rForeign = QrResolver.resolveCode('https://example.com/promo', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(rForeign.ok === false && rForeign.reason === 'not_our_qr', 'QR 통합 처리: 다른 QR/URL -> not_our_qr');
+  const rNotFound = QrResolver.resolveCode('999999', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(rNotFound.ok === false && rNotFound.reason === 'not_found', 'QR 통합 처리: 미등록 6자리 -> not_found');
+  const rShort = QrResolver.resolveCode('1234', { entries: qrEntries, config: qrConfig, storage: qrMockStorage });
+  assert(rShort.ok === false && rShort.reason === 'invalid_format', 'QR 통합 처리: 자릿수 부족 -> invalid_format');
+  const blockedStorage = {
+    getItem: () => { throw new Error('SecurityError'); },
+    setItem: () => { throw new Error('SecurityError'); },
+  };
+  const rBlocked = QrResolver.resolveCode('482915', { entries: qrEntries, config: qrConfig, storage: blockedStorage });
+  assert(rBlocked.ok === true && rBlocked.entry.id === 'spot_legoland', 'QR 통합 처리: localStorage 차단 시에도 정상 결과 반환');
+
   console.log('\n====================================================');
   console.log(` 검증 결과: ${passed} / ${total} 테스트 통과 (${Math.round((passed / total) * 100)}%)`);
   console.log('====================================================');

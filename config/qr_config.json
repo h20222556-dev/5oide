@@ -1,0 +1,7 @@
+{
+  "QR_CODE_LENGTH": 6,
+  "QR_PREFIX": "CCDATE:",
+  "QR_BUTTON_ENABLED": true,
+  "QR_BUTTON_SCREENS": ["title", "game"],
+  "QR_STORAGE_KEY": "qrScannedCodes"
+}

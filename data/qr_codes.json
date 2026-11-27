@@ -1,0 +1,22 @@
+[
+  {
+    "id": "spot_legoland",
+    "code": "482915",
+    "title": "레고랜드 안내소 스탬프 (샘플)",
+    "message": "춘천 레고랜드 입구에서 발견한 숨은 안내 카드예요! 알록달록한 브릭 조형물 사이에서 첫 번째 여행의 추억을 남겼습니다.",
+    "image": "assets/backgrounds/bg_legoland.jpg"
+  },
+  {
+    "id": "spot_skywalk",
+    "code": "307268",
+    "title": "소양강 스카이워크 전망대 (샘플)",
+    "message": "투명한 유리 바닥 아래로 흐르는 소양강의 풍경을 담았어요. 강바람과 함께 잠깐 쉬어 가는 춘천의 명소입니다.",
+    "image": "assets/backgrounds/bg_skywalk.jpg"
+  },
+  {
+    "id": "spot_nami_pier",
+    "code": "915034",
+    "title": "춘천 선착장 수상버스 탑승권 (샘플)",
+    "message": "춘천과 남이섬을 잇는 직행 수상버스 승선 안내 코드예요. 선착장의 반짝이는 호수 풍경과 함께 특별한 여행을 기억해 보세요."
+  }
+]
